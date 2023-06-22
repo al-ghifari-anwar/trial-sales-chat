@@ -18,7 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         mysqli_close($conn);
 
-        echo json_encode(array("status" => "ok", "result" => $transArray));
+        if ($transArray == null) {
+            echo json_encode(array("status" => "empty", "results" => []));
+        } else {
+            echo json_encode(array("status" => "ok", "results" => $transArray));
+        }
     } else {
         $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE tb_contact.status = 'waiting'");
 
@@ -28,7 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         mysqli_close($conn);
 
-        echo json_encode(array("status" => "ok", "results" => $transArray));
+        if ($transArray == null) {
+            echo json_encode(array("status" => "empty", "results" => []));
+        } else {
+            echo json_encode(array("status" => "ok", "results" => $transArray));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nama = $_POST['nama'];

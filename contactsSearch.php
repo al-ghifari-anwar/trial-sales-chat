@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['key'])) {
         $key = $_POST['key'];
 
-        $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama = '$key'");
+        $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%'");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $transArray[] = $row;
@@ -18,9 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         mysqli_close($conn);
 
-        echo json_encode(array("status" => "ok", "result" => $transArray));
+        if ($transArray == null) {
+            echo json_encode(array("status" => "empty", "results" => []));
+        } else {
+            echo json_encode(array("status" => "ok", "results" => $transArray));
+        }
     } else {
 
-        echo json_encode(array("status" => "failed", "results" => "null"));
+        echo json_encode(array("status" => "failed", "results" => []));
     }
 }
