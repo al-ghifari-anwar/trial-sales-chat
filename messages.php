@@ -42,17 +42,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $nama = $_POST['nama'];
     $nomor_hp = $_POST['nomorhp'];
     $message = $_POST['message_body'];
+    $id_contact = null;
 
     $checkKontak = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
 
-    $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp) VALUES('$nama', '$nomor_hp')");
-    $id_contact = mysqli_insert_id($conn);
+    $row = $checkKontak->fetch_array(MYSQLI_ASSOC);
+    if ($row == null) {
+        $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp) VALUES('$nama', '$nomor_hp')");
+        $id_contact = mysqli_insert_id($conn);
+    } else {
+        $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+        $id_contact =  $row['id_contact'];
+    }
 
-    if ($result) {
-        // ini_set('display_errors', 1);
-        // error_reporting(E_ALL);
 
-        $resultMsg = mysqli_query($conn, "INSERT INTO tb_message(id_contact, message_body) VALUES($id_contact, '$message')");
+    if ($id_contact != null) {
+        ini_set('display_errors', 1);
+        error_reporting(E_ALL);
+
+        $resultMsg = mysqli_query($conn, "INSERT INTO tb_messages(id_contact, message_body) VALUES($id_contact, '$message')");
 
         $curl = curl_init();
 
