@@ -39,18 +39,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nama = $_POST['nama'];
-    $nomor_hp = $_POST['nomorhp'];
+    if(isset($_POST['id'])){
+        $id = $_POST['id'];
+        $nama = $_POST['nama'];
+        $tgl_lahir = $_POST['tgl_lahir'];
 
-    $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp) VALUES('$nama', '$nomor_hp')");
+        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir' WHERE id_contact = '$id'");
 
-    if ($result) {
-        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data kontak!"];
-        echo json_encode($response);
+        if ($result) {
+            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
+            echo json_encode($response);
+        } else {
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengubah data kontak!"];
+            echo json_encode($response);
+        }
+
+        mysqli_close($conn);
     } else {
-        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data kontak!"];
-        echo json_encode($response);
+        $nama = $_POST['nama'];
+        $nomor_hp = $_POST['nomorhp'];
+
+        $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp) VALUES('$nama', '$nomor_hp')");
+
+        if ($result) {
+            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data kontak!"];
+            echo json_encode($response);
+        } else {
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data kontak!"];
+            echo json_encode($response);
+        }
     }
+    
 
     mysqli_close($conn);
-}
+} 
