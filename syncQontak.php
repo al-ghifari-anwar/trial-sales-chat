@@ -42,7 +42,7 @@ for ($i = 1; $i < 50; $i++) {
             if ($row == null) {
                 $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp) VALUES('$nama', '$nomor_hp')");
             } else {
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
+                $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama' WHERE nomorhp = '$nomor_hp'");
             }
         }
     }
