@@ -68,8 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data kontak!"];
             echo json_encode($response);
         }
+        mysqli_close($conn);
     }
     
 
-    mysqli_close($conn);
 } 
