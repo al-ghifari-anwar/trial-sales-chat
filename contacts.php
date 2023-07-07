@@ -43,8 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id = $_POST['id'];
         $nama = $_POST['nama'];
         $tgl_lahir = $_POST['tgl_lahir'];
+        $store_owner = $_POST['owner_name'];
 
-        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir' WHERE id_contact = '$id'");
+        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner' WHERE id_contact = '$id'");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
