@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $row = $checkKontak->fetch_array(MYSQLI_ASSOC);
     if ($row == null) {
-        $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp) VALUES('$nama', '$nomor_hp')");
+        $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner) VALUES('$nama', '$nomor_hp','')");
         $id_contact = mysqli_insert_id($conn);
     } else {
         $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
@@ -107,10 +107,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         curl_close($curl);
 
-        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data transaksi!"];
+        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data pesan!"];
         echo json_encode($response);
     } else {
-        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data transaksi!"];
+        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data pesan!"];
         echo json_encode($response);
     }
 
