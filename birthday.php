@@ -58,12 +58,66 @@ foreach($transArray as $arr){
 
         curl_close($curl);
 
-        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim ucapan ultah!"];
-        echo json_encode($response);
-    } else {
-        $response = ["response" => 200, "status" => "failed", "message" => "Berhasil mengirim ucapan ultah!"];
-        echo json_encode($response);
-    }
+        $res = json_decode($response, true);
+
+        $status = $res['status'];
+
+        if($status == 'success'){
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => '{
+                    "to_number": "' . "6287771736555" . '",
+                    "to_name": "' . $nama . '",
+                    "message_template_id": "' . $template_id . '",
+                    "channel_integration_id": "' . $integration_id . '",
+                    "language": {
+                        "code": "id"
+                    },
+                    "parameters": {
+                        "body": [
+                        {
+                            "key": "1",
+                            "value": "nama",
+                            "value_text": "Forwarding from - ' . $nama . '"
+                        }
+                        ]
+                    }
+                    }',
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Bearer ' . $wa_token,
+                    'Content-Type: application/json'
+                ),
+            ));
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+
+            $res = json_decode($response, true);
+
+            $status = $res['status'];
+
+            if($status == "success"){
+                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim ucapan ultah!"];
+                echo json_encode($response);
+            } else {
+                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim ucapan ultah!"];
+                echo json_encode($response);
+            }
+        } else {
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim ucapan ultah!"];
+            echo json_encode($response);
+        }
+    } 
 }
 
 
