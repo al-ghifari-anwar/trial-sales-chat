@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $nama = $_POST['nama'];
     $nomor_hp = $_POST['nomorhp'];
     $message = $_POST['message_body'];
-    $store_owner = $_POST['store_owner'];
+    $store_owner = $_POST['owner_name'];
     $tgl_lahir = $_POST['tgl_lahir'];
     $id_contact = null;
 
