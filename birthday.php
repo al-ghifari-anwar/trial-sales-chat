@@ -75,7 +75,7 @@ foreach($transArray as $arr){
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS => '{
-                    "to_number": "' . "6287771736555" . '",
+                    "to_number": "' . "6287757904850" . '",
                     "to_name": "' . $nama . '",
                     "message_template_id": "' . $template_id . '",
                     "channel_integration_id": "' . $integration_id . '",
