@@ -43,7 +43,7 @@ foreach($transArray as $arr){
                     {
                         "key": "1",
                         "value": "nama",
-                        "value_text": "' . $nama . '"
+                        "value_text": "(DEVSITE)' . $nama . '"
                     }
                     ]
                 }
@@ -87,7 +87,7 @@ foreach($transArray as $arr){
                         {
                             "key": "1",
                             "value": "nama",
-                            "value_text": "Forwarding from - ' . $nama . '"
+                            "value_text": "(DEVSITE)Forwarding from - ' . $nama . '"
                         }
                         ]
                     }
