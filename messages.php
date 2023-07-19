@@ -42,8 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $nama = $_POST['nama'];
     $nomor_hp = $_POST['nomorhp'];
     $message = $_POST['message_body'];
-    $store_owner = $_POST['owner_name'];
-    $tgl_lahir = $_POST['tgl_lahir'];
+    if(isset($_POST['owner_name']) && isset($_POST['tgl_lahir'])){
+        $store_owner = $_POST['owner_name'];
+        $tgl_lahir = $_POST['tgl_lahir'];
+    } else {
+        $store_owner = '';
+        $tgl_lahir = '0000-00-00';
+    }
     $id_contact = null;
 
     $checkKontak = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
