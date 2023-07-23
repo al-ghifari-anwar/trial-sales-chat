@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array("status" => "ok", "results" => $transArray));
         }
     } else {
-        $id_city = $_GET['id_city'];
+        $id_city = $_GET['c'];
         $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE tb_contact.id_city = '$id_city'");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
