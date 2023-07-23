@@ -9,8 +9,9 @@ $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['key'])) {
         $key = $_POST['key'];
+        $id_city = $_POST['id_city'];
 
-        $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%'");
+        $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%' AND id_city = '$id_city'");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $transArray[] = $row;
