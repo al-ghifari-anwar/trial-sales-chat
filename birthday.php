@@ -75,7 +75,7 @@ foreach ($transArray as $arr) {
                         "params": [
                             {
                                 "key":"url",
-                                "value":"https://saleswa.topmortarindonesia.com/img/bday_"' . $nomor_hp . '".jpg"
+                                "value":"https://saleswa.topmortarindonesia.com/img/bday_' . $nomor_hp . '.jpg"
                             },
                             {
                                 "key":"filename",
@@ -111,6 +111,9 @@ foreach ($transArray as $arr) {
 
         $status = $res['status'];
 
+        echo $response;
+        die;
+
         if ($status == 'success') {
             $curl = curl_init();
 
@@ -137,7 +140,7 @@ foreach ($transArray as $arr) {
                             "params": [
                                 {
                                     "key":"url",
-                                    "value":"https://saleswa.topmortarindonesia.com/img/bday_"' . $nomor_hp . '".jpg"
+                                    "value":"https://saleswa.topmortarindonesia.com/img/bday_' . $nomor_hp . '.jpg"
                                 },
                                 {
                                     "key":"filename",
@@ -150,6 +153,11 @@ foreach ($transArray as $arr) {
                             "key": "1",
                             "value": "nama",
                             "value_text": "Forwarding from - ' . $nama . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "nama_toko",
+                            "value_text": "' . $toko . '"
                         }
                         ]
                     }
