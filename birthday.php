@@ -75,7 +75,7 @@ foreach ($transArray as $arr) {
                         "params": [
                             {
                                 "key":"url",
-                                "value":"https://dev-saleswa.topmortarindonesia.com/img/bday_"' . $nomor_hp . '".jpg"
+                                "value":"https://saleswa.topmortarindonesia.com/img/bday_"' . $nomor_hp . '".jpg"
                             },
                             {
                                 "key":"filename",
@@ -137,7 +137,7 @@ foreach ($transArray as $arr) {
                             "params": [
                                 {
                                     "key":"url",
-                                    "value":"https://dev-saleswa.topmortarindonesia.com/img/bday_"' . $nomor_hp . '".jpg"
+                                    "value":"https://saleswa.topmortarindonesia.com/img/bday_"' . $nomor_hp . '".jpg"
                                 },
                                 {
                                     "key":"filename",
