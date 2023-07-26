@@ -24,12 +24,12 @@ foreach ($transArray as $arr) {
 
     if ($tgl_lahir == $tgl_skrg) {
         // (B) WRITE TEXT
-        $txt = $nama;
-        $fontFile = __DIR__ . "./font/CoffeCake.ttf"; // CHANGE TO YOUR OWN!
-        $fontSize = 45;
+        $txt = $nama . "\n" . $toko;
+        $fontFile = __DIR__ . "/font/CoffeCake.ttf"; // CHANGE TO YOUR OWN!
+        $fontSize = 35;
         $fontColor = imagecolorallocate($img, 255, 255, 255);
-        $posX = 312;
-        $posY = 910;
+        $posX = 212;
+        $posY = 875;
         $angle = 0;
         // (C) CALCULATE TEXT BOX POSITION
         // (C1) GET IMAGE DIMENSIONS
@@ -111,8 +111,8 @@ foreach ($transArray as $arr) {
 
         $status = $res['status'];
 
-        echo $response;
-        die;
+        // echo $response;
+        // die;
 
         if ($status == 'success') {
             $curl = curl_init();
