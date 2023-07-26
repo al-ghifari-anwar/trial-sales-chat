@@ -24,7 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array("status" => "ok", "results" => $transArray));
         }
     } else {
-        $result = mysqli_query($conn, "SELECT * FROM tb_contact ");
+        if (isset($_GET['c'])) {
+            $id_city = $_GET['c'];
+            $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE tb_contact.id_city = '$id_city'");
+        } else {
+            $result = mysqli_query($conn, "SELECT * FROM tb_contact");
+        }
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $transArray[] = $row;
@@ -39,13 +44,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if(isset($_POST['id'])){
+    if (isset($_POST['id'])) {
         $id = $_POST['id'];
         $nama = $_POST['nama'];
         $tgl_lahir = $_POST['tgl_lahir'];
         $store_owner = $_POST['owner_name'];
+        $id_city = $_POST['id_city'];
+        $mapsUrl = $_POST['mapsUrl'];
+        $address = $_POST['address'];
 
-        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner' WHERE id_contact = '$id'");
+        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address' WHERE id_contact = '$id'");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
@@ -59,8 +67,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else {
         $nama = $_POST['nama'];
         $nomor_hp = $_POST['nomorhp'];
+        $id_city = $_POST['id_city'];
+        $mapsUrl = $_POST['mapsUrl'];
+        $address = $_POST['address'];
 
-        $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp) VALUES('$nama', '$nomor_hp')");
+        $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, id_city, maps_url, address) VALUES('$nama', '$nomor_hp','$id_city', '$mapsUrl', '$address')");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data kontak!"];
@@ -71,6 +82,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         mysqli_close($conn);
     }
-    
-
-} 
+}

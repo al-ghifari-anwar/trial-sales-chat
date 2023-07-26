@@ -10,7 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['key'])) {
         $key = $_POST['key'];
 
-        $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%'");
+        if (isset($_POST['id_city'])) {
+            $id_city = $_POST['id_city'];
+
+            $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%' AND id_city = '$id_city'");
+        } else {
+            $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%'");
+        }
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $transArray[] = $row;

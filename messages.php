@@ -42,12 +42,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $nama = $_POST['nama'];
     $nomor_hp = $_POST['nomorhp'];
     $message = $_POST['message_body'];
-    if(isset($_POST['owner_name']) && isset($_POST['tgl_lahir'])){
+    $id_city = $_POST['id_city'];
+    if (isset($_POST['owner_name']) && isset($_POST['tgl_lahir']) && isset($_POST['mapsUrl'])) {
         $store_owner = $_POST['owner_name'];
         $tgl_lahir = $_POST['tgl_lahir'];
+        $mapsUrl = $_POST['mapsUrl'];
     } else {
         $store_owner = '';
         $tgl_lahir = '0000-00-00';
+        $mapsUrl = '';
     }
     $id_contact = null;
 
@@ -55,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $row = $checkKontak->fetch_array(MYSQLI_ASSOC);
     if ($row == null) {
-        $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner, tgl_lahir) VALUES('$nama', '$nomor_hp','$store_owner', '$tgl_lahir')");
+        $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner, tgl_lahir, id_city, maps_url) VALUES('$nama', '$nomor_hp','$store_owner', '$tgl_lahir', '$id_city', '$mapsUrl')");
         $id_contact = mysqli_insert_id($conn);
     } else {
         $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
