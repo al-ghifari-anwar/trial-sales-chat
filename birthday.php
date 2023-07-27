@@ -4,7 +4,7 @@ include_once("config.php");
 // putenv('GDFONTPATH=' . realpath('.'));
 
 $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
-$template_id = '27286af8-304e-4543-af66-307f453054f7';
+$template_id = '9e5f403d-a064-475e-b172-74ce62a56ede';
 $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE tgl_lahir IS NOT NULL");
@@ -23,6 +23,7 @@ foreach ($transArray as $arr) {
     $toko = $arr['nama'];
 
     if ($tgl_lahir == $tgl_skrg) {
+        // echo "A";
         // (B) WRITE TEXT
         $txt = $nama . "\n" . $toko;
         $fontFile = __DIR__ . "/font/CoffeCake.ttf"; // CHANGE TO YOUR OWN!
@@ -88,11 +89,6 @@ foreach ($transArray as $arr) {
                         "key": "1",
                         "value": "nama",
                         "value_text": "' . $nama . '"
-                    },
-                    {
-                        "key": "2",
-                        "value": "nama_toko",
-                        "value_text": "' . $toko . '"
                     }
                     ]
                 }
@@ -153,11 +149,6 @@ foreach ($transArray as $arr) {
                             "key": "1",
                             "value": "nama",
                             "value_text": "Forwarding from - ' . $nama . '"
-                        },
-                        {
-                            "key": "2",
-                            "value": "nama_toko",
-                            "value_text": "' . $toko . '"
                         }
                         ]
                     }
