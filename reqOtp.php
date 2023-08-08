@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $expDate = date("Y-m-d H:i:s", strtotime($rowOtp['exp_date']));
             $currentDate = date("Y-m-d H:i:s");
             if ($expDate <= $currentDate) {
-                $expDate = date("Y-m-d H:i:s", strtotime(" + 1 hour"));
+                $expDate = date("Y-m-d H:i:s", strtotime(" +5 minutes"));
                 $otp = rand(100000, 999999);
                 $createOtp = mysqli_query($conn, "INSERT INTO tb_otp(id_user,otp,exp_date) VALUES($id_user, $otp, '$expDate')");
 
