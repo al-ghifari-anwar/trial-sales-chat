@@ -1,9 +1,10 @@
 <?php
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
+// putenv('GDFONTPATH=' . realpath('.'));
 
 $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
-$template_id = 'f9b24650-1029-4eec-9f47-878d2b3e232b';
+$template_id = '9e5f403d-a064-475e-b172-74ce62a56ede';
 $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE tgl_lahir IS NOT NULL");
@@ -12,13 +13,44 @@ while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
     $transArray[] = $row;
 }
 
-foreach($transArray as $arr){
+$img = imagecreatefrompng("img/bday.png");
+
+foreach ($transArray as $arr) {
     $tgl_lahir = date("m-d", strtotime($arr['tgl_lahir']));
     $tgl_skrg = date("m-d");
     $nomor_hp = $arr['nomorhp'];
     $nama = $arr['store_owner'];
+    $toko = $arr['nama'];
 
-    if($tgl_lahir == $tgl_skrg){
+    if ($tgl_lahir == $tgl_skrg) {
+        // echo "A";
+        // (B) WRITE TEXT
+        $txt = $nama . "\n" . $toko;
+        $fontFile = __DIR__ . "/font/CoffeCake.ttf"; // CHANGE TO YOUR OWN!
+        $fontSize = 35;
+        $fontColor = imagecolorallocate($img, 255, 255, 255);
+        $posX = 212;
+        $posY = 875;
+        $angle = 0;
+        // (C) CALCULATE TEXT BOX POSITION
+        // (C1) GET IMAGE DIMENSIONS
+        $iWidth = imagesx($img);
+        $iHeight = imagesy($img);
+
+        // (C2) GET TEXT BOX DIMENSIONS
+        $tSize = imagettfbbox($fontSize, $angle, $fontFile, $txt);
+        $tWidth = max([$tSize[2], $tSize[4]]) - min([$tSize[0], $tSize[6]]);
+        $tHeight = max([$tSize[5], $tSize[7]]) - min([$tSize[1], $tSize[3]]);
+        // (C3) CENTER THE TEXT BLOCK
+        $centerX = ceil(($iWidth - $tWidth) / 2);
+        $centerX = $centerX < 0 ? 0 : $centerX;
+
+        imagettftext($img, $fontSize, $angle, $centerX, $posY, $fontColor, $fontFile, $txt);
+
+        // (C2) OR SAVE TO A FILE
+        $quality = 80; // 0 to 100
+        imagejpeg($img, "img/bday_" . $nomor_hp . ".jpg", $quality);
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -39,6 +71,19 @@ foreach($transArray as $arr){
                     "code": "id"
                 },
                 "parameters": {
+                    "header":{
+                        "format":"IMAGE",
+                        "params": [
+                            {
+                                "key":"url",
+                                "value":"https://saleswa.topmortarindonesia.com/img/bday_' . $nomor_hp . '.jpg"
+                            },
+                            {
+                                "key":"filename",
+                                "value":"bday.jpg"
+                            }
+                        ]
+                    },
                     "body": [
                     {
                         "key": "1",
@@ -62,7 +107,10 @@ foreach($transArray as $arr){
 
         $status = $res['status'];
 
-        if($status == 'success'){
+        // echo $response;
+        // die;
+
+        if ($status == 'success') {
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
@@ -83,6 +131,19 @@ foreach($transArray as $arr){
                         "code": "id"
                     },
                     "parameters": {
+                        "header":{
+                            "format":"IMAGE",
+                            "params": [
+                                {
+                                    "key":"url",
+                                    "value":"https://saleswa.topmortarindonesia.com/img/bday_' . $nomor_hp . '.jpg"
+                                },
+                                {
+                                    "key":"filename",
+                                    "value":"bday.jpg"
+                                }
+                            ]
+                        },
                         "body": [
                         {
                             "key": "1",
@@ -106,7 +167,7 @@ foreach($transArray as $arr){
 
             $status = $res['status'];
 
-            if($status == "success"){
+            if ($status == "success") {
                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim ucapan ultah!"];
                 echo json_encode($response);
             } else {
@@ -117,8 +178,5 @@ foreach($transArray as $arr){
             $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim ucapan ultah!"];
             echo json_encode($response);
         }
-    } 
+    }
 }
-
-
-
