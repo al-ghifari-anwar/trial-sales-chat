@@ -53,8 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $mapsUrl = $_POST['mapsUrl'];
         $address = $_POST['address'];
         $nomor_hp = $_POST['nomorhp'];
+        $status = $_POST['status'];
 
-        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', nomorhp = '$nomor_hp' WHERE id_contact = '$id'");
+        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', store_status = '$status', nomorhp = '$nomor_hp' WHERE id_contact = '$id'");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
@@ -71,8 +72,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_city = $_POST['id_city'];
         $mapsUrl = $_POST['mapsUrl'];
         $address = $_POST['address'];
+        $status = $_POST['status'];
 
-        $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, id_city, maps_url, address) VALUES('$nama', '$nomor_hp','$id_city', '$mapsUrl', '$address')");
+        $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, id_city, maps_url, address,store_status) VALUES('$nama', '$nomor_hp','$id_city', '$mapsUrl', '$address','$status')");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data kontak!"];

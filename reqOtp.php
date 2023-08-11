@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $createOtp = mysqli_query($conn, "INSERT INTO tb_otp(id_user,otp,exp_date) VALUES($id_user, $otp, '$expDate')");
 
                 if ($createOtp) {
-                    $message = "Request for password reset comfirmed, please insert this OTP: " . $otp . ", This OTP will valid until 1 hour";
+                    $message = "Request for password reset comfirmed, please insert this OTP: " . $otp . ", This OTP will valid until 5 minutes";
 
                     $curl = curl_init();
 
