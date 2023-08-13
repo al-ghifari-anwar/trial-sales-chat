@@ -8,18 +8,19 @@ $template_id = '9ac4e6a5-0a71-4d00-981b-6cf05e5637da';
 $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $phone_user = $_POST['phone_user'];
+    $username = $_POST['username'];
 
-    $checkUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE phone_user = '$phone_user'");
+    $checkUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE username = '$username'");
 
     $row = $checkUser->fetch_array(MYSQLI_ASSOC);
 
     if ($row == null) {
-        $response = ["response" => 200, "status" => "failed", "message" => "Phone number not found, please use the registered phone number!"];
+        $response = ["response" => 200, "status" => "failed", "message" => "Username not found, please use the registered username!"];
         echo json_encode($response);
     } else {
         $id_user =  $row['id_user'];
         $username = $row['username'];
+        $phone_user = $row['phone_user'];
         $checkOtp = mysqli_query($conn, "SELECT * FROM tb_otp WHERE id_user = '$id_user'");
         $rowOtp = $checkOtp->fetch_array(MYSQLI_ASSOC);
 
