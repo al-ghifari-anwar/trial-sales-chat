@@ -90,12 +90,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo json_encode($response);
             }
         } else {
-            $expDate = date("Y-m-d H:i:s", strtotime(" + 1 hour"));
+            $expDate = date("Y-m-d H:i:s", strtotime(" +5 minutes"));
             $otp = rand(100000, 999999);
             $createOtp = mysqli_query($conn, "INSERT INTO tb_otp(id_user,otp,exp_date) VALUES($id_user, $otp, '$expDate')");
 
             if ($createOtp) {
-                $message = "Request for password reset comfirmed, please insert this OTP: " . $otp . " , This OTP will valid until 1 hour.";
+                $message = "Request for password reset comfirmed, please insert this OTP: " . $otp . " , This OTP will valid until 5 minutes.";
 
                 $curl = curl_init();
 
