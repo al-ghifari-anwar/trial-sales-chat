@@ -43,7 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $nomor_hp = $_POST['nomorhp'];
     $message = $_POST['message_body'];
     $id_city = $_POST['id_city'];
-    $full_name = $_POST['full_name'];
+    if (isset($_POST['full_name'])) {
+        $full_name = $_POST['full_name'];
+    } else {
+        $full_name = $_POST['Sales Top Mortar'];
+    }
     if (isset($_POST['owner_name']) && isset($_POST['tgl_lahir']) && isset($_POST['mapsUrl'])) {
         $store_owner = $_POST['owner_name'];
         $tgl_lahir = $_POST['tgl_lahir'];
