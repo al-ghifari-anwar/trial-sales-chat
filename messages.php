@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_POST['full_name'])) {
         $full_name = $_POST['full_name'];
     } else {
-        $full_name = $_POST['Sales Top Mortar'];
+        $full_name = 'Sales Top Mortar';
     }
     if (isset($_POST['owner_name']) && isset($_POST['tgl_lahir']) && isset($_POST['mapsUrl'])) {
         $store_owner = $_POST['owner_name'];
