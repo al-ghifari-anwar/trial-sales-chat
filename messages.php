@@ -3,7 +3,7 @@ error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 
 $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
-$template_id = '9ac4e6a5-0a71-4d00-981b-6cf05e5637da';
+$template_id = '85f17083-255d-4340-af32-5dd22f483960';
 $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $nomor_hp = $_POST['nomorhp'];
     $message = $_POST['message_body'];
     $id_city = $_POST['id_city'];
+    $full_name = $_POST['full_name'];
     if (isset($_POST['owner_name']) && isset($_POST['tgl_lahir']) && isset($_POST['mapsUrl'])) {
         $store_owner = $_POST['owner_name'];
         $tgl_lahir = $_POST['tgl_lahir'];
@@ -103,6 +104,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         "key": "2",
                         "value": "message",
                         "value_text": "' . $message . '"
+                    },
+                    {
+                        "key": "3",
+                        "value": "sales",
+                        "value_text": "' . $full_name . '"
                     }
                     ]
                 }
