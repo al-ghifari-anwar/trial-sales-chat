@@ -49,15 +49,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $full_name = 'Sales Top Mortar';
     }
 
-    if (isset($_POST['owner_name']) && isset($_POST['tgl_lahir']) && isset($_POST['mapsUrl'])) {
+    if (isset($_POST['owner_name'])) {
         $store_owner = $_POST['owner_name'];
-        $tgl_lahir = $_POST['tgl_lahir'];
-        $mapsUrl = $_POST['mapsUrl'];
     } else {
         $store_owner = '';
+    }
+
+    if (isset($_POST['tgl_lahir'])) {
+        $tgl_lahir = $_POST['tgl_lahir'];
+    } else {
         $tgl_lahir = '0000-00-00';
+    }
+
+    if (isset($_POST['mapsUrl'])) {
+        $mapsUrl = $_POST['mapsUrl'];
+    } else {
         $mapsUrl = '';
     }
+
     $id_contact = null;
 
     $checkKontak = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
