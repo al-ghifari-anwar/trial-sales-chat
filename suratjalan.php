@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $resultSuratJalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan'");
 
-        $resultDetail = mysqli_query($conn, "SELECT * FROM tb_detail_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan'");
+        $resultDetail = mysqli_query($conn, "SELECT * FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk WHERE id_surat_jalan = '$id_surat_jalan'");
 
         while ($row = $resultDetail->fetch_array(MYSQLI_ASSOC)) {
             $detailArray[] = $row;
