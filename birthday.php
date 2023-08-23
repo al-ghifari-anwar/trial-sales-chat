@@ -13,7 +13,6 @@ while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
     $transArray[] = $row;
 }
 
-$img = imagecreatefrompng("img/bday.png");
 
 foreach ($transArray as $arr) {
     $tgl_lahir = date("m-d", strtotime($arr['tgl_lahir']));
@@ -23,6 +22,7 @@ foreach ($transArray as $arr) {
     $toko = $arr['nama'];
 
     if ($tgl_lahir == $tgl_skrg) {
+        $img = imagecreatefrompng("img/bday.png");
         // echo "A";
         // (B) WRITE TEXT
         $txt = $nama . "\n" . $toko;
@@ -171,7 +171,7 @@ foreach ($transArray as $arr) {
                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim ucapan ultah!"];
                 echo json_encode($response);
             } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim ucapan ultah!"];
+                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim forward ucapan ultah!"];
                 echo json_encode($response);
             }
         } else {
