@@ -85,5 +85,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $response = ["response" => 200, "status" => "failed", "message" => "Failed to change status!"];
             echo json_encode($response);
         }
+    } else if ($_POST['command'] == 'closing') {
+        $id_surat_jalan = $_POST['id_surat_jalan'];
+        $proof_closing = $_FILES['pic']['name'];
+        $date = date("Y-m-d H:i:s");
+
+        move_uploaded_file($_FILES['pic']['tmp_name'], 'img/' . $_FILES['pic']['name']);
+
+        $resultPrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET is_closing = 1, date_closing = '$date', proof_closing = '$proof_closing' WHERE id_surat_jalan = '$id_surat_jalan'");
+
+        if ($resultPrint) {
+            $response = ["response" => 200, "status" => "success", "message" => "Succes to closing!"];
+            echo json_encode($response);
+        } else {
+            $response = ["response" => 200, "status" => "failed", "message" => "Failed to closing!"];
+            echo json_encode($response);
+        }
     }
 }
