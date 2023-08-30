@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if ($_GET['p'] == 3) {
         $id_surat_jalan = $_GET['sj'];
 
-        $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_courier = tb_surat_jalan.id_courier WHERE id_surat_jalan = '$id_surat_jalan' ");
+        $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan WHERE id_surat_jalan = '$id_surat_jalan' ");
 
         $resultDetail = mysqli_query($conn, "SELECT * FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk WHERE id_surat_jalan = '$id_surat_jalan'");
 
@@ -83,6 +83,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         } else {
             $response = ["response" => 200, "status" => "failed", "message" => "Failed to change status!"];
+            echo json_encode($response);
+        }
+    } else if ($_POST['command'] == 'closing') {
+        $id_surat_jalan = $_POST['id_surat_jalan'];
+        $proof_closing = $_FILES['pic']['name'];
+        $date = date("Y-m-d H:i:s");
+
+        move_uploaded_file($_FILES['pic']['tmp_name'], 'img/' . $_FILES['pic']['name']);
+
+        $resultPrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET is_closing = 1, date_closing = '$date', proof_closing = '$proof_closing' WHERE id_surat_jalan = '$id_surat_jalan'");
+
+        if ($resultPrint) {
+            $response = ["response" => 200, "status" => "success", "message" => "Succes to closing!"];
+            echo json_encode($response);
+        } else {
+            $response = ["response" => 200, "status" => "failed", "message" => "Failed to closing!"];
             echo json_encode($response);
         }
     }
