@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if ($_GET['p'] == 2) {
         $id_contact = $_GET['str'];
 
-        $resultSuratJalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan WHERE id_contact = '$id_contact'");
+        $resultSuratJalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan WHERE id_contact = '$id_contact' ORDER BY id_surat_jalan DESC");
 
         while ($row = $resultSuratJalan->fetch_array(MYSQLI_ASSOC)) {
             $suratJalanArray[] = $row;
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $proof_closing = $_FILES['pic']['name'];
         $date = date("Y-m-d H:i:s");
 
-        move_uploaded_file($_FILES['pic']['tmp_name'], 'img/' . $_FILES['pic']['name']);
+        move_uploaded_file($_FILES['pic']['tmp_name'], 'img/' . $_FILES['pic']['name'] . date("Y-m-d-H-i-s"));
 
         $resultPrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET is_closing = 1, date_closing = '$date', proof_closing = '$proof_closing' WHERE id_surat_jalan = '$id_surat_jalan'");
 
