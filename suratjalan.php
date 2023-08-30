@@ -90,9 +90,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $proof_closing = $_FILES['pic']['name'];
         $date = date("Y-m-d H:i:s");
 
-        move_uploaded_file($_FILES['pic']['tmp_name'], 'img/' . $_FILES['pic']['name'] . date("Y-m-d-H-i-s"));
+        if (move_uploaded_file($_FILES['pic']['tmp_name'], 'img/' . date("Y-m-d-H-i-s") . $_FILES['pic']['name'])) {
+            $sourceImage = 'img/' . date("Y-m-d-H-i-s") . $_FILES['pic']['name'];
+            $imageDestination = 'img/min-' . date("Y-m-d-H-i-s") . $_FILES['pic']['name'];
+            $createImage = imagecreatefromjpeg($sourceImage);
+            imagejpeg($createImage, $imageDestination, 60);
+        }
 
-        $resultPrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET is_closing = 1, date_closing = '$date', proof_closing = '$proof_closing' WHERE id_surat_jalan = '$id_surat_jalan'");
+        $resultPrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET is_closing = 1, date_closing = '$date', proof_closing = 'min-$proof_closing' WHERE id_surat_jalan = '$id_surat_jalan'");
 
         if ($resultPrint) {
             $response = ["response" => 200, "status" => "success", "message" => "Succes to closing!"];
