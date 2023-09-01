@@ -98,7 +98,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             imagejpeg($createImage, $imageDestination, 60);
         }
 
-        $resultPrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET is_closing = 1, date_closing = '$date', proof_closing = 'min-$proof_closing' WHERE id_surat_jalan = '$id_surat_jalan'");
+        $imgNewName = date("Y-m-d-H-i-s") . $_FILES['pic']['name'];
+
+        $resultPrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET is_closing = 1, date_closing = '$date', proof_closing = 'min-$imgNewName' WHERE id_surat_jalan = '$id_surat_jalan'");
 
         if ($resultPrint) {
             $response = ["response" => 200, "status" => "success", "message" => "Succes to closing!"];
