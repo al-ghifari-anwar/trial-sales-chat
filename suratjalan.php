@@ -90,15 +90,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_surat_jalan = $_POST['id_surat_jalan'];
         $proof_closing = $_FILES['pic']['name'];
         $date = date("Y-m-d H:i:s");
+        $dateFile = date("Y-m-d-H-i-s");
 
-        if (move_uploaded_file($_FILES['pic']['tmp_name'], 'img/' . date("Y-m-d-H-i-s") . $_FILES['pic']['name'])) {
-            $sourceImage = 'img/' . date("Y-m-d-H-i-s") . $_FILES['pic']['name'];
-            $imageDestination = 'img/min-' . date("Y-m-d-H-i-s") . $_FILES['pic']['name'];
+        if (move_uploaded_file($_FILES['pic']['tmp_name'], 'img/' . $dateFile . $_FILES['pic']['name'])) {
+            $sourceImage = 'img/' . $dateFile . $_FILES['pic']['name'];
+            $imageDestination = 'img/min-' . $dateFile . $_FILES['pic']['name'];
             $createImage = imagecreatefromjpeg($sourceImage);
             imagejpeg($createImage, $imageDestination, 60);
         }
 
-        $imgNewName = date("Y-m-d-H-i-s") . $_FILES['pic']['name'];
+        $imgNewName = $dateFile . $_FILES['pic']['name'];
 
         $resultPrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET is_closing = 1, date_closing = '$date', proof_closing = 'min-$imgNewName' WHERE id_surat_jalan = '$id_surat_jalan'");
 
