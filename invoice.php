@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $rowSubTotals = $getSubTotals->fetch_array(MYSQLI_ASSOC);
 
         $id_surat_jalan = $rowSuratJalan['id_surat_jalan'];
-        $no_invoice = date("Y") . "/" . "TM" . "/" . "INV" . $no;
+        $no_invoice = date("Y") . "/" . "TM" . "/" . "INV" . "/" . $no;
         $date_invoice = date("Y-m-d H:i:s");
         $bill_to_name = $rowSuratJalan['nama'];
         $bill_to_address = $rowSuratJalan['address'];
