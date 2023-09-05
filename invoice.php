@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $response = ["response" => 200, "status" => "failed", "message" => "Surat jalan not found!"];
         echo json_encode($response);
     } else {
-        $countInvoice = mysqli_query($conn, "SELECT no_invoice, MAX(id_invoice) FROM tb_invoice");
+        $countInvoice = mysqli_query($conn, "SELECT MAX(no_invoice) AS no_invoice, MAX(id_invoice) FROM tb_invoice");
 
         $rowInvoice = $countInvoice->fetch_array(MYSQLI_ASSOC);
         if ($rowInvoice['no_invoice'] != null) {
