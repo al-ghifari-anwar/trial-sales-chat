@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if ($_GET['p'] == 1) {
         $id_courier = $_GET['cr'];
 
-        $resultStore = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact IN (SELECT id_contact FROM tb_surat_jalan WHERE id_courier = '$id_courier')");
+        $resultStore = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact IN (SELECT id_contact FROM tb_surat_jalan WHERE id_courier = '$id_courier' AND tb_surat_jalan.is_closing = 0)");
 
         while ($row = $resultStore->fetch_array(MYSQLI_ASSOC)) {
             $storeArray[] = $row;
