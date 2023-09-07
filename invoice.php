@@ -15,14 +15,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $response = ["response" => 200, "status" => "failed", "message" => "Surat jalan not found!"];
         echo json_encode($response);
     } else {
-        $countInvoice = mysqli_query($conn, "SELECT MAX(no_invoice) AS no_invoice, MAX(id_invoice) FROM tb_invoice");
+        // $countInvoice = mysqli_query($conn, "SELECT MAX(no_invoice) AS no_invoice, MAX(id_invoice) FROM tb_invoice");
 
-        $rowInvoice = $countInvoice->fetch_array(MYSQLI_ASSOC);
-        if ($rowInvoice['no_invoice'] != null) {
-            $no = substr($rowInvoice['no_invoice'], strrpos($rowInvoice['no_invoice'], '/') + 1) + 1;
-        } else {
-            $no = 1;
-        }
+        // $rowInvoice = $countInvoice->fetch_array(MYSQLI_ASSOC);
+        // if ($rowInvoice['no_invoice'] != null) {
+        //     $no = substr($rowInvoice['no_invoice'], strrpos($rowInvoice['no_invoice'], '/') + 1);
+        //     echo $no;
+        // } else {
+        //     $no = 1;
+        // }
+        $no = $rowSuratJalan['id_surat_jalan'];
 
         $getSubTotals = mysqli_query($conn, "SELECT SUM(amount) AS subtotal FROM tb_detail_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan'");
 
@@ -54,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $subtotal_invoice = $nominal - $pengurangan;
         $total_invoice = $subtotal_invoice;
 
-        // echo $total_invoice;
+        // echo $no;
 
         $resultInvoice = mysqli_query($conn, "INSERT INTO tb_invoice(id_surat_jalan,no_invoice,date_invoice,bill_to_name,bill_to_address,bill_to_phone,subtotal_invoice,total_invoice) VALUES($id_surat_jalan, '$no_invoice', '$date_invoice', '$bill_to_name', '$bill_to_address', '$bill_to_phone', $subtotal_invoice, $total_invoice)");
 
