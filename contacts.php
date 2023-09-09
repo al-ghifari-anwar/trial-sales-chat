@@ -54,8 +54,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $address = $_POST['address'];
         $nomor_hp = $_POST['nomorhp'];
         $status = $_POST['status'];
+        // NEW
+        $termin_payment = $_POST['termin_payment'];
+        $proof_closing = $_FILES['ktp']['name'];
+        $dateFile = date("Y-m-d-H-i-s");
 
-        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', store_status = '$status', nomorhp = '$nomor_hp' WHERE id_contact = '$id'");
+        if (move_uploaded_file($_FILES['ktp']['tmp_name'], 'img/' . $dateFile . $_FILES['ktp']['name'])) {
+            $sourceImage = 'img/' . $dateFile . $_FILES['ktp']['name'];
+            $imageDestination = 'img/min-' . $dateFile . $_FILES['ktp']['name'];
+            $createImage = imagecreatefromjpeg($sourceImage);
+            imagejpeg($createImage, $imageDestination, 60);
+        }
+
+        $imgNewName = $dateFile . $_FILES['ktp']['name'];
+
+        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', store_status = '$status', nomorhp = '$nomor_hp', termin_payment = $termin_payment, ktp_owner = '$imgNewName' WHERE id_contact = '$id'");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
