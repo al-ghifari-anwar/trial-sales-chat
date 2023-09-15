@@ -58,14 +58,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // echo $no;
 
-        $resultInvoice = mysqli_query($conn, "INSERT INTO tb_invoice(id_surat_jalan,no_invoice,date_invoice,bill_to_name,bill_to_address,bill_to_phone,subtotal_invoice,total_invoice) VALUES($id_surat_jalan, '$no_invoice', '$date_invoice', '$bill_to_name', '$bill_to_address', '$bill_to_phone', $subtotal_invoice, $total_invoice)");
+        $checkInv = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE no_invoice = '$no_invoice'");
+        $rowCheckInv = $checkInv->fetch_array(MYSQLI_ASSOC);
 
-        if ($resultInvoice) {
-            $response = ["response" => 200, "status" => "success", "message" => "Succes creating invoice!"];
+        if ($rowCheckInv) {
+            $response = ["response" => 200, "status" => "failed", "message" => "Invoice already exist!"];
             echo json_encode($response);
         } else {
-            $response = ["response" => 200, "status" => "failed", "message" => "Failed creating invoice!"];
-            echo json_encode($response);
+            $resultInvoice = mysqli_query($conn, "INSERT INTO tb_invoice(id_surat_jalan,no_invoice,date_invoice,bill_to_name,bill_to_address,bill_to_phone,subtotal_invoice,total_invoice) VALUES($id_surat_jalan, '$no_invoice', '$date_invoice', '$bill_to_name', '$bill_to_address', '$bill_to_phone', $subtotal_invoice, $total_invoice)");
+
+            if ($resultInvoice) {
+                $response = ["response" => 200, "status" => "success", "message" => "Succes creating invoice!"];
+                echo json_encode($response);
+            } else {
+                $response = ["response" => 200, "status" => "failed", "message" => "Failed creating invoice!"];
+                echo json_encode($response);
+            }
         }
     }
 }
