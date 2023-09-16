@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data tukang!"];
         echo json_encode($response);
     } else {
-        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data tukang!"];
+        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data tukang!", "detail" => mysqli_error($conn)];
         echo json_encode($response);
     }
 
