@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $id_city = $_POST['id_city'];
     $mapsUrl = $_POST['mapsUrl'];
     $address = $_POST['address'];
+    $nama_lengkap = $_POST['nama_lengkap'];
     $id_skill = $_POST['id_skill'];
 
     if (isset($_POST['full_name'])) {
@@ -71,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $row = $checkKontak->fetch_array(MYSQLI_ASSOC);
     if ($row == null) {
-        $result = mysqli_query($conn, "INSERT INTO tb_tukang(nama, nomorhp, tgl_lahir, id_city, maps_url, id_skill) VALUES('$nama', '$nomor_hp', '$tgl_lahir', $id_city, '$mapsUrl', $id_skill)");
+        $result = mysqli_query($conn, "INSERT INTO tb_tukang(nama, nomorhp, tgl_lahir, id_city, maps_url, id_skill, nama_lengkap) VALUES('$nama', '$nomor_hp', '$tgl_lahir', $id_city, '$mapsUrl', $id_skill, '$nama_lengkap')");
         $id_tukang = mysqli_insert_id($conn);
     } else {
         $result = mysqli_query($conn, "SELECT * FROM tb_tukang WHERE nomorhp = '$nomor_hp'");
