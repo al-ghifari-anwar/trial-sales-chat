@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else {
         if (isset($_GET['c'])) {
             $id_city = $_GET['c'];
-            $result = mysqli_query($conn, "SELECT * FROM tb_tukang WHERE tb_tukang.id_city = '$id_city'");
+            $result = mysqli_query($conn, "SELECT * FROM tb_tukang JOIN tb_skill ON tb_skill.id_skill = tb_tukang.id_skill WHERE tb_tukang.id_city = '$id_city'");
         } else {
             $result = mysqli_query($conn, "SELECT * FROM tb_tukang");
         }
