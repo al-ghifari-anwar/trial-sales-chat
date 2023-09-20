@@ -4,7 +4,25 @@ error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (isset($_GET['id_contact'])) {
+        $id_contact = $_GET['id_contact'];
+
+        $resultInv = mysqli_query($conn, "SELECT * FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact'");
+
+        while ($row = $resultInv->fetch_array(MYSQLI_ASSOC)) {
+            $invArray[] = $row;
+        }
+
+        mysqli_close($conn);
+
+        if ($invArray == null) {
+            echo json_encode(array("status" => "empty", "results" => []));
+        } else {
+            echo json_encode(array("status" => "ok", "results" => $invArray));
+        }
+    }
+} else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_surat_jalan = $_POST['id_surat_jalan'];
 
     $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan, tb_contact.nama, tb_contact.address, tb_contact.nomorhp FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact WHERE id_surat_jalan = '$id_surat_jalan' ");
