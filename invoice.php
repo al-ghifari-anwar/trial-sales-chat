@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($invArray == null) {
             echo json_encode(array("status" => "empty", "results" => []));
         } else {
-            echo json_encode(array("status" => "ok", "results" => $transArray));
+            echo json_encode(array("status" => "ok", "results" => $invArray));
         }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
