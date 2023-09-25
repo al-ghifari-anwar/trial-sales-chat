@@ -21,6 +21,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             echo json_encode(array("status" => "ok", "results" => $invArray));
         }
+    } else if (isset($_GET['status'])) {
+        $id_contact = $_GET['id_contact'];
+        $status_invoice = $_GET['status'];
+
+        $resultInv = mysqli_query($conn, "SELECT * FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact' AND status_invoice = '$status_invoice'");
+
+        while ($row = $resultInv->fetch_array(MYSQLI_ASSOC)) {
+            $invArray[] = $row;
+        }
+
+        mysqli_close($conn);
+
+        if ($invArray == null) {
+            echo json_encode(array("status" => "empty", "results" => []));
+        } else {
+            echo json_encode(array("status" => "ok", "results" => $invArray));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_surat_jalan = $_POST['id_surat_jalan'];
