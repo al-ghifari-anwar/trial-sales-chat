@@ -70,12 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 imagejpeg($createImage, $imageDestination, 60);
             }
 
-            $imgNewName = $dateFile . $_FILES['ktp']['name'];
+            $imgNewName = 'min-' . $dateFile . $_FILES['ktp']['name'];
         } else {
             $imgNewName = $rowTukang['ktp_tukang'];
         }
 
-        $result = mysqli_query($conn, "UPDATE tb_tukang SET nama = '$nama', tgl_lahir = '$tgl_lahir', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', tukang_status = '$status', nomorhp = '$nomor_hp', ktp_tukang = 'min-$imgNewName', id_skill = $id_skill, nama_lengkap = '$nama_lengkap' WHERE id_tukang = '$id'");
+        $result = mysqli_query($conn, "UPDATE tb_tukang SET nama = '$nama', tgl_lahir = '$tgl_lahir', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', tukang_status = '$status', nomorhp = '$nomor_hp', ktp_tukang = '$imgNewName', id_skill = $id_skill, nama_lengkap = '$nama_lengkap' WHERE id_tukang = '$id'");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data tukang!"];
