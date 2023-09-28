@@ -46,6 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['id'])) {
         $id = $_POST['id'];
+        $getTukang = mysqli_query($conn, "SELECT * FROM tb_tukang WHERE id_tukang = '$id'");
+        $rowTukang = $getTukang->fetch_array(MYSQLI_ASSOC);
+
         $nama = $_POST['nama'];
         $nomor_hp = $_POST['nomorhp'];
         $tgl_lahir = $_POST['tgl_lahir'];
@@ -56,17 +59,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_skill = $_POST['id_skill'];
         $nama_lengkap = $_POST['nama_lengkap'];
         // NEW
-        $proof_closing = $_FILES['ktp']['name'];
-        $dateFile = date("Y-m-d-H-i-s");
+        if (isset($_FILES['ktp']['name'])) {
+            $proof_closing = $_FILES['ktp']['name'];
+            $dateFile = date("Y-m-d-H-i-s");
 
-        if (move_uploaded_file($_FILES['ktp']['tmp_name'], 'img/' . $dateFile . $_FILES['ktp']['name'])) {
-            $sourceImage = 'img/' . $dateFile . $_FILES['ktp']['name'];
-            $imageDestination = 'img/min-' . $dateFile . $_FILES['ktp']['name'];
-            $createImage = imagecreatefromjpeg($sourceImage);
-            imagejpeg($createImage, $imageDestination, 60);
+            if (move_uploaded_file($_FILES['ktp']['tmp_name'], 'img/' . $dateFile . $_FILES['ktp']['name'])) {
+                $sourceImage = 'img/' . $dateFile . $_FILES['ktp']['name'];
+                $imageDestination = 'img/min-' . $dateFile . $_FILES['ktp']['name'];
+                $createImage = imagecreatefromjpeg($sourceImage);
+                imagejpeg($createImage, $imageDestination, 60);
+            }
+
+            $imgNewName = $dateFile . $_FILES['ktp']['name'];
+        } else {
+            $imgNewName = $rowTukang['ktp_tukang'];
         }
-
-        $imgNewName = $dateFile . $_FILES['ktp']['name'];
 
         $result = mysqli_query($conn, "UPDATE tb_tukang SET nama = '$nama', tgl_lahir = '$tgl_lahir', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', tukang_status = '$status', nomorhp = '$nomor_hp', ktp_tukang = 'min-$imgNewName', id_skill = $id_skill, nama_lengkap = '$nama_lengkap' WHERE id_tukang = '$id'");
 
