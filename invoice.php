@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id_contact']) && !isset($_GET['status'])) {
         $id_contact = $_GET['id_contact'];
 
-        $resultInv = mysqli_query($conn, "SELECT * FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact'");
+        $resultInv = mysqli_query($conn, "SELECT * FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact' ORDER BY date_invoice DESC");
 
         while ($row = $resultInv->fetch_array(MYSQLI_ASSOC)) {
             $invArray[] = $row;
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_contact = $_GET['id_contact'];
         $status_invoice = $_GET['status'];
 
-        $resultInv = mysqli_query($conn, "SELECT * FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact' AND status_invoice = '$status_invoice'");
+        $resultInv = mysqli_query($conn, "SELECT * FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact' AND status_invoice = '$status_invoice' ORDER BY date_invoice DESC");
 
         while ($row = $resultInv->fetch_array(MYSQLI_ASSOC)) {
             $invArray[] = $row;
