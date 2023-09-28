@@ -46,6 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['id'])) {
         $id = $_POST['id'];
+
+        $getContact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id'");
+        $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
         $nama = $_POST['nama'];
         $tgl_lahir = $_POST['tgl_lahir'];
         $store_owner = $_POST['owner_name'];
@@ -56,19 +59,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $status = $_POST['status'];
         // NEW
         $termin_payment = $_POST['termin_payment'];
-        $proof_closing = $_FILES['ktp']['name'];
-        $dateFile = date("Y-m-d-H-i-s");
 
-        if (move_uploaded_file($_FILES['ktp']['tmp_name'], 'img/' . $dateFile . $_FILES['ktp']['name'])) {
-            $sourceImage = 'img/' . $dateFile . $_FILES['ktp']['name'];
-            $imageDestination = 'img/min-' . $dateFile . $_FILES['ktp']['name'];
-            $createImage = imagecreatefromjpeg($sourceImage);
-            imagejpeg($createImage, $imageDestination, 60);
+        if (isset($_FILES['ktp']['name'])) {
+            $proof_closing = $_FILES['ktp']['name'];
+            $dateFile = date("Y-m-d-H-i-s");
+
+            if (move_uploaded_file($_FILES['ktp']['tmp_name'], 'img/' . $dateFile . $_FILES['ktp']['name'])) {
+                $sourceImage = 'img/' . $dateFile . $_FILES['ktp']['name'];
+                $imageDestination = 'img/min-' . $dateFile . $_FILES['ktp']['name'];
+                $createImage = imagecreatefromjpeg($sourceImage);
+                imagejpeg($createImage, $imageDestination, 60);
+            }
+
+            $imgNewName = 'min-' . $dateFile . $_FILES['ktp']['name'];
+        } else {
+            $imgNewName = $rowContact['ktp_owner'];
         }
 
-        $imgNewName = $dateFile . $_FILES['ktp']['name'];
-
-        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', store_status = '$status', nomorhp = '$nomor_hp', termin_payment = $termin_payment, ktp_owner = 'min-$imgNewName' WHERE id_contact = '$id'");
+        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', store_status = '$status', nomorhp = '$nomor_hp', termin_payment = $termin_payment, ktp_owner = '$imgNewName' WHERE id_contact = '$id'");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];

@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id_invoice'])) {
         $id_invoice = $_GET['id_invoice'];
 
-        $resultPayment = mysqli_query($conn, "SELECT * FROM tb_payment WHERE id_invoice = '$id_invoice'");
+        $resultPayment = mysqli_query($conn, "SELECT * FROM tb_payment WHERE id_invoice = '$id_invoice' ORDER BY date_payment DESC");
 
         while ($row = $resultPayment->fetch_array(MYSQLI_ASSOC)) {
             $paymentArray[] = $row;
