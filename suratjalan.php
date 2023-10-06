@@ -91,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $proof_closing = $_FILES['pic']['name'];
         $date = date("Y-m-d H:i:s");
         $dateFile = date("Y-m-d-H-i-s");
+        $distance = $_POST['distance'];
 
         if (move_uploaded_file($_FILES['pic']['tmp_name'], 'img/' . $dateFile . $_FILES['pic']['name'])) {
             $sourceImage = 'img/' . $dateFile . $_FILES['pic']['name'];
@@ -101,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $imgNewName = $dateFile . $_FILES['pic']['name'];
 
-        $resultPrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET is_closing = 1, date_closing = '$date', proof_closing = 'min-$imgNewName' WHERE id_surat_jalan = '$id_surat_jalan'");
+        $resultPrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET is_closing = 1, date_closing = '$date', proof_closing = 'min-$imgNewName', distance = '$distance' WHERE id_surat_jalan = '$id_surat_jalan'");
 
         if ($resultPrint) {
             $response = ["response" => 200, "status" => "success", "message" => "Succes to closing!"];
