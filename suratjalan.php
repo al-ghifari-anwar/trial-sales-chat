@@ -105,8 +105,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $resultPrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET is_closing = 1, date_closing = '$date', proof_closing = 'min-$imgNewName', distance = '$distance' WHERE id_surat_jalan = '$id_surat_jalan'");
 
         if ($resultPrint) {
-            $response = ["response" => 200, "status" => "success", "message" => "Succes to closing!"];
-            echo json_encode($response);
+            $getSuratJalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan'");
+            $rowSuratJalan = $getSuratJalan->fetch_array(MYSQLI_ASSOC);
+
+            $id_contact = $rowSuratJalan['id_contact'];
+            $changeStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'active' WHERE id_contact = '$id_contact'");
+
+            if ($changeStoreStatus) {
+                $response = ["response" => 200, "status" => "success", "message" => "Succes to closing!"];
+                echo json_encode($response);
+            } else {
+                $response = ["response" => 200, "status" => "failed", "message" => "Failed to change store status!"];
+                echo json_encode($response);
+            }
         } else {
             $response = ["response" => 200, "status" => "failed", "message" => "Failed to closing!"];
             echo json_encode($response);
