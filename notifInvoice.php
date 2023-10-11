@@ -21,11 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $date2 = new DateTime($jatuhTempo);
         $days  = $date2->diff($date1)->format('%a');
         $operan = "";
+        if ($date1 < $date2) {
+            $operan = "-";
+        }
+        $days = $operan . $days;
 
         // Data Body
 
 
-        if ($days == 3) {
+        if ($days == "-3") {
             $getTotalPayment = mysqli_query($conn, "SELECT SUM(amount_payment + potongan_payment + adjustment_payment) AS amount_total FROM tb_payment WHERE id_invoice = '$id_invoice'");
             $rowPayment = $getTotalPayment->fetch_array(MYSQLI_ASSOC);
 
