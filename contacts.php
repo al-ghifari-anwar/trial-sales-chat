@@ -59,7 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $status = $_POST['status'];
         // NEW
         $termin_payment = $_POST['termin_payment'];
-        $id_promo = $_POST['id_promo'];
+        if (isset($_POST['id_promo'])) {
+            $id_promo = $_POST['id_promo'];
+        } else {
+            $id_promo = 0;
+        }
 
         if (isset($_FILES['ktp']['name'])) {
             $proof_closing = $_FILES['ktp']['name'];
