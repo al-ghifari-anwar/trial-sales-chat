@@ -89,7 +89,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         }
         $subtotal_invoice = $nominal - $pengurangan;
-        $total_invoice = $subtotal_invoice;
+        if ($total_invoice <= 0) {
+            $total_invoice = 0;
+        } else {
+            $total_invoice = $subtotal_invoice;
+        }
 
         // echo $no;
 
