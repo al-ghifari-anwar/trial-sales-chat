@@ -45,6 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $id_city = $_POST['id_city'];
     // NEW
     $termin_payment = $_POST['termin_payment'];
+    // Bid
+    $id_user = $_POST['id_user'];
 
     if (isset($_POST['full_name'])) {
         $full_name = $_POST['full_name'];
@@ -140,8 +142,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         curl_close($curl);
 
-        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data pesan!"];
-        echo json_encode($response);
+        $res = json_decode($response, true);
+
+        $status = $res['status'];
+
+        if ($status == 'success') {
+            $insertBid = mysqli_query($conn, "INSERT INTO tb_bid(id_contact,id_user,is_active) VALUES($id_contact, $id_user, 1)");
+
+            if ($insertBid) {
+                $updateStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'bid' WHERE id_contact = '$id_contact'");
+
+                if ($updateStoreStatus) {
+                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim pesan!"];
+                    echo json_encode($response);
+                } else {
+                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal merubah status toko!"];
+                    echo json_encode($response);
+                }
+            } else {
+                $response = ["response" => 200, "status" => "failed", "message" => "Proses bid gagal, silahkan coba lagi!"];
+                echo json_encode($response);
+            }
+        } else {
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim pesan!"];
+            echo json_encode($response);
+        }
     } else {
         $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data pesan!"];
         echo json_encode($response);
