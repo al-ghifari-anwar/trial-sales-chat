@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 // echo "Nominal Skrg: " . ($nominal - $pengurangan) . "\n";
                 // echo "Nominal DB: " . $numberArray['total_invoice'] . "\n";
                 if ($numberArray['total_invoice'] == ($nominal - $pengurangan)) {
-                    $pengurangan = $pengurangan + 5;
+                    $pengurangan = $pengurangan + 1;
                 }
             }
         }
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $response = ["response" => 200, "status" => "success", "message" => "Succes creating invoice!"];
                 echo json_encode($response);
             } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Failed creating invoice!"];
+                $response = ["response" => 200, "status" => "failed", "message" => "Failed creating invoice!", "detail" => mysqli_error($conn)];
                 echo json_encode($response);
             }
         }
