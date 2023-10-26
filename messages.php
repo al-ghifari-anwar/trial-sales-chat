@@ -147,21 +147,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $status = $res['status'];
 
         if ($status == 'success') {
-            $insertBid = mysqli_query($conn, "INSERT INTO tb_bid(id_contact,id_user,is_active) VALUES($id_contact, $id_user, 1)");
+            $checkBid = mysqli_query($conn, "SELECT * FROM tb_bid WHERE id_contact = '$id_contact' AND id_user = '$id_user' AND is_active = 1");
+            $rowBid = $checkBid->fetch_array(MYSQLI_ASSOC);
 
-            if ($insertBid) {
-                $updateStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'bid' WHERE id_contact = '$id_contact'");
+            if ($rowBid == null) {
+                $insertBid = mysqli_query($conn, "INSERT INTO tb_bid(id_contact,id_user,is_active) VALUES($id_contact, $id_user, 1)");
+                $id_bid = mysqli_insert_id($conn);
 
-                if ($updateStoreStatus) {
-                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim pesan!"];
-                    echo json_encode($response);
+                if ($insertBid) {
+                    $updateStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'bid' WHERE id_contact = '$id_contact'");
+
+                    if ($updateStoreStatus) {
+                        $insertAction = mysqli_query($conn, "INSERT INTO tb_action_bid(id_bid, field_action_bid) VALUES($id_bid, 'Send new message')");
+
+                        if ($updateStoreStatus) {
+                            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim pesan!"];
+                            echo json_encode($response);
+                        } else {
+                            $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan record bid!"];
+                            echo json_encode($response);
+                        }
+                    } else {
+                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal merubah status toko!"];
+                        echo json_encode($response);
+                    }
                 } else {
-                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal merubah status toko!"];
+                    $response = ["response" => 200, "status" => "failed", "message" => "Proses bid gagal, silahkan coba lagi!"];
                     echo json_encode($response);
                 }
             } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Proses bid gagal, silahkan coba lagi!"];
-                echo json_encode($response);
+                $id_bid = $rowBid['id_bid'];
+                $insertAction = mysqli_query($conn, "INSERT INTO tb_action_bid(id_bid, field_action_bid) VALUES($id_bid, 'Send message')");
+
+                if ($insertAction) {
+                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim pesan!"];
+                    echo json_encode($response);
+                } else {
+                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan record bid!"];
+                    echo json_encode($response);
+                }
             }
         } else {
             $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim pesan!"];
