@@ -160,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     if ($updateStoreStatus) {
                         $insertAction = mysqli_query($conn, "INSERT INTO tb_action_bid(id_bid, field_action_bid) VALUES($id_bid, 'Send new message')");
 
-                        if ($updateStoreStatus) {
+                        if ($insertAction) {
                             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim pesan!"];
                             echo json_encode($response);
                         } else {
