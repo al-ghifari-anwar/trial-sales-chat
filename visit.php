@@ -21,6 +21,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array("status" => "ok", "results" => $visitArray));
         }
     }
+    if (isset($_GET['a']) && isset($_GET['s'])) {
+        $id_contact = $_GET['s'];
+        $getUser = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_user ON tb_user.id_user = tb_visit.id_user WHERE id_contact = '$id_contact' GROUP BY tb_visit.id_user");
+
+        while ($rowUser = $getUser->fetch_array(MYSQLI_ASSOC)) {
+            $userArray[] = $rowUser;
+        }
+
+        if ($userArray == null) {
+            echo json_encode(array("status" => "empty", "results" => []));
+        } else {
+            echo json_encode(array("status" => "ok", "results" => $userArray));
+        }
+    }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_contact = $_POST['id_contact'];
     $distance_visit = $_POST['distance_visit'];
