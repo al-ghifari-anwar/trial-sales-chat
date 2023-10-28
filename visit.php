@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
     if (isset($_GET['a']) && isset($_GET['s'])) {
         $id_contact = $_GET['s'];
-        $getUser = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_user ON tb_user.id_user = tb_visit.id_user WHERE id_contact = '$id_contact' GROUP BY id_user");
+        $getUser = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_user ON tb_user.id_user = tb_visit.id_user WHERE id_contact = '$id_contact' GROUP BY tb_visit.id_user");
 
         while ($rowUser = $getUser->fetch_array(MYSQLI_ASSOC)) {
             $userArray[] = $rowUser;
