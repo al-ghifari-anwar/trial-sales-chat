@@ -155,7 +155,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $id_bid = mysqli_insert_id($conn);
 
                 if ($insertBid) {
-                    $updateStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'bid' WHERE id_contact = '$id_contact'");
+                    // $updateStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'bid' WHERE id_contact = '$id_contact'");
+                    $updateStoreStatus = true;
 
                     if ($updateStoreStatus) {
                         $insertAction = mysqli_query($conn, "INSERT INTO tb_action_bid(id_bid, field_action_bid) VALUES($id_bid, 'Send new message')");
