@@ -5,20 +5,34 @@ include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if (isset($_GET['u']) && isset($_GET['s'])) {
-        $id_user = $_GET['u'];
-        $id_contact = $_GET['s'];
+    if (isset($_GET['u'])) {
+        if (isset($_GET['s'])) {
+            $id_user = $_GET['u'];
+            $id_contact = $_GET['s'];
 
-        $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_user = '$id_user' AND id_contact = '$id_contact' ORDER BY date_visit DESC");
+            $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE id_user = '$id_user' AND id_contact = '$id_contact' ORDER BY date_visit DESC");
 
-        while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
-            $visitArray[] = $rowVisit;
-        }
+            while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
+                $visitArray[] = $rowVisit;
+            }
 
-        if ($visitArray == null) {
-            echo json_encode(array("status" => "empty", "results" => []));
+            if ($visitArray == null) {
+                echo json_encode(array("status" => "empty", "results" => []));
+            } else {
+                echo json_encode(array("status" => "ok", "results" => $visitArray));
+            }
         } else {
-            echo json_encode(array("status" => "ok", "results" => $visitArray));
+            $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE id_user = '$id_user' ORDER BY date_visit DESC");
+
+            while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
+                $visitArray[] = $rowVisit;
+            }
+
+            if ($visitArray == null) {
+                echo json_encode(array("status" => "empty", "results" => []));
+            } else {
+                echo json_encode(array("status" => "ok", "results" => $visitArray));
+            }
         }
     }
     if (isset($_GET['a']) && isset($_GET['s'])) {
