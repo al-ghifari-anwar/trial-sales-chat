@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_user = $_GET['u'];
             $id_contact = $_GET['s'];
 
-            $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE id_user = '$id_user' AND id_contact = '$id_contact' ORDER BY date_visit DESC");
+            $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE id_user = '$id_user' AND tb_visit.id_contact = '$id_contact' ORDER BY date_visit DESC");
 
             while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
                 $visitArray[] = $rowVisit;
@@ -22,7 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(array("status" => "ok", "results" => $visitArray));
             }
         } else {
-            $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE id_user = '$id_user' ORDER BY date_visit DESC");
+            $id_user = $_GET['u'];
+            $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' ORDER BY date_visit DESC");
 
             while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
                 $visitArray[] = $rowVisit;
