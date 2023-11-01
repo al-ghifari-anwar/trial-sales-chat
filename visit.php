@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         //     echo json_encode($response);
         // }
     } else {
-        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan laporan!", "detail" => mysqli_error($conn)];
+        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan laporan! " . mysqli_error($conn), "detail" => mysqli_error($conn)];
         echo json_encode($response);
     }
     // } else {
