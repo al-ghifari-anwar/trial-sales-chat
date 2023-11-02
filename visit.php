@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_contact = $_POST['id_contact'] ? $_POST['id_contact'] : 0;
-    $distance_visit = $_POST['distance_visit'] ? $_POST['distance_visit'] : 0;
+    $distance_visit = $_POST['distance_visit'] ? str_replace(',', '.', $_POST['distance_visit']) : 0;
     $laporan_visit = $_POST['laporan_visit'] ? $_POST['laporan_visit'] : '';
     $id_user = $_POST['id_user'] ? $_POST['id_user'] : 0;
 
