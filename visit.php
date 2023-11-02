@@ -53,10 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $id_contact = $_POST['id_contact'];
-    $distance_visit = $_POST['distance_visit'];
-    $laporan_visit = $_POST['laporan_visit'];
-    $id_user = $_POST['id_user'];
+    $id_contact = $_POST['id_contact'] ? $_POST['id_contact'] : 0;
+    $distance_visit = $_POST['distance_visit'] ? $_POST['distance_visit'] : 0;
+    $laporan_visit = $_POST['laporan_visit'] ? $_POST['laporan_visit'] : '';
+    $id_user = $_POST['id_user'] ? $_POST['id_user'] : 0;
 
     // $cekBid = mysqli_query($conn, "SELECT * FROM tb_bid WHERE id_user = '$id_user' AND id_contact = '$id_contact' AND is_active = 1");
     // $rowBid = $cekBid->fetch_array(MYSQLI_ASSOC);
