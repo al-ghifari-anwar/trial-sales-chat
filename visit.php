@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // $rowBid = $cekBid->fetch_array(MYSQLI_ASSOC);
 
     // if ($rowBid != null) {
-    $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,id_user) VALUES($id_contact, '$distance_visit', '$laporan_visit', $id_user)");
+    $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit', $id_user)");
 
     if ($insertVisit) {
         $id_bid = $rowBid['id_bid'];
