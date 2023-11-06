@@ -15,7 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%' AND id_city = '$id_city'");
         } else {
-            $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%'");
+            if (isset($_POST['status'])) {
+                $status = $_POST['status'];
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%' AND store_status = '$status'");
+            } else {
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%'");
+            }
         }
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
