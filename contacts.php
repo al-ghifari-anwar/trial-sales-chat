@@ -26,9 +26,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else {
         if (isset($_GET['c'])) {
             $id_city = $_GET['c'];
-            $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE tb_contact.id_city = '$id_city'");
+            if (isset($_GET['status'])) {
+                $status = $_GET['status'];
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE tb_contact.id_city = '$id_city' AND store_status = '$status'");
+            } else {
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE tb_contact.id_city = '$id_city'");
+            }
         } else {
-            $result = mysqli_query($conn, "SELECT * FROM tb_contact");
+            if (isset($_GET['status'])) {
+                $status = $_GET['status'];
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE store_status = '$status'");
+            } else {
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact");
+            }
         }
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
