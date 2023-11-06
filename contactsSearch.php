@@ -13,7 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['id_city'])) {
             $id_city = $_POST['id_city'];
 
-            $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%' AND id_city = '$id_city'");
+            if (isset($_POST['status'])) {
+                $status = $_POST['status'];
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%' AND id_city = '$id_city' AND store_status = '$status'");
+            } else {
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%' AND id_city = '$id_city'");
+            }
         } else {
             if (isset($_POST['status'])) {
                 $status = $_POST['status'];
