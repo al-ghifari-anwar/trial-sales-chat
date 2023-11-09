@@ -24,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if($nomor_hp == "6287774436555" || $nomor_hp == "6281808152028"){
             $message = "Laporan rekap piutang: https://order.topmortarindonesia.com/wh-tagihan?c=0";
             $msgStatus = "All City";
-            echo $message;
+            // echo $message;
         } else {
             $message = "Laporan rekap piutang: https://order.topmortarindonesia.com/wh-tagihan?c=$id_city";
             $msgStatus = "Specific City";
-            echo $message;
+            // echo $message;
         }
 
         $curl = curl_init();
