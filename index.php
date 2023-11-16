@@ -1,3 +1,3 @@
 <?php
 
-redirect("topmortar.com");
+header("Location: https://topmortar.com/");
