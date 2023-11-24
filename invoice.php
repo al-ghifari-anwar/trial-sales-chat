@@ -59,11 +59,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         // } else {
         //     $no = 1;
         // }
+        $is_cod = $rowSuratJalan['is_cod'];
+
         $no = $rowSuratJalan['id_surat_jalan'];
 
         $getSubTotals = mysqli_query($conn, "SELECT SUM(amount) AS subtotal FROM tb_detail_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan'");
 
         $rowSubTotals = $getSubTotals->fetch_array(MYSQLI_ASSOC);
+
+        $getNotFreeItem = mysqli_query($conn, "SELECT SUM(qty_produk) AS jmlItem FROM tb_detail_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan' AND is_bonus = 0 GROUP BY id_surat_jalan");
+
+        $rowNotFreeItem = $getNotFreeItem->fetch_array(MYSQLI_ASSOC);
+
+        if($is_cod == 1) {
+            $jmlItemDiskon = $rowNotFreeItem['jmlItem'];
+            $potonganCod = 2000 * $jmlItemDiskon;
+        } else {
+            $potonganCod = 0;
+        }
 
         $id_surat_jalan = $rowSuratJalan['id_surat_jalan'];
         $no_invoice = date("Y") . "/" . "TM" . "/" . "INV" . "/" . $no;
@@ -77,7 +90,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         while ($rowNumber = $checkNumber->fetch_array(MYSQLI_ASSOC)) {
             $numberArray[] = $rowNumber;
         }
-        $nominal = $rowSubTotals['subtotal'];
+
+        $nominal = $rowSubTotals['subtotal'] - $potonganCod;
+
         $pengurangan = 0;
         if ($numberArray != null) {
             foreach ($numberArray as $numberArray) {
@@ -88,7 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 }
             }
         }
+
         $subtotal_invoice = $nominal - $pengurangan;
+
         if ($subtotal_invoice <= 0) {
             $subtotal_invoice = 0;
             $total_invoice = $subtotal_invoice;
