@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else {
         // echo json_encode($rowSuratJalan);
         foreach ($rowSuratJalan as $rowSuratJalan) {
+            $nominal = 0;
             $is_cod = $rowSuratJalan['is_cod'];
 
             $no = $rowSuratJalan['id_surat_jalan'];
