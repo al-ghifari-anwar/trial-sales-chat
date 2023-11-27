@@ -93,14 +93,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $laporan_visit = $_POST['laporan_visit'] ? $_POST['laporan_visit'] : '';
         $id_user = $_POST['id_user'] ? $_POST['id_user'] : 0;
 
-        $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit', $id_user)");
+        $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,id_user) VALUES($id_gudang, $distance_visit, '$laporan_visit', $id_user)");
 
         if ($insertVisit) {
             $id_bid = $rowBid['id_bid'];
-            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan!"];
+            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim absen!"];
             echo json_encode($response);
         } else {
-            $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan laporan! " . mysqli_error($conn), "detail" => mysqli_error($conn)];
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan absen! " . mysqli_error($conn), "detail" => mysqli_error($conn)];
             echo json_encode($response);
         }
     }
