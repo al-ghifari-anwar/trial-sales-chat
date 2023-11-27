@@ -32,12 +32,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $rowNotFreeItem = $getNotFreeItem->fetch_array(MYSQLI_ASSOC);
 
+            echo "Nominal awal: " . $rowSubTotals['subtotal'];
+
             if ($is_cod == 1) {
                 $jmlItemDiskon = $rowNotFreeItem['jmlItem'];
                 $potonganCod = 2000 * $jmlItemDiskon;
             } else {
                 $potonganCod = 0;
             }
+
+            echo "Potongan: " . $potonganCod;
 
             $id_surat_jalan = $rowSuratJalan['id_surat_jalan'];
             $no_invoice = date("Y") . "/" . "TM" . "/" . "INV" . "/" . $no;
@@ -55,6 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
 
             $nominal = $rowSubTotals['subtotal'] - $potonganCod;
+
+            echo "Nominal after potongan: " . $nominal;
 
             // echo json_encode($numberArray);
             $pengurangan = 0;
