@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $is_cod = $rowSuratJalan['is_cod'];
 
             $no = $rowSuratJalan['id_surat_jalan'];
+            $id_surat_jalan = $rowSuratJalan['id_surat_jalan'];
 
             $getSubTotals = mysqli_query($conn, "SELECT SUM(amount) AS subtotal FROM tb_detail_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan'");
 
