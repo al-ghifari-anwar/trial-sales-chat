@@ -41,17 +41,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(array("status" => "ok", "results" => $visitArray));
             }
         } else {
-            $id_user = $_GET['u'];
-            $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' ORDER BY date_visit DESC");
+            if (isset($_GET['cat']) && $_GET['cat'] == 'sales') {
+                $id_user = $_GET['u'];
+                $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' ORDER BY date_visit DESC");
 
-            while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
-                $visitArray[] = $rowVisit;
-            }
+                while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
+                    $visitArray[] = $rowVisit;
+                }
 
-            if ($visitArray == null) {
-                echo json_encode(array("status" => "empty", "results" => []));
-            } else {
-                echo json_encode(array("status" => "ok", "results" => $visitArray));
+                if ($visitArray == null) {
+                    echo json_encode(array("status" => "empty", "results" => []));
+                } else {
+                    echo json_encode(array("status" => "ok", "results" => $visitArray));
+                }
+            } else if (isset($_GET['cat']) && $_GET['cat'] == 'courier') {
+                $id_user = $_GET['u'];
+                $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_gudang ON tb_gudang.id_gudang = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' ORDER BY date_visit DESC");
+
+                while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
+                    $visitArray[] = $rowVisit;
+                }
+
+                if ($visitArray == null) {
+                    echo json_encode(array("status" => "empty", "results" => []));
+                } else {
+                    echo json_encode(array("status" => "ok", "results" => $visitArray));
+                }
             }
         }
     }
