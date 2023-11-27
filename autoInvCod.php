@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $rowNotFreeItem = $getNotFreeItem->fetch_array(MYSQLI_ASSOC);
 
-            echo "Nominal awal: " . $rowSubTotals['subtotal'];
+            // echo "Nominal awal: " . $rowSubTotals['subtotal'];
 
             if ($is_cod == 1) {
                 $jmlItemDiskon = $rowNotFreeItem['jmlItem'];
@@ -42,11 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $potonganCod = 0;
             }
 
-            echo "Potongan: " . $potonganCod;
+            // echo "Potongan: " . $potonganCod;
 
             $id_surat_jalan = $rowSuratJalan['id_surat_jalan'];
             $no_invoice = date("Y") . "/" . "TM" . "/" . "INV" . "/" . $no;
-            $date_invoice = date("Y-m-d H:i:s", strtotime($rowSuratJalan['date_closing']));
+            $date_invoice = date("Y-m-d H:i:s", strtotime($rowSuratJalan['dalivery_date']));
             $bill_to_name = $rowSuratJalan['nama'];
             $bill_to_address = $rowSuratJalan['address'];
             $bill_to_phone = $rowSuratJalan['nomorhp'];
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $nominal = $rowSubTotals['subtotal'] - $potonganCod;
 
-            echo "Nominal after potongan: " . $nominal;
+            // echo "Nominal after potongan: " . $nominal;
 
             // echo json_encode($numberArray);
             $pengurangan = 0;
