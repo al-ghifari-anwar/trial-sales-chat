@@ -110,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $mapsUrl = $_POST['mapsUrl'];
         $address = $_POST['address'];
         $status = $_POST['status'];
+        // $reputation = $_POST['reputation'];
 
         $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, id_city, maps_url, address,store_status) VALUES('$nama', '$nomor_hp','$id_city', '$mapsUrl', '$address','$status')");
 
