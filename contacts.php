@@ -33,11 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE tb_contact.id_city = '$id_city'");
             }
         } else {
+            $id_distributor = $_GET['dst'];
             if (isset($_GET['status'])) {
                 $status = $_GET['status'];
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE store_status = '$status'");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE store_status = '$status' AND id_distributor = '$id_distributor'");
             } else {
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_distributor = '$id_distributor'");
             }
         }
 
