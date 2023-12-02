@@ -35,12 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if(isset($_POST['id'])){
+    if (isset($_POST['id'])) {
         $id = $_POST['id'];
         $nama_city = $_POST['nama_city'];
         $kode_city = $_POST['kode_city'];
+        $id_distributor = $_POST['id_distributor'];
 
-        $result = mysqli_query($conn, "UPDATE tb_city SET nama_city = '$nama_city', kode_city = '$kode_city' WHERE id_city = '$id'");
+        $result = mysqli_query($conn, "UPDATE tb_city SET nama_city = '$nama_city', kode_city = '$kode_city', id_distributor = $id_distributor WHERE id_city = '$id'");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kota!"];
@@ -54,8 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else {
         $nama_city = $_POST['nama_city'];
         $kode_city = $_POST['kode_city'];
+        $id_distributor = $_POST['id_distributor'];
 
-        $result = mysqli_query($conn, "INSERT INTO tb_city(nama_city, kode_city) VALUES('$nama_city', '$kode_city')");
+        $result = mysqli_query($conn, "INSERT INTO tb_city(nama_city, kode_city, id_distributor) VALUES('$nama_city', '$kode_city', $id_distributor)");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data kota!"];
@@ -66,6 +68,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         mysqli_close($conn);
     }
-    
-
-} 
+}
