@@ -41,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nama = $_POST['nama'];
     $nomor_hp = $_POST['nomorhp'];
-    $message = $_POST['message_body'];
     $id_city = $_POST['id_city'];
     // NEW
     $termin_payment = $_POST['termin_payment'];
@@ -88,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
     if (isset($_POST['message_body'])) {
+        $message = $_POST['message_body'];
         if ($id_contact != null) {
             ini_set('display_errors', 1);
             error_reporting(E_ALL);
