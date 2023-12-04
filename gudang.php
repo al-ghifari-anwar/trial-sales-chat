@@ -28,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_city = $_GET['c'];
             $result = mysqli_query($conn, "SELECT * FROM tb_gudang WHERE tb_gudang.id_city = '$id_city'");
         } else {
-            $result = mysqli_query($conn, "SELECT * FROM tb_gudang");
+            $id_distributor = $_GET['dst'];
+            $result = mysqli_query($conn, "SELECT * FROM tb_gudang JOIN tb_city ON tb_city.id_city = tb_gudang.id_city WHERE id_distributor = '$id_distributor'");
         }
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
