@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
 
-    if ($message != '' || $message != null) {
+    if (isset($_POST['message_body'])) {
         if ($id_contact != null) {
             ini_set('display_errors', 1);
             error_reporting(E_ALL);
