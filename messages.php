@@ -189,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     }
                 }
             } else {
-                $response = ["response" => 200, "status" => "success", "message" => "Berhasil menambah data toko!"];
+                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data toko!"];
                 echo json_encode($response);
             }
         } else {
@@ -197,7 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode($response);
         }
     } else {
-        $response = ["response" => 200, "status" => "success", "message" => "Berhasil menambah data toko!"];
+        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data toko!"];
         echo json_encode($response);
     }
 
