@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
 
-        $result = mysqli_query($conn, "SELECT * FROM tb_city WHERE id_city = '$id'");
+        $result = mysqli_query($conn, "SELECT * FROM tb_distributor WHERE id_distributor = '$id'");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $transArray[] = $row;
@@ -20,9 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array("status" => "ok", "results" => $transArray));
         }
     } else {
-        $id_distributor = $_GET['dst'];
-
-        $result = mysqli_query($conn, "SELECT * FROM tb_city WHERE id_distributor = '$id_distributor'");
+        $result = mysqli_query($conn, "SELECT * FROM tb_distributor ");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $transArray[] = $row;
@@ -41,9 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id = $_POST['id'];
         $nama_city = $_POST['nama_city'];
         $kode_city = $_POST['kode_city'];
-        $id_distributor = $_POST['id_distributor'];
 
-        $result = mysqli_query($conn, "UPDATE tb_city SET nama_city = '$nama_city', kode_city = '$kode_city', id_distributor = $id_distributor WHERE id_city = '$id'");
+        $result = mysqli_query($conn, "UPDATE tb_city SET nama_city = '$nama_city', kode_city = '$kode_city' WHERE id_city = '$id'");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kota!"];
@@ -57,9 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else {
         $nama_city = $_POST['nama_city'];
         $kode_city = $_POST['kode_city'];
-        $id_distributor = $_POST['id_distributor'];
 
-        $result = mysqli_query($conn, "INSERT INTO tb_city(nama_city, kode_city, id_distributor) VALUES('$nama_city', '$kode_city', $id_distributor)");
+        $result = mysqli_query($conn, "INSERT INTO tb_city(nama_city, kode_city) VALUES('$nama_city', '$kode_city')");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data kota!"];

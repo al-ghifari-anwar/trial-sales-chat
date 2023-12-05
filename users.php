@@ -20,7 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array("status" => "ok", "results" => $transArray));
         }
     } else {
-        $result = mysqli_query($conn, "SELECT * FROM tb_user JOIN tb_city ON tb_user.id_city = tb_city.id_city ");
+        $id_distributor = $_GET['dst'];
+
+        $result = mysqli_query($conn, "SELECT * FROM tb_user JOIN tb_city ON tb_user.id_city = tb_city.id_city WHERE id_distributor = '$id_distributor'");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $transArray[] = $row;

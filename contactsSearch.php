@@ -20,11 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%' AND id_city = '$id_city'");
             }
         } else {
+            $id_distributor = $_POST['dst'];
             if (isset($_POST['status'])) {
                 $status = $_POST['status'];
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%' AND store_status = '$status'");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE nama LIKE '%$key%' AND store_status = '$status' AND id_distributor = '$id_distributor'");
             } else {
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%'");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE nama LIKE '%$key%' AND id_distributor = '$id_distributor'");
             }
         }
 

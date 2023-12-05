@@ -33,11 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE tb_contact.id_city = '$id_city'");
             }
         } else {
+            $id_distributor = $_GET['dst'];
             if (isset($_GET['status'])) {
                 $status = $_GET['status'];
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE store_status = '$status'");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE store_status = '$status' AND id_distributor = '$id_distributor'");
             } else {
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_distributor = '$id_distributor'");
             }
         }
 
@@ -75,6 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_promo = 0;
         }
 
+        $reputation = $_POST['reputation'];
+
         if (isset($_FILES['ktp']['name'])) {
             $proof_closing = $_FILES['ktp']['name'];
             $dateFile = date("Y-m-d-H-i-s");
@@ -91,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $imgNewName = $rowContact['ktp_owner'];
         }
 
-        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', store_status = '$status', nomorhp = '$nomor_hp', termin_payment = $termin_payment, ktp_owner = '$imgNewName', id_promo = '$id_promo' WHERE id_contact = '$id'");
+        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', store_status = '$status', nomorhp = '$nomor_hp', termin_payment = $termin_payment, ktp_owner = '$imgNewName', id_promo = '$id_promo', reputation = '$reputation' WHERE id_contact = '$id'");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
@@ -109,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $mapsUrl = $_POST['mapsUrl'];
         $address = $_POST['address'];
         $status = $_POST['status'];
+        // $reputation = $_POST['reputation'];
 
         $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, id_city, maps_url, address,store_status) VALUES('$nama', '$nomor_hp','$id_city', '$mapsUrl', '$address','$status')");
 
