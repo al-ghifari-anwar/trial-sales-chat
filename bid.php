@@ -21,8 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         } else if ($_GET['visit'] == 1) {
             $id_user = $_GET['u'];
+            $month = $_GET['m'];
             // $getBiddedStore = mysqli_query($conn, "SELECT * FROM tb_bid JOIN tb_contact ON tb_contact.id_contact = tb_bid.id_contact WHERE id_user = '$id_user' AND is_active = '1' AND tb_bid.id_contact IN (SELECT id_contact FROM tb_visit WHERE id_user = '$id_user' GROUP BY id_contact)");
-            $getBiddedStore = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' GROUP BY tb_visit.id_contact");
+            $getBiddedStore = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' AND month(date_visit) = $month GROUP BY tb_visit.id_contact");
 
             while ($rowBiddedStore = $getBiddedStore->fetch_array(MYSQLI_ASSOC)) {
                 $biddedStoreArray[] = $rowBiddedStore;
