@@ -5,6 +5,19 @@ include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $id_contact = $_GET['c'];
+
+    $getStoreVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = $id_contact");
+
+    while ($rowGetStoreVoucher = $getStoreVoucher->fetch_array(MYSQLI_ASSOC)) {
+        $getStoreVoucherArray[] = $rowGetStoreVoucher;
+    }
+
+    if ($getStoreVoucherArray == null) {
+        echo json_encode(array("status" => "empty", "results" => []));
+    } else {
+        echo json_encode(array("status" => "ok", "results" => $getStoreVoucherArray));
+    }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $no_vouchers = explode(",", $_POST['no_voucher']);
     $id_contact = $_POST['id_contact'];
