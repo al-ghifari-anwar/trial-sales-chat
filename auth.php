@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = md5($_POST['password']);
 
-    $result = mysqli_query($conn, "SELECT * FROM tb_user WHERE username = '$username' ");
+    $result = mysqli_query($conn, "SELECT * FROM tb_user JOIN tb_distributor ON tb_distributor.id_distributor = tb_user.id_distributor WHERE username = '$username' ");
 
     while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
         $transArray[] = $row;
