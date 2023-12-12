@@ -4,7 +4,6 @@ include_once("config.php");
 
 $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
 $template_id = '85f17083-255d-4340-af32-5dd22f483960';
-$integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id'])) {
@@ -85,8 +84,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_contact =  $row['id_contact'];
     }
 
+    $getUserData = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
+    $rowUserData = $getUserData->fetch_array(MYSQLI_ASSOC);
+
+    $id_distributor = $rowUserData['id_distributor'];
+
+    $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+    $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
 
     if (isset($_POST['message_body'])) {
+        $integration_id = $rowQontak['integration_id'];
         $message = $_POST['message_body'];
         if ($id_contact != null) {
             ini_set('display_errors', 1);
@@ -173,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             echo json_encode($response);
                         }
                     } else {
-                        $response = ["response" => 200, "status" => "failed", "message" => "Proses bid gagal, silahkan coba lagi!"];
+                        $response = ["response" => 200, "status" => "failed", "message" => "Proses bid gagal, silahkan coba lagi!", "detail" => mysqli_error($conn)];
                         echo json_encode($response);
                     }
                 } else {
