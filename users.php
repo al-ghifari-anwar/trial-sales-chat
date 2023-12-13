@@ -63,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_city = $_POST['id_city'];
         $phone_user = $_POST['phone_user'];
         $full_name = $_POST['full_name'];
+        $id_distributor = $_POST['id_distributor'];
 
         $checkUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE username = '$username'");
 
@@ -72,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $response = ["response" => 200, "status" => "failed", "message" => "Username already taken, please use another username!"];
             echo json_encode($response);
         } else {
-            $result = mysqli_query($conn, "INSERT INTO tb_user(full_name,username, password, level_user, id_city, phone_user) VALUES('$full_name','$username', '$password', '$level_user', '$id_city','$phone_user')");
+            $result = mysqli_query($conn, "INSERT INTO tb_user(full_name,username, password, level_user, id_city, phone_user, id_distributor) VALUES('$full_name','$username', '$password', '$level_user', '$id_city','$phone_user',$id_distributor)");
 
             if ($result) {
                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data user!"];
