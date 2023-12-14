@@ -6,9 +6,9 @@ date_default_timezone_set('Asia/Jakarta');
 
 $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
 $template_id = '9e5f403d-a064-475e-b172-74ce62a56ede';
-$integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
+// $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
-$result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE tgl_lahir IS NOT NULL");
+$result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tgl_lahir IS NOT NULL");
 
 while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
     $transArray[] = $row;
@@ -17,6 +17,19 @@ while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
 
 foreach ($transArray as $arr) {
     if ($arr['tgl_lahir'] != '0000-00-00') {
+
+        $id_distributor = $arr['id_distributor'];
+        $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+        $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+        $integration_id = $rowQontak['integration_id'];
+
+        $nomor_forward = '';
+        if ($id_distributor == 1) {
+            $nomor_forward = '6287757904850';
+        } else {
+            $nomor_forward = '6281128500888';
+        }
+
         $tgl_lahir = date("m-d", strtotime($arr['tgl_lahir']));
         $tgl_skrg = date("m-d");
         $nomor_hp = $arr['nomorhp'];
@@ -125,7 +138,7 @@ foreach ($transArray as $arr) {
                     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                     CURLOPT_CUSTOMREQUEST => 'POST',
                     CURLOPT_POSTFIELDS => '{
-                        "to_number": "' . "6287757904850" . '",
+                        "to_number": "' . $nomor_forward . '",
                         "to_name": "' . $nama . '",
                         "message_template_id": "' . $template_id . '",
                         "channel_integration_id": "' . $integration_id . '",
