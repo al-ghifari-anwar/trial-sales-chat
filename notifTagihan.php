@@ -19,14 +19,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_city = $salesArray['id_city'];
         $nomor_hp = $salesArray['phone_user'];
         $nama = $salesArray['full_name'];
+        $id_distributor = $salesArray['id_distributor'];
 
-        
-        if($nomor_hp == "6287774436555" || $nomor_hp == "6281808152028"){
-            $message = "Laporan rekap piutang: https://order.topmortarindonesia.com/wh-tagihan?c=0";
+
+        if ($nomor_hp == "6287774436555" || $nomor_hp == "6281808152028") {
+            $message = "Laporan rekap piutang: https://order.topmortarindonesia.com/wh-tagihan?c=0&dst=$id_distributor";
             $msgStatus = "All City";
             // echo $message;
         } else {
-            $message = "Laporan rekap piutang: https://order.topmortarindonesia.com/wh-tagihan?c=$id_city";
+            $message = "Laporan rekap piutang: https://order.topmortarindonesia.com/wh-tagihan?c=$id_city&dst=$id_distributor";
             $msgStatus = "Specific City";
             // echo $message;
         }
