@@ -84,12 +84,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $res = json_decode($response, true);
 
         $status = $res['status'];
+        $id = $data['data']['id'];
 
         if ($status == "success") {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan tagihan!", "detail" => $msgStatus, "body" => $message];
             echo json_encode($response);
         } else {
-            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim laporan tagihan!"];
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim laporan tagihan!", "id" => $id, "target" => $salesArray['username'] . " - " . $nomor_hp];
             echo json_encode($response);
         }
     }
