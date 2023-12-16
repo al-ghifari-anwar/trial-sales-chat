@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $address = $_POST['address'];
     $nama_lengkap = $_POST['nama_lengkap'];
     $id_skill = $_POST['id_skill'];
+    $id_user = $_POST['id_user'];
 
     if (isset($_POST['full_name'])) {
         $full_name = $_POST['full_name'];
@@ -80,67 +81,78 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_tukang =  $row['id_tukang'];
     }
 
+    $getUserData = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
+    $rowUserData = $getUserData->fetch_array(MYSQLI_ASSOC);
 
-    if ($id_tukang != null) {
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
+    $id_distributor = $rowUserData['id_distributor'];
 
-        $resultMsg = mysqli_query($conn, "INSERT INTO tb_messages(id_tukang, message_body) VALUES($id_tukang, '$message')");
+    $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+    $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
 
-        $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '{
-                "to_number": "' . $nomor_hp . '",
-                "to_name": "' . $nama . '",
-                "message_template_id": "' . $template_id . '",
-                "channel_integration_id": "' . $integration_id . '",
-                "language": {
-                    "code": "id"
-                },
-                "parameters": {
-                    "body": [
-                    {
-                        "key": "1",
-                        "value": "nama",
-                        "value_text": "' . $nama . '"
+    if (isset($_POST['message_body'])) {
+        $integration_id = $rowQontak['id_distributor'];
+        if ($id_tukang != null) {
+            ini_set('display_errors', 1);
+            error_reporting(E_ALL);
+
+            $resultMsg = mysqli_query($conn, "INSERT INTO tb_messages(id_tukang, message_body) VALUES($id_tukang, '$message')");
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => '{
+                    "to_number": "' . $nomor_hp . '",
+                    "to_name": "' . $nama . '",
+                    "message_template_id": "' . $template_id . '",
+                    "channel_integration_id": "' . $integration_id . '",
+                    "language": {
+                        "code": "id"
                     },
-                    {
-                        "key": "2",
-                        "value": "message",
-                        "value_text": "' . $message . '"
-                    },
-                    {
-                        "key": "3",
-                        "value": "sales",
-                        "value_text": "' . $full_name . '"
+                    "parameters": {
+                        "body": [
+                        {
+                            "key": "1",
+                            "value": "nama",
+                            "value_text": "' . $nama . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "message",
+                            "value_text": "' . $message . '"
+                        },
+                        {
+                            "key": "3",
+                            "value": "sales",
+                            "value_text": "' . $full_name . '"
+                        }
+                        ]
                     }
-                    ]
-                }
-                }',
-            CURLOPT_HTTPHEADER => array(
-                'Authorization: Bearer ' . $wa_token,
-                'Content-Type: application/json'
-            ),
-        ));
+                    }',
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Bearer ' . $wa_token,
+                    'Content-Type: application/json'
+                ),
+            ));
 
-        $response = curl_exec($curl);
+            $response = curl_exec($curl);
 
-        curl_close($curl);
+            curl_close($curl);
 
-        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data tukang!"];
-        echo json_encode($response);
-    } else {
-        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data tukang!", "detail" => mysqli_error($conn)];
-        echo json_encode($response);
+            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data tukang!"];
+            echo json_encode($response);
+        } else {
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data tukang!", "detail" => mysqli_error($conn)];
+            echo json_encode($response);
+        }
     }
 
     mysqli_close($conn);
