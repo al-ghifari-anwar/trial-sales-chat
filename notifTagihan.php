@@ -6,7 +6,7 @@ date_default_timezone_set('Asia/Jakarta');
 
 $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
 $template_id = '85f17083-255d-4340-af32-5dd22f483960';
-$integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
+// $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $getSales = mysqli_query($conn, "SELECT * FROM tb_user WHERE level_user = 'sales'");
@@ -16,11 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     foreach ($salesArray as $salesArray) {
+
         $id_city = $salesArray['id_city'];
         $nomor_hp = $salesArray['phone_user'];
         $nama = $salesArray['full_name'];
         $id_distributor = $salesArray['id_distributor'];
 
+        $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+        $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+
+        $integration_id = $rowQontak['integration_id'];
 
         if ($nomor_hp == "6287774436555" || $nomor_hp == "6281808152028") {
             $message = "Laporan rekap piutang: https://order.topmortarindonesia.com/wh-tagihan?c=0&dst=$id_distributor";
