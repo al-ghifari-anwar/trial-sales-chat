@@ -20,6 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $setPassive = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'passive' WHERE id_contact = '$id_contact'");
 
                 if ($setPassive) {
+                    $getContact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact'");
+                    $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
+
+                    $statusChange = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to) VALUES($id_contact,'active','passive')");
+
                     $response = ["response" => 200, "status" => "success", "message" => "Status changed to passive!"];
                     echo json_encode($response);
                 } else {

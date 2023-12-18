@@ -116,6 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
                 if ($rowContact['store_status'] == 'data') {
                     $statusChange = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to) VALUES($id_contact,'data','active')");
+                } else if ($rowContact['store_status'] == 'passive') {
+                    $statusChange = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to) VALUES($id_contact,'passive','active')");
                 }
                 $response = ["response" => 200, "status" => "success", "message" => "Succes to closing!"];
                 echo json_encode($response);
