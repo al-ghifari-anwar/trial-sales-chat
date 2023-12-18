@@ -17,7 +17,8 @@ while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
 
 foreach ($transArray as $arr) {
     if ($arr['tgl_lahir'] != '0000-00-00') {
-
+        $id_contact = $arr['id_contact'];
+        $reputation = $arr['reputation'];
         $id_distributor = $arr['id_distributor'];
         $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
         $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
@@ -183,6 +184,45 @@ foreach ($transArray as $arr) {
                 $status = $res['status'];
 
                 if ($status == "success") {
+                    $getSak = mysqli_query($conn, "SELECT SUM(qty_produk) AS total_qty FROM tb_detail_surat_jalan JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_detail_surat_jalan.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact'");
+                    $rowSak = $getSak->fetch_array(MYSQLI_ASSOC);
+                    $pembelianSak = $rowSak['total_qty'];
+
+                    if ($reputation == 'good') {
+                        $jmlVoucher = 0;
+                        if ($pembelianSak != null) {
+                            if ($pembelianSak <= 100) {
+                                $jmlVoucher = 1;
+                            } else if ($pembelianSak > 100) {
+                                $jmlVoucher = 2;
+                            }
+                        } else {
+                            if ($reputation == 'good') {
+                                $jmlVoucher = 1;
+                            }
+                        }
+
+                        $curl = curl_init();
+
+                        curl_setopt_array(
+                            $curl,
+                            array(
+                                CURLOPT_URL => 'https://saleswa.topmortarindonesia.com/insertVoucher.php?j=' . $jmlVoucher . '&s=' . $id_contact,
+                                CURLOPT_RETURNTRANSFER => true,
+                                CURLOPT_ENCODING => '',
+                                CURLOPT_MAXREDIRS => 10,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_FOLLOWLOCATION => true,
+                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                CURLOPT_CUSTOMREQUEST => 'GET',
+                            )
+                        );
+
+                        $response = curl_exec($curl);
+
+                        curl_close($curl);
+                    }
+
                     $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim ucapan ultah!"];
                     echo json_encode($response);
                 } else {
