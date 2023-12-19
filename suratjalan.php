@@ -107,13 +107,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($resultPrint) {
             $getSuratJalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan'");
             $rowSuratJalan = $getSuratJalan->fetch_array(MYSQLI_ASSOC);
+            $id_contact = $rowSuratJalan['id_contact'];
 
             $getContact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact'");
             $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
             $store_status = $rowContact['store_status'];
             $statusChange = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to) VALUES($id_contact,'$store_status','active')");
 
-            $id_contact = $rowSuratJalan['id_contact'];
+
             $changeStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'active' WHERE id_contact = '$id_contact'");
 
             if ($changeStoreStatus) {
