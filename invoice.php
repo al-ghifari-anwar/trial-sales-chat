@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $nominal = $rowSubTotals['subtotal'] - $potonganCod;
 
-                $pengurangan = 0;
+                $pengurangan = 1;
                 if ($numberArray != null) {
                     foreach ($numberArray as $numberArray) {
                         // echo "Nominal Skrg: " . ($nominal - $pengurangan) . "\n";
