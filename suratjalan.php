@@ -116,14 +116,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $statusChange = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to) VALUES($id_contact,'$store_status','active')");
 
 
-            $changeStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'active' WHERE id_contact = '$id_contact'");
+            if ($statusChange) {
+                $changeStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'active' WHERE id_contact = '$id_contact'");
 
-            if ($changeStoreStatus) {
+                if ($changeStoreStatus) {
 
-                $response = ["response" => 200, "status" => "success", "message" => "Succes to closing!"];
-                echo json_encode($response);
+                    $response = ["response" => 200, "status" => "success", "message" => "Succes to closing!"];
+                    echo json_encode($response);
+                } else {
+                    $response = ["response" => 200, "status" => "failed", "message" => "Failed to change store status!"];
+                    echo json_encode($response);
+                }
             } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Failed to change store status!"];
+                $response = ["response" => 200, "status" => "failed", "message" => "Status record not saved!", "detail" => mysqli_error($conn)];
                 echo json_encode($response);
             }
         } else {
