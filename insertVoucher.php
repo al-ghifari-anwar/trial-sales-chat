@@ -12,9 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $cekVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE no_voucher = '$no_voucher'");
         $rowVoucher = $cekVoucher->fetch_array(MYSQLI_ASSOC);
+        $exp_date = date("Y-m-d", strtotime("+30 days"));
 
         if (!$rowVoucher) {
-            $insert = mysqli_query($conn, "INSERT INTO tb_voucher(id_contact,no_voucher,point_voucher) VALUES($id_contact,'$no_voucher',1)");
+            $insert = mysqli_query($conn, "INSERT INTO tb_voucher(id_contact,no_voucher,point_voucher,exp_date) VALUES($id_contact,'$no_voucher',1,'$exp_date')");
         }
     }
 
