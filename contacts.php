@@ -90,6 +90,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
 
             $imgNewName = 'min-' . $dateFile . $_FILES['ktp']['name'];
+
+            $jmlVoucher = 5;
+            $curl = curl_init();
+
+            curl_setopt_array(
+                $curl,
+                array(
+                    CURLOPT_URL => 'https://saleswa.topmortarindonesia.com/insertVoucher.php?j=' . $jmlVoucher . '&s=' . $id,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'GET',
+                )
+            );
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
         } else {
             $imgNewName = $rowContact['ktp_owner'];
         }
