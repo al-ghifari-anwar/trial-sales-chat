@@ -23,13 +23,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_voucher = $_POST['id_voucher'];
         $no_fisik = $_POST['no_fisik'];
 
-        $updateVoucher = mysqli_query($conn, "UPDATE tb_voucher SET no_fisik = '$no_fisik' WHERE id_voucher = '$id_voucher'");
+        $cekNoFisik = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE no_fisik = '$cekNoFisik'");
+        $rowCekNoFisik = $cekNoFisik->fetch_array(MYSQLI_ASSOC);
 
-        if ($updateVoucher) {
-            $response = ["response" => 200, "status" => "success", "message" => "Kode voucher fisik berhasil disinkronkan!"];
-            echo json_encode($response);
+        if ($rowCekNoFisik == null) {
+            $updateVoucher = mysqli_query($conn, "UPDATE tb_voucher SET no_fisik = '$no_fisik' WHERE id_voucher = '$id_voucher'");
+
+            if ($updateVoucher) {
+                $response = ["response" => 200, "status" => "success", "message" => "Kode voucher fisik berhasil disinkronkan!"];
+                echo json_encode($response);
+            } else {
+                $response = ["response" => 200, "status" => "failed", "message" => "Kode voucher fisik gagal disinkronkan!"];
+                echo json_encode($response);
+            }
         } else {
-            $response = ["response" => 200, "status" => "failed", "message" => "Kode voucher fisik gagal disinkronkan!"];
+            $response = ["response" => 200, "status" => "failed", "message" => "Kode voucher fisik sudah terdaftar!"];
             echo json_encode($response);
         }
     } else {
