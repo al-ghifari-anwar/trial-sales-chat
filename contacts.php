@@ -4,7 +4,7 @@ include_once("config.php");
 
 $wa_token = 'X1CWu_x9GrebaQUxyVGdJF3_4SCsVW9z1QjX-XJ9B6k';
 $template_id = 'b47daffc-7caf-4bea-9f36-edf4067b2c08';
-$integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
+// $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id'])) {
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_POST['id'])) {
         $id = $_POST['id'];
 
-        $getContact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id'");
+        $getContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_contact WHERE id_contact = '$id'");
         $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
         $nama = $_POST['nama'];
         $tgl_lahir = $_POST['tgl_lahir'];
@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $address = $_POST['address'];
         $nomor_hp = $_POST['nomorhp'];
         $status = $_POST['status'];
+        $id_distributor = $rowContact['id_distributor'];
         // NEW
         $termin_payment = $_POST['termin_payment'];
         if (isset($_POST['id_promo'])) {
@@ -90,6 +91,95 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
 
             $imgNewName = 'min-' . $dateFile . $_FILES['ktp']['name'];
+
+            $jmlVoucher = 5;
+            $curl = curl_init();
+
+            curl_setopt_array(
+                $curl,
+                array(
+                    CURLOPT_URL => 'https://saleswa.topmortarindonesia.com/insertVoucher.php?j=' . $jmlVoucher . '&s=' . $id,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'GET',
+                )
+            );
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+
+            $res = json_decode($response, true);
+
+            $status = $res['status'];
+
+            if ($status == 'ok') {
+                $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id' AND is_claimed = 0");
+                while ($rowVoucher = $getVoucher->fetch_array(MYSQLI_ASSOC)) {
+                    $voucherArr[] = $rowVoucher;
+                }
+                $vouchers = "";
+                foreach ($voucherArr as $voucherArr) {
+                    $vouchers .= $voucherArr['no_voucher'];
+                }
+
+                $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+                $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+                $integration_id = $rowQontak['integration_id'];
+
+                $message = "Selamat anda mendapatkan bonus voucher dengan kode. " . $vouchers . ".";
+                // Send message
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => '{
+                    "to_number": "' . $nomor_hp . '",
+                    "to_name": "' . $nama . '",
+                    "message_template_id": "' . $template_id . '",
+                    "channel_integration_id": "' . $integration_id . '",
+                    "language": {
+                        "code": "id"
+                    },
+                    "parameters": {
+                        "body": [
+                        {
+                            "key": "1",
+                            "value": "nama",
+                            "value_text": "' . $nama . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "message",
+                            "value_text": "' . $message . '"
+                        },
+                        {
+                            "key": "3",
+                            "value": "sales",
+                            "value_text": "' . "Automated Message" . '"
+                        }
+                        ]
+                    }
+                    }',
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Bearer ' . $wa_token,
+                        'Content-Type: application/json'
+                    ),
+                ));
+
+                $response = curl_exec($curl);
+
+                curl_close($curl);
+            }
         } else {
             $imgNewName = $rowContact['ktp_owner'];
         }
