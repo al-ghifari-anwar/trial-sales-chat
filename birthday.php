@@ -221,6 +221,75 @@ foreach ($transArray as $arr) {
                         $response = curl_exec($curl);
 
                         curl_close($curl);
+
+                        $res = json_decode($response, true);
+
+                        $status = $res['status'];
+
+                        if ($status == 'ok') {
+                            $dateNow = date("m-d");
+                            $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id' AND is_claimed = 0 AND date_voucher LIKE '$dateNow' ");
+                            while ($rowVoucher = $getVoucher->fetch_array(MYSQLI_ASSOC)) {
+                                $voucherArr[] = $rowVoucher;
+                            }
+                            $vouchers = "";
+                            foreach ($voucherArr as $voucherArr) {
+                                $vouchers .= $voucherArr['no_voucher'];
+                            }
+                            // Send message
+                            // $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+                            // $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+                            // $integration_id = $rowQontak['integration_id'];
+
+                            $message = "Hallo " . $nama . ". Selamat ulang tahun! Selamat anda mendapatkan " . count($voucherArr) . " buah Voucher Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal " . date("d M, Y", strtotime("+30 days")) . ". Kode voucher: " . $vouchers;
+                            // Send message
+                            curl_setopt_array($curl, array(
+                                CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                                CURLOPT_RETURNTRANSFER => true,
+                                CURLOPT_ENCODING => '',
+                                CURLOPT_MAXREDIRS => 10,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_FOLLOWLOCATION => true,
+                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                CURLOPT_CUSTOMREQUEST => 'POST',
+                                CURLOPT_POSTFIELDS => '{
+                                "to_number": "' . $nomor_hp . '",
+                                "to_name": "' . $nama . '",
+                                "message_template_id": "' . $template_id . '",
+                                "channel_integration_id": "' . $integration_id . '",
+                                "language": {
+                                    "code": "id"
+                                },
+                                "parameters": {
+                                    "body": [
+                                    {
+                                        "key": "1",
+                                        "value": "nama",
+                                        "value_text": "' . $nama . '"
+                                    },
+                                    {
+                                        "key": "2",
+                                        "value": "message",
+                                        "value_text": "' . $message . '"
+                                    },
+                                    {
+                                        "key": "3",
+                                        "value": "sales",
+                                        "value_text": "' . "Automated Message" . '"
+                                    }
+                                    ]
+                                }
+                                }',
+                                CURLOPT_HTTPHEADER => array(
+                                    'Authorization: Bearer ' . $wa_token,
+                                    'Content-Type: application/json'
+                                ),
+                            ));
+
+                            $response = curl_exec($curl);
+
+                            curl_close($curl);
+                        }
                     }
 
                     $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim ucapan ultah!"];
