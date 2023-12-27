@@ -125,6 +125,7 @@ foreach ($transArray as $arr) {
 
             // echo $response;
             // die;
+            // $status = "success";
 
             if ($status == 'success') {
                 $curl = curl_init();
@@ -182,6 +183,7 @@ foreach ($transArray as $arr) {
                 $res = json_decode($response, true);
 
                 $status = $res['status'];
+                // $status = "success";
 
                 if ($status == "success") {
                     $getSak = mysqli_query($conn, "SELECT SUM(qty_produk) AS total_qty FROM tb_detail_surat_jalan JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_detail_surat_jalan.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact'");
@@ -227,21 +229,23 @@ foreach ($transArray as $arr) {
                         $status = $res['status'];
 
                         if ($status == 'ok') {
+                            $voucherArr = array();
                             $dateNow = date("m-d");
-                            $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id' AND is_claimed = 0 AND date_voucher LIKE '$dateNow' ");
+                            $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id_contact' AND is_claimed = 0 AND date_voucher LIKE '%$dateNow%' ");
                             while ($rowVoucher = $getVoucher->fetch_array(MYSQLI_ASSOC)) {
                                 $voucherArr[] = $rowVoucher;
                             }
                             $vouchers = "";
                             foreach ($voucherArr as $voucherArr) {
-                                $vouchers .= $voucherArr['no_voucher'];
+                                $vouchers .= $voucherArr['no_voucher'] . ",";
                             }
                             // Send message
                             // $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
                             // $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
                             // $integration_id = $rowQontak['integration_id'];
 
-                            $message = "Hallo " . $nama . ". Selamat ulang tahun! Selamat anda mendapatkan " . count($voucherArr) . " buah Voucher Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal " . date("d M, Y", strtotime("+30 days")) . ". Kode voucher: " . $vouchers;
+                            $template_vc = "85f17083-255d-4340-af32-5dd22f483960";
+                            $message = "Selamat ulang tahun! Selamat anda mendapatkan Voucher. Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal " . date("d M, Y", strtotime("+30 days")) . ". Kode voucher: " . $vouchers;
                             // Send message
                             curl_setopt_array($curl, array(
                                 CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
@@ -255,7 +259,7 @@ foreach ($transArray as $arr) {
                                 CURLOPT_POSTFIELDS => '{
                                 "to_number": "' . $nomor_hp . '",
                                 "to_name": "' . $nama . '",
-                                "message_template_id": "' . $template_id . '",
+                                "message_template_id": "' . $template_vc . '",
                                 "channel_integration_id": "' . $integration_id . '",
                                 "language": {
                                     "code": "id"
@@ -291,7 +295,6 @@ foreach ($transArray as $arr) {
                             curl_close($curl);
                         }
                     }
-
                     $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim ucapan ultah!"];
                     echo json_encode($response);
                 } else {
