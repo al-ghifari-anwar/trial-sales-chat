@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_POST['id'])) {
         $id = $_POST['id'];
 
-        $getContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_contact WHERE id_contact = '$id'");
+        $getContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id'");
         $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
         $nama = $_POST['nama'];
         $tgl_lahir = $_POST['tgl_lahir'];
@@ -120,20 +120,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($status == 'ok') {
                 $voucherArr = array();
                 $dateNow = date("m-d");
-                $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id' AND is_claimed = 0 date_voucher LIKE '%$dateNow%' ");
+                $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id' AND is_claimed = 0 AND date_voucher LIKE '%$dateNow%' ");
                 while ($rowVoucher = $getVoucher->fetch_array(MYSQLI_ASSOC)) {
                     $voucherArr[] = $rowVoucher;
                 }
                 $vouchers = "";
                 foreach ($voucherArr as $voucherArr) {
-                    $vouchers .= $voucherArr['no_voucher'];
+                    $vouchers .= $voucherArr['no_voucher'] . ",";
                 }
 
                 $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
                 $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
                 $integration_id = $rowQontak['integration_id'];
 
-                $message = "Terimakasih telah bargabung menjadi bagian dari TOP Mortar! Nikmati layanan kilat 1 hari kerja 'Pesan Hari Ini, Kirim Hari Ini' hanya dengan pembelian 10 sak. Nantikan promo-promo menarik lainnya Bersama Top Mortar, mari kita maju bersama! Selamat anda kode voucher. Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal" . date("d M, Y", strtotime("+30 days")) . ". Kode Voucher: " . $vouchers;
+                $message = "Terimakasih telah bargabung menjadi bagian dari TOP Mortar! Nikmati layanan kilat 1 hari kerja 'Pesan Hari Ini, Kirim Hari Ini' hanya dengan pembelian 10 sak. Nantikan promo-promo menarik lainnya Bersama Top Mortar, mari kita maju bersama! Selamat anda kode voucher. Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal " . date("d M, Y", strtotime("+30 days")) . ". Kode Voucher: " . $vouchers;
                 // Send message
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
