@@ -118,7 +118,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $status = $res['status'];
 
             if ($status == 'ok') {
-                $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id' AND is_claimed = 0");
+                $voucherArr = array();
+                $dateNow = date("m-d");
+                $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id' AND is_claimed = 0 date_voucher LIKE '%$dateNow%' ");
                 while ($rowVoucher = $getVoucher->fetch_array(MYSQLI_ASSOC)) {
                     $voucherArr[] = $rowVoucher;
                 }
@@ -131,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
                 $integration_id = $rowQontak['integration_id'];
 
-                $message = "Selamat anda mendapatkan bonus voucher dengan kode. " . $vouchers . ".";
+                $message = "Terimakasih telah bargabung menjadi bagian dari TOP Mortar! Nikmati layanan kilat 1 hari kerja 'Pesan Hari Ini, Kirim Hari Ini' hanya dengan pembelian 10 sak. Nantikan promo-promo menarik lainnya Bersama Top Mortar, mari kita maju bersama! Selamat anda kode voucher. Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal" . date("d M, Y", strtotime("+30 days")) . ". Kode Voucher: " . $vouchers;
                 // Send message
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
