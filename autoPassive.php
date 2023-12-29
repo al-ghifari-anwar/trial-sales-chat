@@ -24,7 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $getContact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact'");
                 $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
 
-                $cekStatusData = mysqli_query($conn, "SELECT * FROM tb_status_change WHERE id_contact = '$id_contact' AND status_from = 'active' AND status_to = 'passive' AND created_at = '$datePassive'");
+                $cekDate = date("Y-m-d", strtotime($datePassive));
+                $cekStatusData = mysqli_query($conn, "SELECT * FROM tb_status_change WHERE id_contact = '$id_contact' AND status_from = 'active' AND status_to = 'passive' AND created_at LIKE '%$cekDate%'");
                 $rowStatusData = $cekStatusData->fetch_array(MYSQLI_ASSOC);
 
                 if ($rowStatusData == null) {
