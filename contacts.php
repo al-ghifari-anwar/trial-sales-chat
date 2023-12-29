@@ -187,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                         },
                                         {
                                             "key": "4",
-                                            "value": "no_voucher",
+                                            "value": "date_voucher",
                                             "value_text": "' . date("d M, Y", strtotime("+30 days")) . '"
                                         }
                                     ]
@@ -205,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $res = json_decode($response, true);
 
-                echo $response;
+                // echo $response;
             }
         } else {
             $imgNewName = $rowContact['ktp_owner'];
