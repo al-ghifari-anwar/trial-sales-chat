@@ -3,7 +3,7 @@ error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 
 $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
-$template_id = '85f17083-255d-4340-af32-5dd22f483960';
+$template_id = '2a5a5dc1-8e2d-4789-b0c0-566b9bb5ab72';
 // $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -116,6 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $res = json_decode($response, true);
 
             $status = $res['status'];
+            // $status = "ok";
 
             if ($status == 'ok') {
                 $voucherArr = array();
@@ -135,6 +136,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $message = "Terimakasih telah bargabung menjadi bagian dari TOP Mortar! Nikmati layanan kilat 1 hari kerja 'Pesan Hari Ini, Kirim Hari Ini' hanya dengan pembelian 10 sak. Nantikan promo-promo menarik lainnya Bersama Top Mortar, mari kita maju bersama! Selamat anda kode voucher. Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal " . date("d M, Y", strtotime("+30 days")) . ". Kode Voucher: " . $vouchers;
                 // Send message
+                $curl = curl_init();
+
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
                     CURLOPT_RETURNTRANSFER => true,
@@ -145,33 +148,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                     CURLOPT_CUSTOMREQUEST => 'POST',
                     CURLOPT_POSTFIELDS => '{
-                    "to_number": "' . $nomor_hp . '",
-                    "to_name": "' . $nama . '",
-                    "message_template_id": "' . $template_id . '",
-                    "channel_integration_id": "' . $integration_id . '",
-                    "language": {
-                        "code": "id"
-                    },
-                    "parameters": {
-                        "body": [
-                        {
-                            "key": "1",
-                            "value": "nama",
-                            "value_text": "' . $nama . '"
-                        },
-                        {
-                            "key": "2",
-                            "value": "message",
-                            "value_text": "' . $message . '"
-                        },
-                        {
-                            "key": "3",
-                            "value": "sales",
-                            "value_text": "' . "Automated Message" . '"
-                        }
-                        ]
-                    }
-                    }',
+                                "to_number": "' . $nomor_hp . '",
+                                "to_name": "' . $nama . '",
+                                "message_template_id": "' . $template_id . '",
+                                "channel_integration_id": "' . $integration_id . '",
+                                "language": {
+                                    "code": "id"
+                                },
+                                "parameters": {
+                                    "header":{
+                                        "format":"IMAGE",
+                                        "params": [
+                                            {
+                                                "key":"url",
+                                                "value":"https://saleswa.topmortarindonesia.com/img/flyer_toko_baru.png"
+                                            },
+                                            {
+                                                "key":"filename",
+                                                "value":"bday.jpg"
+                                            }
+                                        ]
+                                    },
+                                    "body": [
+                                        {
+                                            "key": "1",
+                                            "value": "nama",
+                                            "value_text": "' . $nama . '"
+                                        },
+                                        {
+                                            "key": "2",
+                                            "value": "jml_voucher",
+                                            "value_text": "' . $jmlVoucher . '"
+                                        },
+                                        {
+                                            "key": "3",
+                                            "value": "no_voucher",
+                                            "value_text": "' . $vouchers . '"
+                                        },
+                                        {
+                                            "key": "4",
+                                            "value": "no_voucher",
+                                            "value_text": "' . date("d M, Y", strtotime("+30 days")) . '"
+                                        }
+                                    ]
+                                }
+                                }',
                     CURLOPT_HTTPHEADER => array(
                         'Authorization: Bearer ' . $wa_token,
                         'Content-Type: application/json'
@@ -181,6 +202,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $response = curl_exec($curl);
 
                 curl_close($curl);
+
+                $res = json_decode($response, true);
+
+                echo $response;
             }
         } else {
             $imgNewName = $rowContact['ktp_owner'];
