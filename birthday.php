@@ -195,7 +195,7 @@ foreach ($transArray as $arr) {
 
                     $res = json_decode($response, true);
 
-                    echo $response;
+                    // echo $response;
 
                     $status = $res['status'];
 
