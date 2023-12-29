@@ -177,7 +177,7 @@ foreach ($transArray as $arr) {
                                         },
                                         {
                                             "key": "4",
-                                            "value": "no_voucher",
+                                            "value": "date_voucher",
                                             "value_text": "' . date("d M, Y", strtotime("+30 days")) . '"
                                         }
                                     ]
