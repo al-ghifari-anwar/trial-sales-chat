@@ -18,10 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_contact = $lastOrder['id_contact'];
 
             if ($lastOrder['last_order'] < $twoMonths) {
+                $dateLastOrder = strtotime($lastOrder['last_order']);
+                $datePassive = date("Y-m-d H:i:s", strtotime("+2 month", $dateLastOrder));
+
                 $getContact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact'");
                 $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
 
-                $statusChange = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to) VALUES($id_contact,'active','passive')");
+                $statusChange = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to, created_at) VALUES($id_contact,'active','passive', '$datePassive')");
 
                 $setPassive = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'passive' WHERE id_contact = '$id_contact'");
 

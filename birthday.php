@@ -5,7 +5,7 @@ date_default_timezone_set('Asia/Jakarta');
 // putenv('GDFONTPATH=' . realpath('.'));
 
 $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
-$template_id = '9e5f403d-a064-475e-b172-74ce62a56ede';
+
 // $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tgl_lahir IS NOT NULL");
@@ -67,18 +67,160 @@ foreach ($transArray as $arr) {
             $quality = 80; // 0 to 100
             imagejpeg($img, "img/bday_" . $nomor_hp . ".jpg", $quality);
 
-            $curl = curl_init();
+            $getSak = mysqli_query($conn, "SELECT SUM(qty_produk) AS total_qty FROM tb_detail_surat_jalan JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_detail_surat_jalan.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact'");
+            $rowSak = $getSak->fetch_array(MYSQLI_ASSOC);
+            $pembelianSak = $rowSak['total_qty'];
 
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => '{
+            if ($reputation == 'good') {
+                $jmlVoucher = 0;
+                if ($pembelianSak != null) {
+                    if ($pembelianSak <= 100) {
+                        $jmlVoucher = 1;
+                    } else if ($pembelianSak > 100) {
+                        $jmlVoucher = 2;
+                    }
+                } else {
+                    if ($reputation == 'good') {
+                        $jmlVoucher = 1;
+                    }
+                }
+
+                $curl = curl_init();
+
+                curl_setopt_array(
+                    $curl,
+                    array(
+                        CURLOPT_URL => 'https://saleswa.topmortarindonesia.com/insertVoucher.php?j=' . $jmlVoucher . '&s=' . $id_contact,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'GET',
+                    )
+                );
+
+                $response = curl_exec($curl);
+
+                curl_close($curl);
+
+                $res = json_decode($response, true);
+
+                $status = $res['status'];
+
+                if ($status == 'ok') {
+                    $voucherArr = array();
+                    $dateNow = date("m-d");
+                    $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id_contact' AND is_claimed = 0 AND date_voucher LIKE '%$dateNow%' ");
+                    while ($rowVoucher = $getVoucher->fetch_array(MYSQLI_ASSOC)) {
+                        $voucherArr[] = $rowVoucher;
+                    }
+                    $vouchers = "";
+                    foreach ($voucherArr as $voucherArr) {
+                        $vouchers .= $voucherArr['no_voucher'] . ",";
+                    }
+                    // $template_id = "52df213b-b75e-4175-b3ec-be7963b8e93a";
+                    // Send message
+                    // $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+                    // $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+                    // $integration_id = $rowQontak['integration_id'];
+                    $template_vc = "52df213b-b75e-4175-b3ec-be7963b8e93a";
+                    $message = "Selamat ulang tahun! Selamat anda mendapatkan Voucher. Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal " . date("d M, Y", strtotime("+30 days")) . ". Kode voucher: " . $vouchers;
+                    // Send message
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => '{
+                                "to_number": "' . $nomor_hp . '",
+                                "to_name": "' . $nama . '",
+                                "message_template_id": "' . $template_vc . '",
+                                "channel_integration_id": "' . $integration_id . '",
+                                "language": {
+                                    "code": "id"
+                                },
+                                "parameters": {
+                                    "header":{
+                                        "format":"IMAGE",
+                                        "params": [
+                                            {
+                                                "key":"url",
+                                                "value":"https://saleswa.topmortarindonesia.com/img/bday_' . $nomor_hp . '.jpg"
+                                            },
+                                            {
+                                                "key":"filename",
+                                                "value":"bday.jpg"
+                                            }
+                                        ]
+                                    },
+                                    "body": [
+                                        {
+                                            "key": "1",
+                                            "value": "nama",
+                                            "value_text": "' . $nama . '"
+                                        },
+                                        {
+                                            "key": "2",
+                                            "value": "jml_voucher",
+                                            "value_text": "' . $jmlVoucher . '"
+                                        },
+                                        {
+                                            "key": "3",
+                                            "value": "no_voucher",
+                                            "value_text": "' . $vouchers . '"
+                                        },
+                                        {
+                                            "key": "4",
+                                            "value": "no_voucher",
+                                            "value_text": "' . date("d M, Y", strtotime("+30 days")) . '"
+                                        }
+                                    ]
+                                }
+                                }',
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: Bearer ' . $wa_token,
+                            'Content-Type: application/json'
+                        ),
+                    ));
+
+                    $response = curl_exec($curl);
+
+                    curl_close($curl);
+
+                    $res = json_decode($response, true);
+
+                    echo $response;
+
+                    $status = $res['status'];
+
+                    if ($status == "success") {
+                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim ucapan ultah!"];
+                        echo json_encode($response);
+                    } else {
+                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim ucapan ultah!"];
+                        echo json_encode($response);
+                    }
+                }
+            } else {
+                $template_id = '9e5f403d-a064-475e-b172-74ce62a56ede';
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => '{
                     "to_number": "' . $nomor_hp . '",
                     "to_name": "' . $nama . '",
                     "message_template_id": "' . $template_id . '",
@@ -109,37 +251,37 @@ foreach ($transArray as $arr) {
                         ]
                     }
                     }',
-                CURLOPT_HTTPHEADER => array(
-                    'Authorization: Bearer ' . $wa_token,
-                    'Content-Type: application/json'
-                ),
-            ));
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Bearer ' . $wa_token,
+                        'Content-Type: application/json'
+                    ),
+                ));
 
-            $response = curl_exec($curl);
+                $response = curl_exec($curl);
 
-            curl_close($curl);
+                curl_close($curl);
 
-            $res = json_decode($response, true);
+                $res = json_decode($response, true);
 
-            $status = $res['status'];
+                $status = $res['status'];
 
-            // echo $response;
-            // die;
-            // $status = "success";
+                // echo $response;
+                // die;
+                // $status = "success";
 
-            if ($status == 'success') {
-                $curl = curl_init();
+                if ($status == 'success') {
+                    $curl = curl_init();
 
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => '{
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => '{
                         "to_number": "' . $nomor_forward . '",
                         "to_name": "' . $nama . '",
                         "message_template_id": "' . $template_id . '",
@@ -170,140 +312,32 @@ foreach ($transArray as $arr) {
                             ]
                         }
                         }',
-                    CURLOPT_HTTPHEADER => array(
-                        'Authorization: Bearer ' . $wa_token,
-                        'Content-Type: application/json'
-                    ),
-                ));
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: Bearer ' . $wa_token,
+                            'Content-Type: application/json'
+                        ),
+                    ));
 
-                $response = curl_exec($curl);
+                    $response = curl_exec($curl);
 
-                curl_close($curl);
+                    curl_close($curl);
 
-                $res = json_decode($response, true);
+                    $res = json_decode($response, true);
 
-                $status = $res['status'];
-                // $status = "success";
+                    $status = $res['status'];
+                    // $status = "success";
 
-                if ($status == "success") {
-                    $getSak = mysqli_query($conn, "SELECT SUM(qty_produk) AS total_qty FROM tb_detail_surat_jalan JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_detail_surat_jalan.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact'");
-                    $rowSak = $getSak->fetch_array(MYSQLI_ASSOC);
-                    $pembelianSak = $rowSak['total_qty'];
-
-                    if ($reputation == 'good') {
-                        $jmlVoucher = 0;
-                        if ($pembelianSak != null) {
-                            if ($pembelianSak <= 100) {
-                                $jmlVoucher = 1;
-                            } else if ($pembelianSak > 100) {
-                                $jmlVoucher = 2;
-                            }
-                        } else {
-                            if ($reputation == 'good') {
-                                $jmlVoucher = 1;
-                            }
-                        }
-
-                        $curl = curl_init();
-
-                        curl_setopt_array(
-                            $curl,
-                            array(
-                                CURLOPT_URL => 'https://saleswa.topmortarindonesia.com/insertVoucher.php?j=' . $jmlVoucher . '&s=' . $id_contact,
-                                CURLOPT_RETURNTRANSFER => true,
-                                CURLOPT_ENCODING => '',
-                                CURLOPT_MAXREDIRS => 10,
-                                CURLOPT_TIMEOUT => 0,
-                                CURLOPT_FOLLOWLOCATION => true,
-                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                                CURLOPT_CUSTOMREQUEST => 'GET',
-                            )
-                        );
-
-                        $response = curl_exec($curl);
-
-                        curl_close($curl);
-
-                        $res = json_decode($response, true);
-
-                        $status = $res['status'];
-
-                        if ($status == 'ok') {
-                            $voucherArr = array();
-                            $dateNow = date("m-d");
-                            $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id_contact' AND is_claimed = 0 AND date_voucher LIKE '%$dateNow%' ");
-                            while ($rowVoucher = $getVoucher->fetch_array(MYSQLI_ASSOC)) {
-                                $voucherArr[] = $rowVoucher;
-                            }
-                            $vouchers = "";
-                            foreach ($voucherArr as $voucherArr) {
-                                $vouchers .= $voucherArr['no_voucher'] . ",";
-                            }
-                            // Send message
-                            // $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
-                            // $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
-                            // $integration_id = $rowQontak['integration_id'];
-
-                            $template_vc = "85f17083-255d-4340-af32-5dd22f483960";
-                            $message = "Selamat ulang tahun! Selamat anda mendapatkan Voucher. Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal " . date("d M, Y", strtotime("+30 days")) . ". Kode voucher: " . $vouchers;
-                            // Send message
-                            curl_setopt_array($curl, array(
-                                CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                                CURLOPT_RETURNTRANSFER => true,
-                                CURLOPT_ENCODING => '',
-                                CURLOPT_MAXREDIRS => 10,
-                                CURLOPT_TIMEOUT => 0,
-                                CURLOPT_FOLLOWLOCATION => true,
-                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                                CURLOPT_CUSTOMREQUEST => 'POST',
-                                CURLOPT_POSTFIELDS => '{
-                                "to_number": "' . $nomor_hp . '",
-                                "to_name": "' . $nama . '",
-                                "message_template_id": "' . $template_vc . '",
-                                "channel_integration_id": "' . $integration_id . '",
-                                "language": {
-                                    "code": "id"
-                                },
-                                "parameters": {
-                                    "body": [
-                                    {
-                                        "key": "1",
-                                        "value": "nama",
-                                        "value_text": "' . $nama . '"
-                                    },
-                                    {
-                                        "key": "2",
-                                        "value": "message",
-                                        "value_text": "' . $message . '"
-                                    },
-                                    {
-                                        "key": "3",
-                                        "value": "sales",
-                                        "value_text": "' . "Automated Message" . '"
-                                    }
-                                    ]
-                                }
-                                }',
-                                CURLOPT_HTTPHEADER => array(
-                                    'Authorization: Bearer ' . $wa_token,
-                                    'Content-Type: application/json'
-                                ),
-                            ));
-
-                            $response = curl_exec($curl);
-
-                            curl_close($curl);
-                        }
+                    if ($status == "success") {
+                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim ucapan ultah!"];
+                        echo json_encode($response);
+                    } else {
+                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim forward ucapan ultah!"];
+                        echo json_encode($response);
                     }
-                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim ucapan ultah!"];
-                    echo json_encode($response);
                 } else {
-                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim forward ucapan ultah!"];
+                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim ucapan ultah!"];
                     echo json_encode($response);
                 }
-            } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim ucapan ultah!"];
-                echo json_encode($response);
             }
         }
     }
