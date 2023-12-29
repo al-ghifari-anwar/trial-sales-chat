@@ -115,10 +115,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $res = json_decode($response, true);
 
-            $status = $res['status'];
+            $statusRes = $res['status'];
             // $status = "ok";
 
-            if ($status == 'ok') {
+            if ($statusRes == 'ok') {
                 $voucherArr = array();
                 $dateNow = date("m-d");
                 $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id' AND is_claimed = 0 AND date_voucher LIKE '%$dateNow%' ");
