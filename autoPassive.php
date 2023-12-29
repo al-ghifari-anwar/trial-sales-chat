@@ -24,17 +24,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $getContact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact'");
                 $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
 
-                $statusChange = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to, created_at) VALUES($id_contact,'active','passive', '$datePassive')");
+                $cekStatusData = mysqli_query($conn, "SELECT * FROM tb_status_change WHERE id_contact = '$id_contact' AND status_from = 'active' AND status_to = 'passive' AND created_at = '$datePassive'");
+                $rowStatusData = $cekStatusData->fetch_array(MYSQLI_ASSOC);
 
-                $setPassive = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'passive' WHERE id_contact = '$id_contact'");
+                if ($rowStatusData == null) {
+                    $statusChange = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to, created_at) VALUES($id_contact,'active','passive', '$datePassive')");
 
-                if ($setPassive) {
+                    $setPassive = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'passive' WHERE id_contact = '$id_contact'");
 
-                    $response = ["response" => 200, "status" => "success", "message" => "Status changed to passive!"];
-                    echo json_encode($response);
-                } else {
-                    $response = ["response" => 200, "status" => "failed", "message" => "Failed changing status!", "detail" => mysqli_error($conn)];
-                    echo json_encode($response);
+                    if ($setPassive) {
+
+                        $response = ["response" => 200, "status" => "success", "message" => "Status changed to passive!"];
+                        echo json_encode($response);
+                    } else {
+                        $response = ["response" => 200, "status" => "failed", "message" => "Failed changing status!", "detail" => mysqli_error($conn)];
+                        echo json_encode($response);
+                    }
                 }
             }
         }
