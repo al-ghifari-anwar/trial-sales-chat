@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             // echo $no;
 
-            $checkInv = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE no_invoice = '$no_invoice'");
+            $checkInv = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE id_surat_jalan = '$no'");
             $rowCheckInv = $checkInv->fetch_array(MYSQLI_ASSOC);
 
             if ($rowCheckInv) {
