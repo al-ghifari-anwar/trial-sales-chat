@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data gudang!"];
             echo json_encode($response);
         } else {
-            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengubah data gudang!"];
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengubah data gudang!", "detail" => mysqli_error($conn)];
             echo json_encode($response);
         }
 
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data gudang!"];
             echo json_encode($response);
         } else {
-            $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data gudang!"];
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data gudang!", "detail" => mysqli_error($conn)];
             echo json_encode($response);
         }
         mysqli_close($conn);
