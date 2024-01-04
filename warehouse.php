@@ -67,12 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         mysqli_close($conn);
     } else {
-        $nama_gudang = $_POST['nama_gudang'];
-        $location_gudang = $_POST['location_gudang'];
-        $nomorhp_gudang = $_POST['nomorhp_gudang'];
+        $nama_warehouse = $_POST['nama_warehouse'];
+        $location_warehouse = $_POST['location_warehouse'];
+        $nomorhp_warehouse = $_POST['nomorhp_warehouse'];
         $id_city = $_POST['id_city'];
 
-        $result = mysqli_query($conn, "INSERT INTO tb_warehouse(nama_warehouse,location_gudang,nomorhp_warehouse,id_city) VALUES('$nama_gudang', '$location_gudang','$nomorhp_gudang', $id_city)");
+        $result = mysqli_query($conn, "INSERT INTO tb_warehouse(nama_warehouse,location_warehouse,nomorhp_warehouse,id_city) VALUES('$nama_warehouse', '$location_warehouse','$nomorhp_warehouse', $id_city)");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data gudang!"];
