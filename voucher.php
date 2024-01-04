@@ -7,7 +7,7 @@ date_default_timezone_set('Asia/Jakarta');
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $id_contact = $_GET['c'];
 
-    $getStoreVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = $id_contact");
+    $getStoreVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = $id_contact ORDER BY id_voucher DESC");
 
     while ($rowGetStoreVoucher = $getStoreVoucher->fetch_array(MYSQLI_ASSOC)) {
         $getStoreVoucherArray[] = $rowGetStoreVoucher;
