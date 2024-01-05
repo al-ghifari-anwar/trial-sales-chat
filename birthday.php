@@ -44,9 +44,9 @@ foreach ($transArray as $arr) {
             $txt = $nama . "\n" . $toko;
             $fontFile = __DIR__ . "/font/CoffeCake.ttf"; // CHANGE TO YOUR OWN!
             $fontSize = 35;
-            $fontColor = imagecolorallocate($img, 255, 255, 255);
+            $fontColor = imagecolorallocate($img, 0, 0, 0);
             $posX = 212;
-            $posY = 875;
+            $posY = 610;
             $angle = 0;
             // (C) CALCULATE TEXT BOX POSITION
             // (C1) GET IMAGE DIMENSIONS
@@ -194,8 +194,7 @@ foreach ($transArray as $arr) {
                     curl_close($curl);
 
                     $res = json_decode($response, true);
-
-                    // echo $response;
+                    echo $response;
 
                     $status = $res['status'];
 
