@@ -110,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_contact = $rowSuratJalan['id_contact'];
 
             // Save record change status
+            $store_status = "";
             $getContact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact'");
             $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
             $store_status = $rowContact['store_status'];
