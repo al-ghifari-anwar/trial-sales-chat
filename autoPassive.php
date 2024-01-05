@@ -41,6 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         $response = ["response" => 200, "status" => "failed", "message" => "Failed changing status!", "detail" => mysqli_error($conn)];
                         echo json_encode($response);
                     }
+                } else {
+                    $response = ["response" => 200, "status" => "failed", "message" => "Failed changing status!", "detail" => "Status change already saved"];
+                    echo json_encode($response);
                 }
             }
         }
