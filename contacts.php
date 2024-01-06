@@ -69,6 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $nomor_hp = $_POST['nomorhp'];
         $status = $_POST['status'];
         $id_distributor = $rowContact['id_distributor'];
+        if ($id_city == 0) {
+            $response = ["response" => 200, "status" => "failed", "message" => "ID CITY 0!"];
+            echo json_encode($response);
+            die;
+        }
         // NEW
         $termin_payment = $_POST['termin_payment'];
         if (isset($_POST['id_promo'])) {
