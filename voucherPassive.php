@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         }
                     }
 
+                    $cekVoucherArr = null;
                     $cekVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id_contact' AND is_claimed = 0");
                     while ($rowCekVoucher = $cekVoucher->fetch_array(MYSQLI_ASSOC)) {
                         $cekVoucherArr[] = $rowCekVoucher;
@@ -92,59 +93,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                             $template_id = "750b1da6-d14f-4549-99b4-999cdfa6e708";
                             // Send message
-                            // curl_setopt_array($curl, array(
-                            //     CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                            //     CURLOPT_RETURNTRANSFER => true,
-                            //     CURLOPT_ENCODING => '',
-                            //     CURLOPT_MAXREDIRS => 10,
-                            //     CURLOPT_TIMEOUT => 0,
-                            //     CURLOPT_FOLLOWLOCATION => true,
-                            //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            //     CURLOPT_CUSTOMREQUEST => 'POST',
-                            //     CURLOPT_POSTFIELDS => '{
-                            //             "to_number": "' . $nomor_hp . '",
-                            //             "to_name": "' . $nama . '",
-                            //             "message_template_id": "' . $template_id . '",
-                            //             "channel_integration_id": "' . $integration_id . '",
-                            //             "language": {
-                            //                 "code": "id"
-                            //             },
-                            //             "parameters": {
-                            //                 "body": [
-                            //                     {
-                            //                         "key": "1",
-                            //                         "value": "nama",
-                            //                         "value_text": "' . $nama . '"
-                            //                     },
-                            //                     {
-                            //                         "key": "2",
-                            //                         "value": "jml_voucher",
-                            //                         "value_text": "' . $jmlVoucher . '"
-                            //                     },
-                            //                     {
-                            //                         "key": "3",
-                            //                         "value": "no_voucher",
-                            //                         "value_text": "' . $vouchers . '"
-                            //                     },
-                            //                     {
-                            //                         "key": "4",
-                            //                         "value": "date_voucher",
-                            //                         "value_text": "' . date("d M, Y", strtotime("+30 days")) . '"
-                            //                     }
-                            //                 ]
-                            //             }
-                            //             }',
-                            //     CURLOPT_HTTPHEADER => array(
-                            //         'Authorization: Bearer ' . $wa_token,
-                            //         'Content-Type: application/json'
-                            //     ),
-                            // ));
+                            curl_setopt_array($curl, array(
+                                CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                                CURLOPT_RETURNTRANSFER => true,
+                                CURLOPT_ENCODING => '',
+                                CURLOPT_MAXREDIRS => 10,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_FOLLOWLOCATION => true,
+                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                CURLOPT_CUSTOMREQUEST => 'POST',
+                                CURLOPT_POSTFIELDS => '{
+                                        "to_number": "' . $nomor_hp . '",
+                                        "to_name": "' . $nama . '",
+                                        "message_template_id": "' . $template_id . '",
+                                        "channel_integration_id": "' . $integration_id . '",
+                                        "language": {
+                                            "code": "id"
+                                        },
+                                        "parameters": {
+                                            "body": [
+                                                {
+                                                    "key": "1",
+                                                    "value": "nama",
+                                                    "value_text": "' . $nama . '"
+                                                },
+                                                {
+                                                    "key": "2",
+                                                    "value": "jml_voucher",
+                                                    "value_text": "' . $jmlVoucher . '"
+                                                },
+                                                {
+                                                    "key": "3",
+                                                    "value": "no_voucher",
+                                                    "value_text": "' . $vouchers . '"
+                                                },
+                                                {
+                                                    "key": "4",
+                                                    "value": "date_voucher",
+                                                    "value_text": "' . date("d M, Y", strtotime("+30 days")) . '"
+                                                }
+                                            ]
+                                        }
+                                        }',
+                                CURLOPT_HTTPHEADER => array(
+                                    'Authorization: Bearer ' . $wa_token,
+                                    'Content-Type: application/json'
+                                ),
+                            ));
 
-                            // $response = curl_exec($curl);
+                            $response = curl_exec($curl);
 
-                            // curl_close($curl);
+                            curl_close($curl);
 
-                            // $res = json_decode($response, true);
+                            $res = json_decode($response, true);
 
                             // echo $response;
 
