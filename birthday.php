@@ -199,8 +199,84 @@ foreach ($transArray as $arr) {
                     $status = $res['status'];
 
                     if ($status == "success") {
-                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim ucapan ultah!"];
-                        echo json_encode($response);
+                        // Send forward message
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => '{
+                                "to_number": "' . $nomor_forward . '",
+                                "to_name": "' . $nama . '",
+                                "message_template_id": "' . $template_vc . '",
+                                "channel_integration_id": "' . $integration_id . '",
+                                "language": {
+                                    "code": "id"
+                                },
+                                "parameters": {
+                                    "header":{
+                                        "format":"IMAGE",
+                                        "params": [
+                                            {
+                                                "key":"url",
+                                                "value":"https://saleswa.topmortarindonesia.com/img/bday_' . $nomor_hp . '.jpg"
+                                            },
+                                            {
+                                                "key":"filename",
+                                                "value":"bday.jpg"
+                                            }
+                                        ]
+                                    },
+                                    "body": [
+                                        {
+                                            "key": "1",
+                                            "value": "nama",
+                                            "value_text": "' . $nama . '"
+                                        },
+                                        {
+                                            "key": "2",
+                                            "value": "jml_voucher",
+                                            "value_text": "' . $jmlVoucher . '"
+                                        },
+                                        {
+                                            "key": "3",
+                                            "value": "no_voucher",
+                                            "value_text": "' . $vouchers . '"
+                                        },
+                                        {
+                                            "key": "4",
+                                            "value": "date_voucher",
+                                            "value_text": "' . date("d M, Y", strtotime("+30 days")) . '"
+                                        }
+                                    ]
+                                }
+                                }',
+                            CURLOPT_HTTPHEADER => array(
+                                'Authorization: Bearer ' . $wa_token,
+                                'Content-Type: application/json'
+                            ),
+                        ));
+
+                        $response = curl_exec($curl);
+
+                        curl_close($curl);
+
+                        $res = json_decode($response, true);
+                        echo $response;
+
+                        $status = $res['status'];
+
+                        if ($status == 'success') {
+                            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim forward ucapan ultah!"];
+                            echo json_encode($response);
+                        } else {
+                            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim forward ucapan ultah!"];
+                            echo json_encode($response);
+                        }
                     } else {
                         $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim ucapan ultah!"];
                         echo json_encode($response);
