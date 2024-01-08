@@ -153,9 +153,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim voucher passive!"];
                                 echo json_encode($response);
                             } else {
-                                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim voucher passive!"];
+                                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim pesan voucher passive!"];
                                 echo json_encode($response);
                             }
+                        } else {
+                            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim voucher passive!"];
+                            echo json_encode($response);
                         }
                     } else {
                         $response = ["response" => 200, "status" => "failed", "message" => "Cant input voucher!", "detail" => "This store already have voucher"];
