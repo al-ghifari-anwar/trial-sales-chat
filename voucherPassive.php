@@ -52,115 +52,115 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     while ($rowCekVoucher = $cekVoucher->fetch_array(MYSQLI_ASSOC)) {
                         $cekVoucherArr[] = $rowCekVoucher;
                     }
-                    echo "ID:" . $id_contact;
-                    echo json_encode($cekVoucherArr);
+                    // echo "ID:" . $id_contact;
+                    // echo json_encode($cekVoucherArr);
                     if ($cekVoucherArr == null) {
-                        echo "Voucher sent";
-                        // $curl = curl_init();
+                        // echo "Voucher sent";
+                        $curl = curl_init();
 
-                        // curl_setopt_array(
-                        //     $curl,
-                        //     array(
-                        //         CURLOPT_URL => 'https://saleswa.topmortarindonesia.com/insertVoucher.php?j=' . $jmlVoucher . '&s=' . $id_contact,
-                        //         CURLOPT_RETURNTRANSFER => true,
-                        //         CURLOPT_ENCODING => '',
-                        //         CURLOPT_MAXREDIRS => 10,
-                        //         CURLOPT_TIMEOUT => 0,
-                        //         CURLOPT_FOLLOWLOCATION => true,
-                        //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        //         CURLOPT_CUSTOMREQUEST => 'GET',
-                        //     )
-                        // );
+                        curl_setopt_array(
+                            $curl,
+                            array(
+                                CURLOPT_URL => 'https://saleswa.topmortarindonesia.com/insertVoucher.php?j=' . $jmlVoucher . '&s=' . $id_contact,
+                                CURLOPT_RETURNTRANSFER => true,
+                                CURLOPT_ENCODING => '',
+                                CURLOPT_MAXREDIRS => 10,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_FOLLOWLOCATION => true,
+                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                CURLOPT_CUSTOMREQUEST => 'GET',
+                            )
+                        );
 
-                        // $response = curl_exec($curl);
+                        $response = curl_exec($curl);
 
-                        // curl_close($curl);
+                        curl_close($curl);
 
-                        // $res = json_decode($response, true);
+                        $res = json_decode($response, true);
 
-                        // $status = $res['status'];
+                        $status = $res['status'];
 
-                        // if ($status == 'ok') {
-                        //     $voucherArr = array();
-                        //     $dateNow = date("m-d");
-                        //     $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id_contact' AND is_claimed = 0 AND date_voucher LIKE '%$dateNow%' ");
-                        //     while ($rowVoucher = $getVoucher->fetch_array(MYSQLI_ASSOC)) {
-                        //         $voucherArr[] = $rowVoucher;
-                        //     }
-                        //     $vouchers = "";
-                        //     foreach ($voucherArr as $voucherArr) {
-                        //         $vouchers .= $voucherArr['no_voucher'] . ",";
-                        //     }
+                        if ($status == 'ok') {
+                            $voucherArr = array();
+                            $dateNow = date("m-d");
+                            $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id_contact' AND is_claimed = 0 AND date_voucher LIKE '%$dateNow%' ");
+                            while ($rowVoucher = $getVoucher->fetch_array(MYSQLI_ASSOC)) {
+                                $voucherArr[] = $rowVoucher;
+                            }
+                            $vouchers = "";
+                            foreach ($voucherArr as $voucherArr) {
+                                $vouchers .= $voucherArr['no_voucher'] . ",";
+                            }
 
-                        //     $template_id = "750b1da6-d14f-4549-99b4-999cdfa6e708";
+                            $template_id = "750b1da6-d14f-4549-99b4-999cdfa6e708";
 
-                        //     curl_setopt_array($curl, array(
-                        //         CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                        //         CURLOPT_RETURNTRANSFER => true,
-                        //         CURLOPT_ENCODING => '',
-                        //         CURLOPT_MAXREDIRS => 10,
-                        //         CURLOPT_TIMEOUT => 0,
-                        //         CURLOPT_FOLLOWLOCATION => true,
-                        //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        //         CURLOPT_CUSTOMREQUEST => 'POST',
-                        //         CURLOPT_POSTFIELDS => '{
-                        //                 "to_number": "' . $nomor_hp . '",
-                        //                 "to_name": "' . $nama . '",
-                        //                 "message_template_id": "' . $template_id . '",
-                        //                 "channel_integration_id": "' . $integration_id . '",
-                        //                 "language": {
-                        //                     "code": "id"
-                        //                 },
-                        //                 "parameters": {
-                        //                     "body": [
-                        //                         {
-                        //                             "key": "1",
-                        //                             "value": "nama",
-                        //                             "value_text": "' . $nama . '"
-                        //                         },
-                        //                         {
-                        //                             "key": "2",
-                        //                             "value": "jml_voucher",
-                        //                             "value_text": "' . $jmlVoucher . '"
-                        //                         },
-                        //                         {
-                        //                             "key": "3",
-                        //                             "value": "no_voucher",
-                        //                             "value_text": "' . $vouchers . '"
-                        //                         },
-                        //                         {
-                        //                             "key": "4",
-                        //                             "value": "date_voucher",
-                        //                             "value_text": "' . date("d M, Y", strtotime("+30 days")) . '"
-                        //                         }
-                        //                     ]
-                        //                 }
-                        //                 }',
-                        //         CURLOPT_HTTPHEADER => array(
-                        //             'Authorization: Bearer ' . $wa_token,
-                        //             'Content-Type: application/json'
-                        //         ),
-                        //     ));
+                            curl_setopt_array($curl, array(
+                                CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                                CURLOPT_RETURNTRANSFER => true,
+                                CURLOPT_ENCODING => '',
+                                CURLOPT_MAXREDIRS => 10,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_FOLLOWLOCATION => true,
+                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                CURLOPT_CUSTOMREQUEST => 'POST',
+                                CURLOPT_POSTFIELDS => '{
+                                        "to_number": "' . $nomor_hp . '",
+                                        "to_name": "' . $nama . '",
+                                        "message_template_id": "' . $template_id . '",
+                                        "channel_integration_id": "' . $integration_id . '",
+                                        "language": {
+                                            "code": "id"
+                                        },
+                                        "parameters": {
+                                            "body": [
+                                                {
+                                                    "key": "1",
+                                                    "value": "nama",
+                                                    "value_text": "' . $nama . '"
+                                                },
+                                                {
+                                                    "key": "2",
+                                                    "value": "jml_voucher",
+                                                    "value_text": "' . $jmlVoucher . '"
+                                                },
+                                                {
+                                                    "key": "3",
+                                                    "value": "no_voucher",
+                                                    "value_text": "' . $vouchers . '"
+                                                },
+                                                {
+                                                    "key": "4",
+                                                    "value": "date_voucher",
+                                                    "value_text": "' . date("d M, Y", strtotime("+30 days")) . '"
+                                                }
+                                            ]
+                                        }
+                                        }',
+                                CURLOPT_HTTPHEADER => array(
+                                    'Authorization: Bearer ' . $wa_token,
+                                    'Content-Type: application/json'
+                                ),
+                            ));
 
-                        //     $response = curl_exec($curl);
+                            $response = curl_exec($curl);
 
-                        //     curl_close($curl);
+                            curl_close($curl);
 
-                        //     $res = json_decode($response, true);
+                            $res = json_decode($response, true);
 
-                        //     $status = $res['status'];
+                            $status = $res['status'];
 
-                        //     if ($status == "success") {
-                        //         $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim voucher passive!"];
-                        //         echo json_encode($response);
-                        //     } else {
-                        //         $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim pesan voucher passive!"];
-                        //         echo json_encode($response);
-                        //     }
-                        // } else {
-                        //     $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim voucher passive!"];
-                        //     echo json_encode($response);
-                        // }
+                            if ($status == "success") {
+                                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim voucher passive!"];
+                                echo json_encode($response);
+                            } else {
+                                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim pesan voucher passive!"];
+                                echo json_encode($response);
+                            }
+                        } else {
+                            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim voucher passive!"];
+                            echo json_encode($response);
+                        }
                     } else {
                         $response = ["response" => 200, "status" => "failed", "message" => "Cant input voucher!", "detail" => "This store already have voucher"];
                         echo json_encode($response);
