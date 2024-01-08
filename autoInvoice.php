@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo "Nominal after potongan: " . $nominal;
 
             // echo json_encode($numberArray);
-            $pengurangan = 0;
+            $pengurangan = 1;
             if ($numberArray != null) {
                 foreach ($numberArray as $numberArray) {
                     // echo "Nominal Skrg: " . ($nominal - $pengurangan) . "\n";
