@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     while ($rowCekVoucher = $cekVoucher->fetch_array(MYSQLI_ASSOC)) {
                         $cekVoucherArr[] = $rowCekVoucher;
                     }
+                    echo "ID:" . $id_contact;
                     echo json_encode($cekVoucherArr);
                     if ($cekVoucherArr == null) {
                         $curl = curl_init();
@@ -167,8 +168,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 }
                 // }
             } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Last order not more than 3 months!"];
-                echo json_encode($response);
+                // $response = ["response" => 200, "status" => "failed", "message" => "Last order not more than 3 months!"];
+                // echo json_encode($response);
             }
         }
     } else {
