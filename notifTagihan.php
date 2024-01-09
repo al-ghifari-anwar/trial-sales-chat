@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $nama = $salesArray['full_name'];
         $id_distributor = $salesArray['id_distributor'];
 
-        $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+        $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor' AND is_notify = 1");
         $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
 
         $integration_id = $rowQontak['integration_id'];
