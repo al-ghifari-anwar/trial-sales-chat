@@ -6,7 +6,7 @@ $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
 $template_id = '85f17083-255d-4340-af32-5dd22f483960';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher JOIN tb_contact ON tb_contact.id_contact = tb_voucher.id_contact WHERE is_claimed = 0 GROUP BY DATE(tb_voucher.date_voucher)");
+    $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher JOIN tb_contact ON tb_contact.id_contact = tb_voucher.id_contact WHERE is_claimed = 0 GROUP BY tb_voucher.id_contact");
     while ($rowGetVoucher = $getVoucher->fetch_array(MYSQLI_ASSOC)) {
         $getVoucherArr[] = $rowGetVoucher;
     }
