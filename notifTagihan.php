@@ -9,7 +9,7 @@ $template_id = '85f17083-255d-4340-af32-5dd22f483960';
 // $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $getSales = mysqli_query($conn, "SELECT * FROM tb_user WHERE level_user = 'sales'");
+    $getSales = mysqli_query($conn, "SELECT * FROM tb_user WHERE level_user = 'sales' AND is_notify = 1");
 
     while ($rowSales = $getSales->fetch_array(MYSQLI_ASSOC)) {
         $salesArray[] = $rowSales;
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $nama = $salesArray['full_name'];
         $id_distributor = $salesArray['id_distributor'];
 
-        $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor' AND is_notify = 1");
+        $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
         $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
 
         $integration_id = $rowQontak['integration_id'];
