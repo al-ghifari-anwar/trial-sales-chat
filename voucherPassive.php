@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 $vouchers .= $voucherArr['no_voucher'] . ",";
                             }
 
-                            $template_id = "750b1da6-d14f-4549-99b4-999cdfa6e708";
+                            $template_id = "7352c89d-ec94-4c1a-bbd6-ff0003e9c2a1";
 
                             curl_setopt_array($curl, array(
                                 CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
