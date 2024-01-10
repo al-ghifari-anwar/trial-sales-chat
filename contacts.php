@@ -3,7 +3,7 @@ error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 
 $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
-$template_id = '2a5a5dc1-8e2d-4789-b0c0-566b9bb5ab72';
+$template_id = '2eead557-1b0b-4613-b89c-5c153f5bfe55';
 // $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
