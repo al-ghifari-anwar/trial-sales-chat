@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $id_contact = $_GET['s'];
 
     for ($i = 0; $i < $jmlVoucher; $i++) {
-        $no_voucher = rand(00001, 99999);
+        $no_voucher = rand(10000, 99999);
 
         $cekVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE no_voucher = '$no_voucher'");
         $rowVoucher = $cekVoucher->fetch_array(MYSQLI_ASSOC);
