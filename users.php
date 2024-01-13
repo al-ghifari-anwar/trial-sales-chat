@@ -20,20 +20,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array("status" => "ok", "results" => $transArray));
         }
     } else {
-        $id_distributor = $_GET['dst'];
+        if (isset($_GET['c'])) {
+            $id_city = $_GET['c'];
 
-        $result = mysqli_query($conn, "SELECT * FROM tb_user JOIN tb_city ON tb_user.id_city = tb_city.id_city WHERE tb_city.id_distributor = '$id_distributor'");
+            $result = mysqli_query($conn, "SELECT * FROM tb_user JOIN tb_city ON tb_user.id_city = tb_city.id_city WHERE tb_city.id_city = '$id_city'");
 
-        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-            $transArray[] = $row;
-        }
+            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                $transArray[] = $row;
+            }
 
-        mysqli_close($conn);
+            mysqli_close($conn);
 
-        if ($transArray == null) {
-            echo json_encode(array("status" => "empty", "results" => []));
+            if ($transArray == null) {
+                echo json_encode(array("status" => "empty", "results" => []));
+            } else {
+                echo json_encode(array("status" => "ok", "results" => $transArray));
+            }
         } else {
-            echo json_encode(array("status" => "ok", "results" => $transArray));
+            $id_distributor = $_GET['dst'];
+
+            $result = mysqli_query($conn, "SELECT * FROM tb_user JOIN tb_city ON tb_user.id_city = tb_city.id_city WHERE tb_city.id_distributor = '$id_distributor'");
+
+            while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                $transArray[] = $row;
+            }
+
+            mysqli_close($conn);
+
+            if ($transArray == null) {
+                echo json_encode(array("status" => "empty", "results" => []));
+            } else {
+                echo json_encode(array("status" => "ok", "results" => $transArray));
+            }
         }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
