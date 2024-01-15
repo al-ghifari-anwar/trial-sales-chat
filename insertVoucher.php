@@ -15,7 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $exp_date = date("Y-m-d", strtotime("+30 days"));
 
         if (!$rowVoucher) {
-            $insert = mysqli_query($conn, "INSERT INTO tb_voucher(id_contact,no_voucher,point_voucher,exp_date) VALUES($id_contact,'$no_voucher',1,'$exp_date')");
+            if (isset($_GET['t'])) {
+                $insert = mysqli_query($conn, "INSERT INTO tb_voucher(id_contact,no_voucher,point_voucher,exp_date,type_voucher) VALUES($id_contact,'$no_voucher',1,'$exp_date','manual')");
+            } else {
+                $insert = mysqli_query($conn, "INSERT INTO tb_voucher(id_contact,no_voucher,point_voucher,exp_date) VALUES($id_contact,'$no_voucher',1,'$exp_date')");
+            }
         }
     }
 
