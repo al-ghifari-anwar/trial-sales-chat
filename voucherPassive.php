@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 $vouchers .= $voucherArr['no_voucher'] . ",";
                             }
 
-                            $template_id = "7352c89d-ec94-4c1a-bbd6-ff0003e9c2a1";
+                            $template_id = "c4504076-8fc7-44a0-9534-9f6ebc3e56e5";
 
                             curl_setopt_array($curl, array(
                                 CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
@@ -112,6 +112,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                             "code": "id"
                                         },
                                         "parameters": {
+                                            "header":{
+                                                "format":"IMAGE",
+                                                "params": [
+                                                    {
+                                                        "key":"url",
+                                                        "value":"https://saleswa.topmortarindonesia.com/img/vc_passive.jpg"
+                                                    },
+                                                    {
+                                                        "key":"filename",
+                                                        "value":"bday.jpg"
+                                                    }
+                                                ]
+                                            },
                                             "body": [
                                                 {
                                                     "key": "1",
