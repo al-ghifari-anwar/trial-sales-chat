@@ -3,7 +3,7 @@ error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
-$template_id = '85f17083-255d-4340-af32-5dd22f483960';
+$template_id = 'cef1a14c-0441-4927-941c-5d785ed81f76';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher JOIN tb_contact ON tb_contact.id_contact = tb_voucher.id_contact WHERE is_claimed = 0 GROUP BY tb_voucher.id_contact");
@@ -63,6 +63,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         "code": "id"
                     },
                     "parameters": {
+                        "header":{
+                            "format":"IMAGE",
+                            "params": [
+                                {
+                                    "key":"url",
+                                    "value":"https://saleswa.topmortarindonesia.com/img/vc_reminderAfter.jpg"
+                                },
+                                {
+                                    "key":"filename",
+                                    "value":"bday.jpg"
+                                }
+                            ]
+                        },
                         "body": [
                         {
                             "key": "1",
