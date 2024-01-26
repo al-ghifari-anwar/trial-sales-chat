@@ -3,7 +3,7 @@ error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
-$template_id = 'cef1a14c-0441-4927-941c-5d785ed81f76';
+$template_id = '46231ab1-3a21-4501-af81-3c96a8e3ead1';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher JOIN tb_contact ON tb_contact.id_contact = tb_voucher.id_contact WHERE is_claimed = 0 GROUP BY tb_voucher.id_contact");
@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     foreach ($getVoucherArr as $getVoucherArr) {
-        $oneWeek = date("Y-m-d", strtotime("-1 week"));
+        $oneWeek = date("Y-m-d", strtotime("-3 week"));
         $dateVoucher = date("Y-m-d", strtotime($getVoucherArr['date_voucher']));
 
         $codeArr = null;
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             "params": [
                                 {
                                     "key":"url",
-                                    "value":"https://saleswa.topmortarindonesia.com/img/vc_reminderAfter.jpg"
+                                    "value":"https://saleswa.topmortarindonesia.com/img/vc_reminderBfr.jpg"
                                 },
                                 {
                                     "key":"filename",
