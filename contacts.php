@@ -97,112 +97,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $imgNewName = 'min-' . $dateFile . $_FILES['ktp']['name'];
 
-            $jmlVoucher = 5;
-            $curl = curl_init();
+            if ($id_distributor == 1) {
 
-            curl_setopt_array(
-                $curl,
-                array(
-                    CURLOPT_URL => 'https://saleswa.topmortarindonesia.com/insertVoucher.php?j=' . $jmlVoucher . '&s=' . $id,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'GET',
-                )
-            );
-
-            $response = curl_exec($curl);
-
-            curl_close($curl);
-
-            $res = json_decode($response, true);
-
-            $statusRes = $res['status'];
-            // $status = "ok";
-
-            if ($statusRes == 'ok') {
-                $voucherArr = array();
-                $dateNow = date("m-d");
-                $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id' AND is_claimed = 0 AND date_voucher LIKE '%$dateNow%' ");
-                while ($rowVoucher = $getVoucher->fetch_array(MYSQLI_ASSOC)) {
-                    $voucherArr[] = $rowVoucher;
-                }
-                $vouchers = "";
-                foreach ($voucherArr as $voucherArr) {
-                    $vouchers .= $voucherArr['no_voucher'] . ",";
-                }
-
-                $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
-                $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
-                $integration_id = $rowQontak['integration_id'];
-
-                $message = "Terimakasih telah bargabung menjadi bagian dari TOP Mortar! Nikmati layanan kilat 1 hari kerja 'Pesan Hari Ini, Kirim Hari Ini' hanya dengan pembelian 10 sak. Nantikan promo-promo menarik lainnya Bersama Top Mortar, mari kita maju bersama! Selamat anda kode voucher. Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal " . date("d M, Y", strtotime("+30 days")) . ". Kode Voucher: " . $vouchers;
-                // Send message
+                $jmlVoucher = 5;
                 $curl = curl_init();
 
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => '{
-                                "to_number": "' . $nomor_hp . '",
-                                "to_name": "' . $nama . '",
-                                "message_template_id": "' . $template_id . '",
-                                "channel_integration_id": "' . $integration_id . '",
-                                "language": {
-                                    "code": "id"
-                                },
-                                "parameters": {
-                                    "header":{
-                                        "format":"IMAGE",
-                                        "params": [
-                                            {
-                                                "key":"url",
-                                                "value":"https://saleswa.topmortarindonesia.com/img/flyer_toko_baru.png"
-                                            },
-                                            {
-                                                "key":"filename",
-                                                "value":"bday.jpg"
-                                            }
-                                        ]
-                                    },
-                                    "body": [
-                                        {
-                                            "key": "1",
-                                            "value": "nama",
-                                            "value_text": "' . $nama . '"
-                                        },
-                                        {
-                                            "key": "2",
-                                            "value": "jml_voucher",
-                                            "value_text": "' . $jmlVoucher . '"
-                                        },
-                                        {
-                                            "key": "3",
-                                            "value": "no_voucher",
-                                            "value_text": "' . $vouchers . '"
-                                        },
-                                        {
-                                            "key": "4",
-                                            "value": "date_voucher",
-                                            "value_text": "' . date("d M, Y", strtotime("+30 days")) . '"
-                                        }
-                                    ]
-                                }
-                                }',
-                    CURLOPT_HTTPHEADER => array(
-                        'Authorization: Bearer ' . $wa_token,
-                        'Content-Type: application/json'
-                    ),
-                ));
+                curl_setopt_array(
+                    $curl,
+                    array(
+                        CURLOPT_URL => 'https://saleswa.topmortarindonesia.com/insertVoucher.php?j=' . $jmlVoucher . '&s=' . $id,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'GET',
+                    )
+                );
 
                 $response = curl_exec($curl);
 
@@ -210,7 +122,98 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $res = json_decode($response, true);
 
-                // echo $response;
+                $statusRes = $res['status'];
+                // $status = "ok";
+
+                if ($statusRes == 'ok') {
+                    $voucherArr = array();
+                    $dateNow = date("m-d");
+                    $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id' AND is_claimed = 0 AND date_voucher LIKE '%$dateNow%' ");
+                    while ($rowVoucher = $getVoucher->fetch_array(MYSQLI_ASSOC)) {
+                        $voucherArr[] = $rowVoucher;
+                    }
+                    $vouchers = "";
+                    foreach ($voucherArr as $voucherArr) {
+                        $vouchers .= $voucherArr['no_voucher'] . ",";
+                    }
+
+                    $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+                    $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+                    $integration_id = $rowQontak['integration_id'];
+
+                    $message = "Terimakasih telah bargabung menjadi bagian dari TOP Mortar! Nikmati layanan kilat 1 hari kerja 'Pesan Hari Ini, Kirim Hari Ini' hanya dengan pembelian 10 sak. Nantikan promo-promo menarik lainnya Bersama Top Mortar, mari kita maju bersama! Selamat anda kode voucher. Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal " . date("d M, Y", strtotime("+30 days")) . ". Kode Voucher: " . $vouchers;
+                    // Send message
+                    $curl = curl_init();
+
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => '{
+                                    "to_number": "' . $nomor_hp . '",
+                                    "to_name": "' . $nama . '",
+                                    "message_template_id": "' . $template_id . '",
+                                    "channel_integration_id": "' . $integration_id . '",
+                                    "language": {
+                                        "code": "id"
+                                    },
+                                    "parameters": {
+                                        "header":{
+                                            "format":"IMAGE",
+                                            "params": [
+                                                {
+                                                    "key":"url",
+                                                    "value":"https://saleswa.topmortarindonesia.com/img/flyer_toko_baru.png"
+                                                },
+                                                {
+                                                    "key":"filename",
+                                                    "value":"bday.jpg"
+                                                }
+                                            ]
+                                        },
+                                        "body": [
+                                            {
+                                                "key": "1",
+                                                "value": "nama",
+                                                "value_text": "' . $nama . '"
+                                            },
+                                            {
+                                                "key": "2",
+                                                "value": "jml_voucher",
+                                                "value_text": "' . $jmlVoucher . '"
+                                            },
+                                            {
+                                                "key": "3",
+                                                "value": "no_voucher",
+                                                "value_text": "' . $vouchers . '"
+                                            },
+                                            {
+                                                "key": "4",
+                                                "value": "date_voucher",
+                                                "value_text": "' . date("d M, Y", strtotime("+30 days")) . '"
+                                            }
+                                        ]
+                                    }
+                                    }',
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: Bearer ' . $wa_token,
+                            'Content-Type: application/json'
+                        ),
+                    ));
+
+                    $response = curl_exec($curl);
+
+                    curl_close($curl);
+
+                    $res = json_decode($response, true);
+
+                    // echo $response;
+                }
             }
         } else {
             $imgNewName = $rowContact['ktp_owner'];
