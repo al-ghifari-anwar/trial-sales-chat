@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array("status" => "ok", "results" => $transArray));
         }
     } else {
-
+        echo "AWDA";
         $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
