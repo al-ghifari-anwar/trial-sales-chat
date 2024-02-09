@@ -35,6 +35,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             echo json_encode(array("status" => "ok", "results" => $transArray));
         }
+    } else {
+
+        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier");
+
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $transArray[] = $row;
+        }
+
+        mysqli_close($conn);
+
+        if ($transArray == null) {
+            echo json_encode(array("status" => "empty", "results" => []));
+        } else {
+            echo json_encode(array("status" => "ok", "results" => $transArray));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['id'])) {
