@@ -6,7 +6,7 @@ $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-    $getLastOrder = mysqli_query($conn, "SELECT MAX(date_closing) AS last_order, id_contact  FROM tb_surat_jalan tsj GROUP BY tsj.id_contact ");
+    $getLastOrder = mysqli_query($conn, "SELECT MAX(date_closing) AS last_order, id_contact  FROM tb_surat_jalan tsj WHERE is_closing = 1 GROUP BY tsj.id_contact ");
 
     while ($rowLastOrder = $getLastOrder->fetch_array(MYSQLI_ASSOC)) {
         $lastOrderArr[] = $rowLastOrder;
