@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
 
-        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier WHERE id_delivery = '$id'");
+        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE id_delivery = '$id'");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $transArray[] = $row;
@@ -22,7 +22,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if (isset($_GET['id_courier'])) {
         $id_courier = $_GET['id_courier'];
 
-        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier WHERE tb_delivery.id_courier = '$id_courier'");
+        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE tb_delivery.id_courier = '$id_courier'");
+
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $transArray[] = $row;
+        }
+
+        mysqli_close($conn);
+
+        if ($transArray == null) {
+            echo json_encode(array("status" => "empty", "results" => []));
+        } else {
+            echo json_encode(array("status" => "ok", "results" => $transArray));
+        }
+    } else if (isset($_GET['c'])) {
+        $id_city = $_GET['c'];
+
+        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE tb_user.id_city = '$id_city'");
+
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $transArray[] = $row;
+        }
+
+        mysqli_close($conn);
+
+        if ($transArray == null) {
+            echo json_encode(array("status" => "empty", "results" => []));
+        } else {
+            echo json_encode(array("status" => "ok", "results" => $transArray));
+        }
+    } else if (isset($_GET['dst'])) {
+        $id_distributor = $_GET['dst'];
+
+        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE tb_user.id_distributor = '$id_distributor'");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $transArray[] = $row;
@@ -37,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     } else {
         // echo "AWDA";
-        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier");
+        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $transArray[] = $row;
