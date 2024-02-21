@@ -7,18 +7,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $jmlVoucher = $_GET['j'];
     $id_contact = $_GET['s'];
 
-    for ($i = 0; $i < $jmlVoucher; $i++) {
-        $no_voucher = rand(10000, 99999);
+    $getContact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact'");
+    $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
 
-        $cekVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE no_voucher = '$no_voucher'");
-        $rowVoucher = $cekVoucher->fetch_array(MYSQLI_ASSOC);
-        $exp_date = date("Y-m-d", strtotime("+30 days"));
+    if ($rowContact['store_status'] != 'blacklist') {
+        for ($i = 0; $i < $jmlVoucher; $i++) {
+            $no_voucher = rand(10000, 99999);
 
-        if (!$rowVoucher) {
-            if (isset($_GET['t'])) {
-                $insert = mysqli_query($conn, "INSERT INTO tb_voucher(id_contact,no_voucher,point_voucher,exp_date,type_voucher) VALUES($id_contact,'$no_voucher',1,'$exp_date','manual')");
-            } else {
-                $insert = mysqli_query($conn, "INSERT INTO tb_voucher(id_contact,no_voucher,point_voucher,exp_date) VALUES($id_contact,'$no_voucher',1,'$exp_date')");
+            $cekVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE no_voucher = '$no_voucher'");
+            $rowVoucher = $cekVoucher->fetch_array(MYSQLI_ASSOC);
+            $exp_date = date("Y-m-d", strtotime("+30 days"));
+
+            if (!$rowVoucher) {
+                if (isset($_GET['t'])) {
+                    $insert = mysqli_query($conn, "INSERT INTO tb_voucher(id_contact,no_voucher,point_voucher,exp_date,type_voucher) VALUES($id_contact,'$no_voucher',1,'$exp_date','manual')");
+                } else {
+                    $insert = mysqli_query($conn, "INSERT INTO tb_voucher(id_contact,no_voucher,point_voucher,exp_date) VALUES($id_contact,'$no_voucher',1,'$exp_date')");
+                }
             }
         }
     }
