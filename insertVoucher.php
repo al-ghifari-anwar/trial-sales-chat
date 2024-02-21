@@ -26,8 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 }
             }
         }
+        $response = ["response" => 200, "status" => "ok", "message" => $jmlVoucher . " voucher telah berhasil diinput"];
+        echo json_encode($response);
+    } else {
+        $response = ["response" => 200, "status" => "failed", "message" => " Toko blacklist tidak dapat menerima voucher"];
     }
-
-    $response = ["response" => 200, "status" => "ok", "message" => $jmlVoucher . " voucher telah berhasil diinput"];
-    echo json_encode($response);
 }
