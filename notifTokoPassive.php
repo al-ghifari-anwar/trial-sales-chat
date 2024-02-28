@@ -27,15 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $integration_id = $rowQontak['integration_id'];
 
-        if ($nomor_hp == "6287774436555" || $nomor_hp == "6281808152028") {
-            $message = "Data toko passive: https://order.topmortarindonesia.com/notif-passive?ct=0";
-            $msgStatus = "All City";
-            // echo $message;
-        } else {
-            $message = "Data toko passive: https://order.topmortarindonesia.com/notif-passive?ct=$id_city";
-            $msgStatus = "Specific City";
-            // echo $message;
-        }
+        // if ($nomor_hp == "6287774436555" || $nomor_hp == "6281808152028") {
+        //     $message = "Data toko passive: https://order.topmortarindonesia.com/notif-passive?ct=0";
+        //     $msgStatus = "All City";
+        // } else {
+        $message = "Data toko passive: https://order.topmortarindonesia.com/notif-passive?ct=$id_city";
+        $msgStatus = "Specific City";
+        // }
 
         if ($nomor_hp != "6287774436555" || $nomor_hp != "6281808152028" || $nomor_hp != "6281235834111" || $nomor_hp != "6281952581199" || $nomor_hp != "6285335631783" || $nomor_hp != "6281808152028" || $nomor_hp != "6287757904850") {
 
