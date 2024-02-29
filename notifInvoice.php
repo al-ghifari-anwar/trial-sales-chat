@@ -46,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // echo json_encode($sisaHutang);
             if ($sisaHutang > 0) {
                 if ($id_distributor == 2) {
-                    echo "Jateng";
+                    $response = ["message" => "Belum waktunya", "days" => $days, "date_inv" => $invArray['date_invoice']];
+                    echo json_encode($response);
                 }
                 // $curl = curl_init();
 
