@@ -116,7 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 // }
             }
         } else {
-            echo "Belum waktunya";
+            $response = ["message" => "Belum waktunya", "days" => $days, "date_inv" => $invArray['date_invoice']];
+            echo $response;
         }
         // echo $jatuhTempo;
     }
