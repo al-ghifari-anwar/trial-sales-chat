@@ -4,6 +4,7 @@ include_once("config.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id'])) {
+        // 
         $id = $_GET['id'];
 
         $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE id_delivery = '$id'");
