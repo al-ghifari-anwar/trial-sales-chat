@@ -12,6 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $renvisArray[] = $rowRenvis;
             }
+
+            if ($renvisArray == null) {
+                echo json_encode(array("status" => "empty", "results" => []));
+            } else {
+                echo json_encode(array("status" => "ok", "results" => $renvisArray));
+            }
         }
     }
 }
