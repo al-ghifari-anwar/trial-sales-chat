@@ -35,13 +35,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $sisaHutang = number_format($invArray['total_invoice'] - $rowPayment['amount_total'], 0, '.', ',');
 
             if ($sisaHutang > 0) {
-                $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem',$id_distributor,$id_invoice)");
+                $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_rencana_visit WHERE id_contact = '$id_contact' AND type_rencana = 'jatem' AND is_visited = 0");
 
-                if ($insertRenvis) {
-                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit!"];
-                    echo json_encode($response);
+                if ($cekRenvis == null) {
+                    $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem',$id_distributor,$id_invoice)");
+
+                    if ($insertRenvis) {
+                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit!"];
+                        echo json_encode($response);
+                    } else {
+                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!"];
+                        echo json_encode($response);
+                    }
                 } else {
-                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!"];
+                    $response = ["message" => "Sudah ada", "days" => $days, "date_inv" => $invArray['date_invoice']];
                     echo json_encode($response);
                 }
             }
