@@ -45,19 +45,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $integration_id = $rowQontak['integration_id'];
             // echo json_encode($sisaHutang);
             if ($sisaHutang > 0) {
-                if ($id_distributor == 2) {
-                    $curl = curl_init();
+                // if ($id_distributor == 2) {
+                $curl = curl_init();
 
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => '{
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => '{
                         "to_number": "' . $nomor_hp . '",
                         "to_name": "' . $nama . '",
                         "message_template_id": "' . $template_id . '",
@@ -90,29 +90,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             ]
                         }
                         }',
-                        CURLOPT_HTTPHEADER => array(
-                            'Authorization: Bearer ' . $wa_token,
-                            'Content-Type: application/json'
-                        ),
-                    ));
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Bearer ' . $wa_token,
+                        'Content-Type: application/json'
+                    ),
+                ));
 
-                    $response = curl_exec($curl);
+                $response = curl_exec($curl);
 
 
-                    curl_close($curl);
+                curl_close($curl);
 
-                    $res = json_decode($response, true);
+                $res = json_decode($response, true);
 
-                    $status = $res['status'];
+                $status = $res['status'];
 
-                    if ($status == "success") {
-                        $response = ["response" => 200, "status" => "ok", "message" => "Success notify customer"];
-                        echo json_encode($response);
-                    } else {
-                        $response = ["response" => 200, "status" => "failed", "message" => "Failed notify customer. " . mysqli_error($conn), "detail" => mysqli_error($conn)];
-                        echo json_encode($response);
-                    }
+                if ($status == "success") {
+                    $response = ["response" => 200, "status" => "ok", "message" => "Success notify customer"];
+                    echo json_encode($response);
+                } else {
+                    $response = ["response" => 200, "status" => "failed", "message" => "Failed notify customer. " . mysqli_error($conn), "detail" => mysqli_error($conn)];
+                    echo json_encode($response);
                 }
+                // }
             }
         } else {
             $response = ["message" => "Belum waktunya", "days" => $days, "date_inv" => $invArray['date_invoice']];
