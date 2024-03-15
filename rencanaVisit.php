@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         } else {
             $id_distributor = $_GET['dst'];
-            $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_city.* FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact JOIN tb_city ON tb_city.id_city = tb_distributor.id_distributor WHERE type_rencana = 'jatem' AND tb_city.id_distributor = '$id_distributor'");
+            $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_city.* FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact JOIN tb_city ON tb_city.id_city = tb_city.id_distributor WHERE type_rencana = 'jatem' AND tb_city.id_distributor = '$id_distributor'");
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $renvisArray[] = $rowRenvis;
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         } else {
             $id_distributor = $_GET['dst'];
-            $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_city.* FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact JOIN tb_city ON tb_city.id_city = tb_distributor.id_distributor WHERE type_rencana = 'voucher' AND tb_city.id_distributor = '$id_distributor'");
+            $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_city.* FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact JOIN tb_city ON tb_city.id_city = tb_city.id_distributor WHERE type_rencana = 'voucher' AND tb_city.id_distributor = '$id_distributor'");
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $renvisArray[] = $rowRenvis;
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         } else {
             $id_distributor = $_GET['dst'];
-            $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_city.* FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact JOIN tb_city ON tb_city.id_city = tb_distributor.id_distributor WHERE type_rencana = 'passive' AND tb_city.id_distributor = '$id_distributor'");
+            $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_city.* FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact JOIN tb_city ON tb_city.id_city = tb_city.id_distributor WHERE type_rencana = 'passive' AND tb_city.id_distributor = '$id_distributor'");
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $renvisArray[] = $rowRenvis;
