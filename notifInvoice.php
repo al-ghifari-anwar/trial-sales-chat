@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         // Data Body
 
 
-        if ($days == "3") {
+        if ($days == "-3") {
             $getTotalPayment = mysqli_query($conn, "SELECT SUM(amount_payment + potongan_payment + adjustment_payment) AS amount_total FROM tb_payment WHERE id_invoice = '$id_invoice'");
             $rowPayment = $getTotalPayment->fetch_array(MYSQLI_ASSOC);
 
