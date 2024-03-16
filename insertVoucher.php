@@ -24,6 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 } else {
                     $insert = mysqli_query($conn, "INSERT INTO tb_voucher(id_contact,no_voucher,point_voucher,exp_date) VALUES($id_contact,'$no_voucher',1,'$exp_date')");
                 }
+
+                $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,0,'voucher',0,0)");
             }
         }
         $response = ["response" => 200, "status" => "ok", "message" => $jmlVoucher . " voucher telah berhasil diinput"];
