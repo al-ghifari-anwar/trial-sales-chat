@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         echo json_encode($response);
                     }
                 } else {
-                    $response = ["message" => "Sudah ada", "days" => $days, "no_inv" => $invArray['no_invoice']];
+                    $response = ["message" => "Sudah ada", "days" => $days, "no_inv" => $invArray['no_invoice'] . "-id-" . $invArray['id_contact']];
                     echo json_encode($response);
                 }
             }
