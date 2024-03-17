@@ -52,12 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         echo json_encode($response);
                     }
                 } else {
-                    $response = ["message" => "Sudah ada", "days" => $days, "date_inv" => $invArray['date_invoice']];
+                    $response = ["message" => "Sudah ada", "days" => $days, "no_inv" => $invArray['no_invoice']];
                     echo json_encode($response);
                 }
             }
         } else {
-            $response = ["message" => "Belum waktunya", "days" => $days, "date_inv" => $invArray['date_invoice']];
+            $response = ["message" => "Belum waktunya", "days" => $days, "no_inv" => $invArray['no_invoice']];
             echo json_encode($response);
         }
     }
