@@ -37,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($sisaHutang > 0) {
                 $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_rencana_visit WHERE id_contact = '$id_contact' AND type_rencana = 'jatem' AND is_visited = 0");
 
-                while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
-                    $renvisArray[] = $rowRenvis;
-                }
+                // while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
+                $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
+                // }
 
                 if ($renvisArray == null) {
                     $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem',$id_distributor,$id_invoice)");
