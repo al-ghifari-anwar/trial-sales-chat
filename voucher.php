@@ -30,10 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $updateVoucher = mysqli_query($conn, "UPDATE tb_voucher SET no_fisik = '$no_fisik' WHERE id_voucher = '$id_voucher'");
 
         if ($updateVoucher) {
-            $response = ["response" => 200, "status" => "success", "message" => "Kode voucher fisik berhasil disinkronkan!"];
+            $response = ["response" => 200, "status" => "success", "message" => "Berhasil konfirmasi voucher!"];
             echo json_encode($response);
         } else {
-            $response = ["response" => 200, "status" => "failed", "message" => "Kode voucher fisik gagal disinkronkan!"];
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal konfirmasi voucher!"];
             echo json_encode($response);
         }
         // } else {
