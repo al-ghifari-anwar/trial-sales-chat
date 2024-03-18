@@ -23,23 +23,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_voucher = $_POST['id_voucher'];
         $no_fisik = $_POST['no_fisik'];
 
-        $cekNoFisik = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE no_fisik = '$cekNoFisik'");
-        $rowCekNoFisik = $cekNoFisik->fetch_array(MYSQLI_ASSOC);
+        // $cekNoFisik = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE no_fisik = '$cekNoFisik'");
+        // $rowCekNoFisik = $cekNoFisik->fetch_array(MYSQLI_ASSOC);
 
-        if ($rowCekNoFisik == null) {
-            $updateVoucher = mysqli_query($conn, "UPDATE tb_voucher SET no_fisik = '$no_fisik' WHERE id_voucher = '$id_voucher'");
+        // if ($rowCekNoFisik == null) {
+        $updateVoucher = mysqli_query($conn, "UPDATE tb_voucher SET no_fisik = '$no_fisik' WHERE id_voucher = '$id_voucher'");
 
-            if ($updateVoucher) {
-                $response = ["response" => 200, "status" => "success", "message" => "Kode voucher fisik berhasil disinkronkan!"];
-                echo json_encode($response);
-            } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Kode voucher fisik gagal disinkronkan!"];
-                echo json_encode($response);
-            }
+        if ($updateVoucher) {
+            $response = ["response" => 200, "status" => "success", "message" => "Kode voucher fisik berhasil disinkronkan!"];
+            echo json_encode($response);
         } else {
-            $response = ["response" => 200, "status" => "failed", "message" => "Kode voucher fisik sudah terdaftar!"];
+            $response = ["response" => 200, "status" => "failed", "message" => "Kode voucher fisik gagal disinkronkan!"];
             echo json_encode($response);
         }
+        // } else {
+        //     $response = ["response" => 200, "status" => "failed", "message" => "Kode voucher fisik sudah terdaftar!"];
+        //     echo json_encode($response);
+        // }
     } else {
         $no_vouchers = explode(",", $_POST['no_voucher']);
         $id_contact = $_POST['id_contact'];
