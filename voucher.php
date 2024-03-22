@@ -30,6 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $updateVoucher = mysqli_query($conn, "UPDATE tb_voucher SET no_fisik = '$no_fisik' WHERE id_voucher = '$id_voucher'");
 
         if ($updateVoucher) {
+            $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_voucher = '$id_voucher'");
+            $voucherArr = $getVoucher->fetch_array(MYSQLI_ASSOC);
+
+            $id_contact = $voucherArr['id_contact'];
+            $visitDate = date("Y-m-d H:i:s");
+
+            $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
+
             $response = ["response" => 200, "status" => "success", "message" => "Berhasil konfirmasi voucher!"];
             echo json_encode($response);
         } else {
