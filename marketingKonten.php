@@ -111,8 +111,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim konten marketing!"];
                                 echo json_encode($response);
                             } else {
-                                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim konten marketing!"];
-                                echo json_encode($response);
+                                // $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim konten marketing!"];
+                                // echo json_encode($response);
+                                echo $response;
                             }
                         } else {
                             $response = ["response" => 200, "status" => "failed", "message" => "Not for testing!"];
