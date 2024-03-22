@@ -7,8 +7,8 @@ $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $getMarketingMsg = mysqli_query($conn, "SELECT * FROM tb_marketing_message");
 
-    while ($rowMarketingMsh = $getMarketingMsg->fetch_array(MYSQLI_ASSOC)) {
-        $marketingMsgArr[] = $rowStore;
+    while ($rowMarketingMsg = $getMarketingMsg->fetch_array(MYSQLI_ASSOC)) {
+        $marketingMsgArr[] = $rowMarketingMsg;
     }
 
     if ($marketingMsgArr != null) {
@@ -33,6 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             while ($rowStore = $getStore->fetch_array(MYSQLI_ASSOC)) {
                 $storeArr[] = $rowStore;
             }
+
+            // $response = ["response" => 200, "status" => "failed", "contacts" => $storeArr, "dst" => $id_distributor];
+            // echo json_encode($response);
+            // die;
 
             if ($storeArr != null) {
 
