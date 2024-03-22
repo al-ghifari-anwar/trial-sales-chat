@@ -108,6 +108,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit', $id_user)");
 
         if ($insertVisit) {
+            $visitDate = date("Y-m-d H:i:s");
+            $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana <> 'voucher'");
+
             $id_bid = $rowBid['id_bid'];
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan!"];
             echo json_encode($response);
