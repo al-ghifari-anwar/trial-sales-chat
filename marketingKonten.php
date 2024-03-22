@@ -11,109 +11,115 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $marketingMsgArr[] = $rowStore;
     }
 
-    foreach ($marketingMsgArr as $marketingMsg) {
-        $template_id = $marketingMsg['template_id'];
-        $image = "https://order.topmortarindonesia.com/img/content_img/" . $marketingMsg['image_marketing_message'];
-        $body = $marketingMsg['body_marketing_message'];
-        $week = $marketingMsg['week_marketing_message'];
-        $target_status = $marketingMsg['target_status'];
-        $id_distributor = $id_distributor['id_distributor'];
+    if ($marketingMsgArr != null) {
 
-        $getStore = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tb_city.id_distributor = '$id_distributor'");
+        foreach ($marketingMsgArr as $marketingMsg) {
+            $template_id = $marketingMsg['template_id'];
+            $image = "https://order.topmortarindonesia.com/img/content_img/" . $marketingMsg['image_marketing_message'];
+            $body = $marketingMsg['body_marketing_message'];
+            $week = $marketingMsg['week_marketing_message'];
+            $target_status = $marketingMsg['target_status'];
+            $id_distributor = $id_distributor['id_distributor'];
 
-        $qontak = null;
-        $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
-        $qontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+            $getStore = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tb_city.id_distributor = '$id_distributor'");
 
-        $integration_id = $qontak['integration_id'];
+            $qontak = null;
+            $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+            $qontak = $getQontak->fetch_array(MYSQLI_ASSOC);
 
-        $storeArr = array();
-        while ($rowStore = $getStore->fetch_array(MYSQLI_ASSOC)) {
-            $storeArr[] = $rowStore;
-        }
+            $integration_id = $qontak['integration_id'];
 
-        foreach ($storeArr as $store) {
-            $created_at = date("Y-m-d", strtotime($store['created_at']));
-            $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " week"));
-            $nama = $store['nama'];
-            $nomor_hp = $store['nomorhp'];
-            $id_contact = $store['id_contact'];
+            $storeArr = array();
+            while ($rowStore = $getStore->fetch_array(MYSQLI_ASSOC)) {
+                $storeArr[] = $rowStore;
+            }
 
-            if ($dateMinusWeek == $created_at) {
-                if ($id_contact == 1670) {
+            foreach ($storeArr as $store) {
+                $created_at = date("Y-m-d", strtotime($store['created_at']));
+                $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " week"));
+                $nama = $store['nama'];
+                $nomor_hp = $store['nomorhp'];
+                $id_contact = $store['id_contact'];
 
-                    // Send Message
-                    $curl = curl_init();
+                if ($dateMinusWeek == $created_at) {
+                    if ($id_contact == 1670) {
 
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => '{
-                        "to_number": "' . $nomor_hp . '",
-                        "to_name": "' . $nama . '",
-                        "message_template_id": "' . $template_id . '",
-                        "channel_integration_id": "' . $integration_id . '",
-                        "language": {
-                            "code": "id"
-                        },
-                        "parameters": {
-                            "header":{
-                                "format":"IMAGE",
-                                "params": [
-                                    {
-                                        "key":"url",
-                                        "value":"' . $image . '"
-                                    },
-                                    {
-                                        "key":"filename",
-                                        "value":"content.jpg"
-                                    }
-                                ]
+                        // Send Message
+                        $curl = curl_init();
+
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => '{
+                            "to_number": "' . $nomor_hp . '",
+                            "to_name": "' . $nama . '",
+                            "message_template_id": "' . $template_id . '",
+                            "channel_integration_id": "' . $integration_id . '",
+                            "language": {
+                                "code": "id"
                             },
-                            "body": [
-                            {
-                                "key": "1",
-                                "value": "body_msg",
-                                "value_text": "' . $body . '"
+                            "parameters": {
+                                "header":{
+                                    "format":"IMAGE",
+                                    "params": [
+                                        {
+                                            "key":"url",
+                                            "value":"' . $image . '"
+                                        },
+                                        {
+                                            "key":"filename",
+                                            "value":"content.jpg"
+                                        }
+                                    ]
+                                },
+                                "body": [
+                                {
+                                    "key": "1",
+                                    "value": "body_msg",
+                                    "value_text": "' . $body . '"
+                                }
+                                ]
                             }
-                            ]
+                            }',
+                            CURLOPT_HTTPHEADER => array(
+                                'Authorization: Bearer ' . $wa_token,
+                                'Content-Type: application/json'
+                            ),
+                        ));
+
+                        $response = curl_exec($curl);
+
+                        curl_close($curl);
+
+                        $res = json_decode($response, true);
+
+                        $status = $res['status'];
+
+                        if ($status == "success") {
+                            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim konten marketing!"];
+                            echo json_encode($response);
+                        } else {
+                            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim konten marketing!"];
+                            echo json_encode($response);
                         }
-                        }',
-                        CURLOPT_HTTPHEADER => array(
-                            'Authorization: Bearer ' . $wa_token,
-                            'Content-Type: application/json'
-                        ),
-                    ));
-
-                    $response = curl_exec($curl);
-
-                    curl_close($curl);
-
-                    $res = json_decode($response, true);
-
-                    $status = $res['status'];
-
-                    if ($status == "success") {
-                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim konten marketing!"];
-                        echo json_encode($response);
                     } else {
-                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim konten marketing!"];
+                        $response = ["response" => 200, "status" => "failed", "message" => "Not for testing!"];
                         echo json_encode($response);
                     }
                 } else {
-                    $response = ["response" => 200, "status" => "failed", "message" => "Not for testing!"];
+                    $response = ["response" => 200, "status" => "failed", "message" => "Tidak kirim konten karna bukan waktunya!"];
                     echo json_encode($response);
                 }
-            } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Tidak kirim konten karna bukan waktunya!"];
-                echo json_encode($response);
             }
         }
+    } else {
+        $response = ["response" => 200, "status" => "failed", "message" => "Konten tidak ditemukan!"];
+        echo json_encode($response);
     }
 }
