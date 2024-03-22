@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $body = $marketingMsg['body_marketing_message'];
             $week = $marketingMsg['week_marketing_message'];
             $target_status = $marketingMsg['target_status'];
-            $id_distributor = $id_distributor['id_distributor'];
+            $id_distributor = $marketingMsg['id_distributor'];
 
             $getStore = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tb_city.id_distributor = '$id_distributor'");
 
