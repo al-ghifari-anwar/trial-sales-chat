@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         foreach ($marketingMsgArr as $marketingMsg) {
             $template_id = $marketingMsg['template_id'];
-            $image = "https://order.topmortarindonesia.com/img/content_img/" . $marketingMsg['image_marketing_message'];
+            $image = "https://order.topmortarindonesia.com/assets/img/content_img/" . $marketingMsg['image_marketing_message'];
             $body = $marketingMsg['body_marketing_message'];
             $week = $marketingMsg['week_marketing_message'];
             $target_status = $marketingMsg['target_status'];
