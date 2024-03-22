@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $integration_id = $qontak['integration_id'];
 
-            $storeArr = array();
+            // $storeArr = array();
             while ($rowStore = $getStore->fetch_array(MYSQLI_ASSOC)) {
                 $storeArr[] = $rowStore;
             }
