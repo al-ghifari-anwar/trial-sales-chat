@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         foreach ($lastOrderArr as $lastOrder) {
             $id_contact = $lastOrder['id_contact'];
 
-            $getContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tb_contact.id_contact = '$id_contact'");
+            $getContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tb_contact.id_contact = '$id_contact' AND store_status != 'blacklist");
             $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
             $reputation = $rowContact['reputation'];
             $id_distributor = $rowContact['id_distributor'];
