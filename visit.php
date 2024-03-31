@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if ($insertVisit) {
             $visitDate = date("Y-m-d H:i:s");
-            $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana <> 'voucher'");
+            $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
 
             $id_bid = $rowBid['id_bid'];
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan!"];
