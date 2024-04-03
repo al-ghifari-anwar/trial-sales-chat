@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_POST['id_voucher'])) {
         $id_voucher = $_POST['id_voucher'];
         $no_fisik = $_POST['no_fisik'];
+        $id_user = $_POST['id_user'];
 
         // $cekNoFisik = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE no_fisik = '$cekNoFisik'");
         // $rowCekNoFisik = $cekNoFisik->fetch_array(MYSQLI_ASSOC);
@@ -37,6 +38,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $visitDate = date("Y-m-d H:i:s");
 
             $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
+
+            $getAllVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id_contact' AND is_claimed = 0");
+            $voucherCodes = '';
+            $distance_visit = '0.001';
+            while ($rowAllVoucher = $getAllVoucher->fetch_array(MYSQLI_ASSOC)) {
+                $allVoucherArray[] = $rowAllVoucher;
+            }
+
+
+            if ($allVoucherArray != null) {
+                foreach ($allVoucherArray as $vc_array) {
+                    $voucherCodes .= $vc_array['no_voucher'] . ",";
+                }
+
+                $laporan_visit = 'Kirim voucher fisik ' . $voucherCodes;
+
+                $cekVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE laporan_visit = '$laporan_visit' AND id_contact = '$id_contact'");
+                $rowVisit = $cekVisit->fetch_array(MYSQLI_ASSOC);
+
+                if ($rowVisit == null) {
+                    $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit', $id_user)");
+                }
+            }
 
             $response = ["response" => 200, "status" => "success", "message" => "Berhasil konfirmasi voucher!"];
             echo json_encode($response);
