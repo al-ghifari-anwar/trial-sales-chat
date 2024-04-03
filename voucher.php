@@ -43,20 +43,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $voucherCodes = '';
             $distance_visit = '0.001';
             while ($rowAllVoucher = $getAllVoucher->fetch_array(MYSQLI_ASSOC)) {
-                $allVoucherArray = $rowAllVoucher;
+                $allVoucherArray[] = $rowAllVoucher;
             }
 
-            $laporan_visit = 'Kirim fisik voucher ' . $voucherCodes;
 
-            foreach ($allVoucherArray as $allVoucherArray) {
-                $voucherCodes .= $allVoucherArray['no_voucher'] . ",";
-            }
+            if ($allVoucherArray != null) {
+                foreach ($allVoucherArray as $vc_array) {
+                    $voucherCodes .= $vc_array['no_voucher'] . ",";
+                }
 
-            $cekVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE laporan_visit = '$laporan_visit' AND id_contact = '$id_contact'");
-            $rowVisit = $cekVisit->fetch_array(MYSQLI_ASSOC);
+                $laporan_visit = 'Kirim voucher fisik ' . $voucherCodes;
 
-            if ($rowVisit != null) {
-                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit', $id_user)");
+                $cekVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE laporan_visit = '$laporan_visit' AND id_contact = '$id_contact'");
+                $rowVisit = $cekVisit->fetch_array(MYSQLI_ASSOC);
+
+                if ($rowVisit == null) {
+                    $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit', $id_user)");
+                }
             }
 
             $response = ["response" => 200, "status" => "success", "message" => "Berhasil konfirmasi voucher!"];
