@@ -105,11 +105,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $laporan_visit = $_POST['laporan_visit'] ? $_POST['laporan_visit'] : '';
         $id_user = $_POST['id_user'] ? $_POST['id_user'] : 0;
 
+        $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
+        $rowUser = $getUser->fetch_array(MYSQLI_ASSOC);
+
         $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit', $id_user)");
 
         if ($insertVisit) {
             $visitDate = date("Y-m-d H:i:s");
-            $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
+            if ($rowUser['level_user'] == 'sales') {
+                $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
+            } else {
+                $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_penagihan SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
+            }
 
             $id_bid = $rowBid['id_bid'];
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan!"];
