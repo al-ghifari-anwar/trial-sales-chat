@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($rowUser['level_user'] == 'sales') {
                 $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
             } else {
-                $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_penagihan SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
+                $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
             }
 
             $id_bid = $rowBid['id_bid'];
