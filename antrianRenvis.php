@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit!"];
                     echo json_encode($response);
                 } else {
-                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!"];
+                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!", "detail" => mysqli_error($conn)];
                     echo json_encode($response);
                 }
             } else {
