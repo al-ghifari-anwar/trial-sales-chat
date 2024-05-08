@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // }
 
             if ($renvisArray == null) {
-                $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'passive',$id_distributor,$id_invoice)");
+                $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'passive',$id_distributor,0)");
 
                 if ($insertRenvis) {
                     $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit!"];
