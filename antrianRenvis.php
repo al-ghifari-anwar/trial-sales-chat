@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $interval_renvis = $antrianArray['interval_renvis'];
 
         if ($date_renvis == date("Y-m-d")) {
-            $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_rencana_visit WHERE id_contact = '$id_contact' AND type_rencana = 'jatem' AND is_visited = 0");
+            $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_rencana_visit WHERE id_contact = '$id_contact' AND type_rencana = 'passive' AND is_visited = 0");
 
             // while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
             $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
