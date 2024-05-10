@@ -38,8 +38,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode($response);
             }
         } else {
-            $response = ["message" => "Belum waktunya"];
-            echo json_encode($response);
+            $cekRenvis = mysqli_query($conn, "SELECT COUNT(*) AS jml_renvis FROM tb_rencana_visit WHERE id_contact = '$id_contact' AND type_rencana = 'passive'");
+            $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
+            $jmlRenvis = $renvisArray['jml_renvis'];
+
+            $times = $jmlRenvis * $interval_renvis;
+
+            if ($date_renvis == date("Y-m-d", strtotime("-" . $times . " days"))) {
+                $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,0,'passive',$id_distributor,0)");
+
+                if ($insertRenvis) {
+                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit!"];
+                    echo json_encode($response);
+                } else {
+                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!", "detail" => mysqli_error($conn)];
+                    echo json_encode($response);
+                }
+            } else {
+                $response = ["message" => "Belum waktunya interval"];
+                echo json_encode($response);
+            }
         }
     }
 }
