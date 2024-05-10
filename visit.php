@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
         $rowUser = $getUser->fetch_array(MYSQLI_ASSOC);
 
-        $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit', $id_user)");
+        $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit','$source', $id_user)");
 
         if ($insertVisit) {
             $visitDate = date("Y-m-d H:i:s");
@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $laporan_visit = $_POST['laporan_visit'] ? $_POST['laporan_visit'] : '';
         $id_user = $_POST['id_user'] ? $_POST['id_user'] : 0;
 
-        $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,id_user) VALUES($id_gudang, $distance_visit, '$laporan_visit', $id_user)");
+        $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_gudang, $distance_visit, '$laporan_visit', 'normal', $id_user)");
 
         if ($insertVisit) {
             $id_bid = $rowBid['id_bid'];
