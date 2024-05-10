@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_contact = $_POST['id_contact'] ? $_POST['id_contact'] : 0;
         $distance_visit = $_POST['distance_visit'] ? str_replace(',', '.', $_POST['distance_visit']) : 0;
         $source = $_POST['source'];
-        $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'] ? $_POST['laporan_visit'] : '';
+        $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'];
         $id_user = $_POST['id_user'] ? $_POST['id_user'] : 0;
 
         $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
