@@ -45,10 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $insertRenvis = mysqli_query($conn, "INSERT INTO tb_renvis_jatem(id_contact,id_surat_jalan,type_renvis,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem1',$id_distributor,$id_invoice)");
 
                     if ($insertRenvis) {
-                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit!"];
+                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit! jatem1, " . $days];
                         echo json_encode($response);
                     } else {
-                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!"];
+                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit! jatem1, " . $days];
                         echo json_encode($response);
                     }
                 } else {
@@ -78,10 +78,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $insertRenvis = mysqli_query($conn, "INSERT INTO tb_renvis_jatem(id_contact,id_surat_jalan,type_renvis,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem2',$id_distributor,$id_invoice)");
 
                     if ($insertRenvis) {
-                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit!"];
+                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit jatem2!, " . $days];
                         echo json_encode($response);
                     } else {
-                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!"];
+                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit jatem2!, " . $days];
                         echo json_encode($response);
                     }
                 } else {
@@ -111,10 +111,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $insertRenvis = mysqli_query($conn, "INSERT INTO tb_renvis_jatem(id_contact,id_surat_jalan,type_renvis,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem3',$id_distributor,$id_invoice)");
 
                     if ($insertRenvis) {
-                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit!"];
+                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit jatem3!, " . $days];
                         echo json_encode($response);
                     } else {
-                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!"];
+                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit jatem3!, " . $days];
                         echo json_encode($response);
                     }
                 } else {
