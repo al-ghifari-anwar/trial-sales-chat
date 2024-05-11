@@ -52,13 +52,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $voucherCodes .= $vc_array['no_voucher'] . ",";
                 }
 
-                $laporan_visit = 'Kirim voucher fisik ' . $voucherCodes;
+                $laporan_visit = '[renvisales] Kirim voucher fisik ' . $voucherCodes;
 
                 $cekVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE laporan_visit = '$laporan_visit' AND id_contact = '$id_contact'");
                 $rowVisit = $cekVisit->fetch_array(MYSQLI_ASSOC);
 
                 if ($rowVisit == null) {
-                    $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit', $id_user)");
+                    $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit','renvisales', $id_user)");
                 }
             }
 
