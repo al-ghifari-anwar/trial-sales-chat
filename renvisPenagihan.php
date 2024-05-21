@@ -91,4 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         }
     }
+
+    // Untuk Update Payment
+    //     UPDATE tb_renvis_jatem SET is_visited = 1 WHERE id_renvis_jatem IN 
+    // (SELECT id_renvis_jatem FROM tb_renvis_jatem JOIN tb_invoice ON tb_invoice.id_invoice = tb_renvis_jatem.id_invoice WHERE status_invoice = 'paid')
 }
