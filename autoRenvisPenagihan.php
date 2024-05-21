@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit! jatem1, " . $days];
                         echo json_encode($response);
                     } else {
-                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit! jatem1, " . $days];
+                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit! jatem1, " . $days . " idContact: " . $id_contact];
                         echo json_encode($response);
                     }
                 } else {
