@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if ($insertVisit) {
             $visitDate = date("Y-m-d H:i:s");
-            if ($rowUser['level_user'] == 'sales') {
+            if ($source == 'renvisales') {
                 $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
             } else {
                 $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
