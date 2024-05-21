@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $sisaHutang = number_format($invArray['total_invoice'] - $rowPayment['amount_total'], 0, '.', ',');
 
             if ($sisaHutang > 0) {
-                $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND type_renvis = 'jatem1'");
+                $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND type_renvis = 'jatem1' AND is_visited = 0");
 
                 // while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $sisaHutang = number_format($invArray['total_invoice'] - $rowPayment['amount_total'], 0, '.', ',');
 
             if ($sisaHutang > 0) {
-                $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND type_renvis = 'jatem2'");
+                $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND type_renvis = 'jatem2' AND is_visited = 0");
 
                 // while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $sisaHutang = number_format($invArray['total_invoice'] - $rowPayment['amount_total'], 0, '.', ',');
 
             if ($sisaHutang > 0) {
-                $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND type_renvis = 'jatem3'");
+                $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND type_renvis = 'jatem3' AND is_visited = 0");
 
                 // while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
