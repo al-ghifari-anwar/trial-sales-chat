@@ -105,6 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $source = $_POST['source'];
         $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'];
         $id_user = $_POST['id_user'] ? $_POST['id_user'] : 0;
+        $type_renvi = $_POST['type_renvi'];
 
         $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
         $rowUser = $getUser->fetch_array(MYSQLI_ASSOC);
@@ -113,10 +114,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if ($insertVisit) {
             $visitDate = date("Y-m-d H:i:s");
-            if ($source == 'renvisales') {
-                $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
+            if ($type_renvi == 'jatem3') {
+                $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'jatem'");
+
+                $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_renvis = 'jatem3'");
             } else {
-                $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
+                if ($source == 'renvisales') {
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
+                } else {
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
+                }
             }
 
             $id_bid = $rowBid['id_bid'];
