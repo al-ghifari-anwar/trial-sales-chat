@@ -4,7 +4,7 @@ include_once("config.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['c'])) {
-        $id_dity = $_GET['c'];
+        $id_city = $_GET['c'];
 
         $result = mysqli_query($conn, "SELECT * FROM tb_produk WHERE id_city = '$id_city'");
 
