@@ -51,6 +51,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_contact.store_owner, tb_contact.maps_url, tb_contact.created_at AS created_at_store, tb_contact.reputation FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact WHERE type_rencana = 'voucher' AND tb_contact.id_city = '$id_city' AND is_visited = 0");
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
+                // $id_inv = $rowRenvis['id_invoice'];
+                // $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_invoice = '$id_inv'");
+                // $resCount = $count->fetch_array(MYSQLI_ASSOC);
+                // $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? 1 : 0;
                 $renvisArray[] = $rowRenvis;
             }
 
@@ -79,7 +83,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_contact.store_owner, tb_contact.maps_url, tb_contact.created_at AS created_at_store, tb_contact.reputation FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact WHERE type_rencana = 'passive' AND tb_contact.id_city = '$id_city' AND is_visited = 0");
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
-                $renvisArray[] = $rowRenvis;
+                $id_con = $rowRenvis['id_contact'];
+                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_contact = '$id_con'");
+                $resCount = $count->fetch_array(MYSQLI_ASSOC);
+                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? 1 : 0;
+                $$renvisArray[] = $rowRenvis;
             }
 
             if ($renvisArray == null) {
@@ -92,6 +100,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_city.*, tb_contact.store_owner, tb_contact.maps_url, tb_contact.created_at AS created_at_store, tb_contact.reputation FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE type_rencana = 'passive' AND tb_city.id_distributor = '$id_distributor' AND is_visited = 0");
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
+                $id_con = $rowRenvis['id_contact'];
+                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_contact = '$id_con'");
+                $resCount = $count->fetch_array(MYSQLI_ASSOC);
+                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? 1 : 0;
                 $renvisArray[] = $rowRenvis;
             }
 
