@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $id_inv = $rowRenvis['id_invoice'];
-                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv'");
+                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv' AND type_renvis = 'jatem1'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $id_inv = $rowRenvis['id_invoice'];
-                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv'");
+                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv' AND type_renvis = 'jatem1'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $id_inv = $rowRenvis['id_invoice'];
-                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv'");
+                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv' AND type_renvis = 'jatem2'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $id_inv = $rowRenvis['id_invoice'];
-                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv'");
+                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv' AND type_renvis = 'jatem2'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $id_inv = $rowRenvis['id_invoice'];
-                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv'");
+                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv' AND type_renvis = 'jatem3'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $id_inv = $rowRenvis['id_invoice'];
-                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv'");
+                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv' AND type_renvis = 'jatem3'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
