@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
-                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? 1 : 0;
+                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $renvisArray[] = $rowRenvis;
             }
 
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
-                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? 1 : 0;
+                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $renvisArray[] = $rowRenvis;
             }
 
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $id_con = $rowRenvis['id_contact'];
                 $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_contact = '$id_con'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
-                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? 1 : 0;
+                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $$renvisArray[] = $rowRenvis;
             }
 
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $id_con = $rowRenvis['id_contact'];
                 $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_contact = '$id_con'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
-                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? 1 : 0;
+                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $renvisArray[] = $rowRenvis;
             }
 
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
-                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? 1 : 0;
+                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $renvisArray[] = $rowRenvis;
             }
 
@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
-                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? 1 : 0;
+                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $renvisArray[] = $rowRenvis;
             }
 
