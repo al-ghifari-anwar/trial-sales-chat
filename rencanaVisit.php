@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_contact = '$id_con'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
-                $$renvisArray[] = $rowRenvis;
+                $renvisArray[] = $rowRenvis;
             }
 
             if ($renvisArray == null) {
