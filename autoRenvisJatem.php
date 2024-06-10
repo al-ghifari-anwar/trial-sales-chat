@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         $days = $operan . $days;
 
-        if ($days >= "15") {
+        if ($days > "15") {
             $getTotalPayment = mysqli_query($conn, "SELECT SUM(amount_payment + potongan_payment + adjustment_payment) AS amount_total FROM tb_payment WHERE id_invoice = '$id_invoice'");
             $rowPayment = $getTotalPayment->fetch_array(MYSQLI_ASSOC);
 
