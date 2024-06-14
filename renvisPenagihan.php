@@ -15,6 +15,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv' AND type_renvis = 'jatem1'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
+                $date1 = new DateTime(date("Y-m-d"));
+                $date2 = new DateTime($jatuhTempo);
+                $days  = $date2->diff($date1)->format('%a');
+                $operan = "";
+                if ($date1 < $date2) {
+                    $operan = "-";
+                }
+                $days = $operan . $days;
+                $rowRenvis['days'] = $days;
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $renvisArray[] = $rowRenvis;
@@ -34,6 +43,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv' AND type_renvis = 'jatem1'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
+                $date1 = new DateTime(date("Y-m-d"));
+                $date2 = new DateTime($jatuhTempo);
+                $days  = $date2->diff($date1)->format('%a');
+                $operan = "";
+                if ($date1 < $date2) {
+                    $operan = "-";
+                }
+                $days = $operan . $days;
+                $rowRenvis['days'] = $days;
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $renvisArray[] = $rowRenvis;
@@ -55,6 +73,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv' AND type_renvis = 'jatem2'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
+                $date1 = new DateTime(date("Y-m-d"));
+                $date2 = new DateTime($jatuhTempo);
+                $days  = $date2->diff($date1)->format('%a');
+                $operan = "";
+                if ($date1 < $date2) {
+                    $operan = "-";
+                }
+                $days = $operan . $days;
+                $rowRenvis['days'] = $days;
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $renvisArray[] = $rowRenvis;
@@ -74,6 +101,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv' AND type_renvis = 'jatem2'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
+                $date1 = new DateTime(date("Y-m-d"));
+                $date2 = new DateTime($jatuhTempo);
+                $days  = $date2->diff($date1)->format('%a');
+                $operan = "";
+                if ($date1 < $date2) {
+                    $operan = "-";
+                }
+                $days = $operan . $days;
+                $rowRenvis['days'] = $days;
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $renvisArray[] = $rowRenvis;
@@ -95,6 +131,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv' AND type_renvis = 'jatem3'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
+                $date1 = new DateTime(date("Y-m-d"));
+                $date2 = new DateTime($jatuhTempo);
+                $days  = $date2->diff($date1)->format('%a');
+                $operan = "";
+                if ($date1 < $date2) {
+                    $operan = "-";
+                }
+                $days = $operan . $days;
+                $rowRenvis['days'] = $days;
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $renvisArray[] = $rowRenvis;
@@ -114,6 +159,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_renvis_jatem WHERE id_invoice = '$id_inv' AND type_renvis = 'jatem3'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
+                $date1 = new DateTime(date("Y-m-d"));
+                $date2 = new DateTime($jatuhTempo);
+                $days  = $date2->diff($date1)->format('%a');
+                $operan = "";
+                if ($date1 < $date2) {
+                    $operan = "-";
+                }
+                $days = $operan . $days;
+                $rowRenvis['days'] = $days;
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $renvisArray[] = $rowRenvis;
