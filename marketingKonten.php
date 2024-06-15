@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         //     echo json_encode($response);
                         // }
                     } else {
-                        $response = ["response" => 200, "status" => "failed", "message" => "Tidak kirim konten karna bukan waktunya!"];
+                        $response = ["response" => 200, "status" => "failed", "message" => "Tidak kirim konten karna bukan waktunya!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp];
                         echo json_encode($response);
                     }
                 }
