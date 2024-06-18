@@ -133,9 +133,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         $response = ["message" => "Sudah ada jatem3", "days" => $days, "no_inv" => $invArray['no_invoice'] . "-id-" . $invArray['id_contact']];
                         echo json_encode($response);
                     }
+                } else {
+                    $response = ["message" => "Satus dan total tidak sesuai jatem3", "days" => $days, "no_inv" => $invArray['no_invoice']];
+                    echo json_encode($response);
                 }
             } else {
-                $response = ["message" => "Belum waktunya", "days" => $days, "no_inv" => $invArray['no_invoice']];
+                $response = ["message" => "Belum waktunya jatem3", "days" => $days, "no_inv" => $invArray['no_invoice']];
                 echo json_encode($response);
             }
         }
