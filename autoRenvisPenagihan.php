@@ -13,58 +13,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     foreach ($invArray as $invArray) {
         $id_invoice = $invArray['id_invoice'];
         $mingguan = $invArray['tagih_mingguan'];
-        if ($mingguan == 0) {
+        // Calculate sisa hari jatuh tempo
+        $jatuhTempo = date('d M Y', strtotime("+" . $invArray['termin_payment'] . " days", strtotime($invArray['date_invoice'])));
+        $date1 = new DateTime(date("Y-m-d"));
+        $date2 = new DateTime($jatuhTempo);
+        $days  = $date2->diff($date1)->format('%a');
+        $operan = "";
+        if ($date1 < $date2) {
+            $operan = "-";
+        }
+        $days = $operan . $days;
 
-            // Calculate sisa hari jatuh tempo
-            $jatuhTempo = date('d M Y', strtotime("+" . $invArray['termin_payment'] . " days", strtotime($invArray['date_invoice'])));
-            $date1 = new DateTime(date("Y-m-d"));
-            $date2 = new DateTime($jatuhTempo);
-            $days  = $date2->diff($date1)->format('%a');
-            $operan = "";
-            if ($date1 < $date2) {
-                $operan = "-";
-            }
-            $days = $operan . $days;
-
-            if (date("Y-m-d", strtotime("+" . $invArray['termin_payment'] . " days", strtotime($invArray['date_invoice']))) >= date("Y-m-d")) {
-                if ($days >= "0" && $days <= "7") {
-                    $getTotalPayment = mysqli_query($conn, "SELECT SUM(amount_payment + potongan_payment + adjustment_payment) AS amount_total FROM tb_payment WHERE id_invoice = '$id_invoice'");
-                    $rowPayment = $getTotalPayment->fetch_array(MYSQLI_ASSOC);
-
-                    $id_contact = $invArray['id_contact'];
-                    $id_surat_jalan = $invArray['id_surat_jalan'];
-                    $id_distributor = $invArray['id_distributor'];
-                    $id_invoice = $invArray['id_invoice'];
-
-                    $sisaHutang = number_format($invArray['total_invoice'] - $rowPayment['amount_total'], 0, '.', ',');
-
-                    if ($sisaHutang > 0) {
-                        $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND type_renvis = 'jatem1' AND is_visited = 0");
-
-                        // while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
-                        $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
-                        // }
-
-                        if ($renvisArray == null) {
-                            $insertRenvis = mysqli_query($conn, "INSERT INTO tb_renvis_jatem(id_contact,id_surat_jalan,type_renvis,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem1',$id_distributor,$id_invoice)");
-
-                            if ($insertRenvis) {
-                                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit! jatem1, " . $days];
-                                echo json_encode($response);
-                            } else {
-                                $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit! jatem1, " . $days . " idContact: " . $id_contact];
-                                echo json_encode($response);
-                            }
-                        } else {
-                            $response = ["message" => "Sudah ada jatem1", "days" => $days, "no_inv" => $invArray['no_invoice'] . "-id-" . $invArray['id_contact']];
-                            echo json_encode($response);
-                        }
-                    }
-                } else {
-                    $response = ["message" => "Jatem masih belum", "days" => $days, "no_inv" => $invArray['no_invoice'] . "-id-" . $invArray['id_contact']];
-                    echo json_encode($response);
-                }
-            } else if ($days > "7" && $days <= "15") {
+        if (date("Y-m-d", strtotime("+" . $invArray['termin_payment'] . " days", strtotime($invArray['date_invoice']))) >= date("Y-m-d")) {
+            if ($days >= "0" && $days <= "7") {
                 $getTotalPayment = mysqli_query($conn, "SELECT SUM(amount_payment + potongan_payment + adjustment_payment) AS amount_total FROM tb_payment WHERE id_invoice = '$id_invoice'");
                 $rowPayment = $getTotalPayment->fetch_array(MYSQLI_ASSOC);
 
@@ -76,71 +37,107 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $sisaHutang = number_format($invArray['total_invoice'] - $rowPayment['amount_total'], 0, '.', ',');
 
                 if ($sisaHutang > 0) {
-                    $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND type_renvis = 'jatem2' AND is_visited = 0");
+                    $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND type_renvis = 'jatem1' AND is_visited = 0");
 
                     // while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
                     $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
                     // }
 
-                    $deleteOldRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_renvis = 'jatem1' ");
-
                     if ($renvisArray == null) {
-                        $insertRenvis = mysqli_query($conn, "INSERT INTO tb_renvis_jatem(id_contact,id_surat_jalan,type_renvis,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem2',$id_distributor,$id_invoice)");
+                        $insertRenvis = mysqli_query($conn, "INSERT INTO tb_renvis_jatem(id_contact,id_surat_jalan,type_renvis,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem1',$id_distributor,$id_invoice)");
 
                         if ($insertRenvis) {
-                            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit jatem2!, " . $days];
+                            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit! jatem1, " . $days];
                             echo json_encode($response);
                         } else {
-                            $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit jatem2!, " . $days];
+                            $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit! jatem1, " . $days . " idContact: " . $id_contact];
                             echo json_encode($response);
                         }
                     } else {
-                        $response = ["message" => "Sudah ada jatem2", "days" => $days, "no_inv" => $invArray['no_invoice'] . "-id-" . $invArray['id_contact']];
+                        $response = ["message" => "Sudah ada jatem1", "days" => $days, "no_inv" => $invArray['no_invoice'] . "-id-" . $invArray['id_contact']];
                         echo json_encode($response);
                     }
                 }
-            } else if ($days > "15") {
-                $getTotalPayment = mysqli_query($conn, "SELECT SUM(amount_payment + potongan_payment + adjustment_payment) AS amount_total FROM tb_payment WHERE id_invoice = '$id_invoice'");
-                $rowPayment = $getTotalPayment->fetch_array(MYSQLI_ASSOC);
+            } else {
+                $response = ["message" => "Jatem masih belum", "days" => $days, "no_inv" => $invArray['no_invoice'] . "-id-" . $invArray['id_contact']];
+                echo json_encode($response);
+            }
+        } else if ($days > "7" && $days <= "15") {
+            $getTotalPayment = mysqli_query($conn, "SELECT SUM(amount_payment + potongan_payment + adjustment_payment) AS amount_total FROM tb_payment WHERE id_invoice = '$id_invoice'");
+            $rowPayment = $getTotalPayment->fetch_array(MYSQLI_ASSOC);
 
-                $id_contact = $invArray['id_contact'];
-                $id_surat_jalan = $invArray['id_surat_jalan'];
-                $id_distributor = $invArray['id_distributor'];
-                $id_invoice = $invArray['id_invoice'];
+            $id_contact = $invArray['id_contact'];
+            $id_surat_jalan = $invArray['id_surat_jalan'];
+            $id_distributor = $invArray['id_distributor'];
+            $id_invoice = $invArray['id_invoice'];
 
-                $sisaHutang = number_format($invArray['total_invoice'] - $rowPayment['amount_total'], 0, '.', ',');
+            $sisaHutang = number_format($invArray['total_invoice'] - $rowPayment['amount_total'], 0, '.', ',');
 
-                if ($invArray['status_invoice'] == 'waiting' && $invArray['total_invoice'] > 0) {
-                    $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND type_renvis = 'jatem3' AND is_visited = 0");
+            if ($sisaHutang > 0) {
+                $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND type_renvis = 'jatem2' AND is_visited = 0");
 
-                    // while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
-                    $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
-                    // }
+                // while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
+                $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
+                // }
 
-                    $deleteOldRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_renvis = 'jatem2' ");
+                $deleteOldRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_renvis = 'jatem1' ");
 
-                    if ($renvisArray == null) {
-                        $insertRenvis = mysqli_query($conn, "INSERT INTO tb_renvis_jatem(id_contact,id_surat_jalan,type_renvis,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem3',$id_distributor,$id_invoice)");
+                if ($renvisArray == null) {
+                    $insertRenvis = mysqli_query($conn, "INSERT INTO tb_renvis_jatem(id_contact,id_surat_jalan,type_renvis,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem2',$id_distributor,$id_invoice)");
 
-                        if ($insertRenvis) {
-                            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit jatem3!, " . $days];
-                            echo json_encode($response);
-                        } else {
-                            $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit jatem3!, " . $days, "no_inv" => $invArray['no_invoice']];
-                            echo json_encode($response);
-                        }
+                    if ($insertRenvis) {
+                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit jatem2!, " . $days];
+                        echo json_encode($response);
                     } else {
-                        $response = ["message" => "Sudah ada jatem3", "days" => $days, "no_inv" => $invArray['no_invoice'] . "-id-" . $invArray['id_contact']];
+                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit jatem2!, " . $days];
                         echo json_encode($response);
                     }
                 } else {
-                    $response = ["message" => "Satus dan total tidak sesuai jatem3", "days" => $days, "no_inv" => $invArray['no_invoice']];
+                    $response = ["message" => "Sudah ada jatem2", "days" => $days, "no_inv" => $invArray['no_invoice'] . "-id-" . $invArray['id_contact']];
+                    echo json_encode($response);
+                }
+            }
+        } else if ($days > "15") {
+            $getTotalPayment = mysqli_query($conn, "SELECT SUM(amount_payment + potongan_payment + adjustment_payment) AS amount_total FROM tb_payment WHERE id_invoice = '$id_invoice'");
+            $rowPayment = $getTotalPayment->fetch_array(MYSQLI_ASSOC);
+
+            $id_contact = $invArray['id_contact'];
+            $id_surat_jalan = $invArray['id_surat_jalan'];
+            $id_distributor = $invArray['id_distributor'];
+            $id_invoice = $invArray['id_invoice'];
+
+            $sisaHutang = number_format($invArray['total_invoice'] - $rowPayment['amount_total'], 0, '.', ',');
+
+            if ($invArray['status_invoice'] == 'waiting' && $invArray['total_invoice'] > 0) {
+                $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND type_renvis = 'jatem3' AND is_visited = 0");
+
+                // while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
+                $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
+                // }
+
+                $deleteOldRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_renvis = 'jatem2' ");
+
+                if ($renvisArray == null) {
+                    $insertRenvis = mysqli_query($conn, "INSERT INTO tb_renvis_jatem(id_contact,id_surat_jalan,type_renvis,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem3',$id_distributor,$id_invoice)");
+
+                    if ($insertRenvis) {
+                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit jatem3!, " . $days];
+                        echo json_encode($response);
+                    } else {
+                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit jatem3!, " . $days, "no_inv" => $invArray['no_invoice']];
+                        echo json_encode($response);
+                    }
+                } else {
+                    $response = ["message" => "Sudah ada jatem3", "days" => $days, "no_inv" => $invArray['no_invoice'] . "-id-" . $invArray['id_contact']];
                     echo json_encode($response);
                 }
             } else {
-                $response = ["message" => "Belum waktunya jatem3", "days" => $days, "no_inv" => $invArray['no_invoice']];
+                $response = ["message" => "Satus dan total tidak sesuai jatem3", "days" => $days, "no_inv" => $invArray['no_invoice']];
                 echo json_encode($response);
             }
+        } else {
+            $response = ["message" => "Belum waktunya jatem3", "days" => $days, "no_inv" => $invArray['no_invoice']];
+            echo json_encode($response);
         }
     }
 }
