@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($renvisArray == null) {
                 echo json_encode(array("status" => "empty", "results" => []));
             } else {
-                echo json_encode(array("status" => "ok", "results" => $renvisArray));
+                echo json_encode(array("status" => "ok", "total" => count($renvisArray), "results" => $renvisArray));
             }
         } else {
             $id_distributor = $_GET['dst'];
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($renvisArray == null) {
                 echo json_encode(array("status" => "empty", "results" => []));
             } else {
-                echo json_encode(array("status" => "ok", "results" => $renvisArray));
+                echo json_encode(array("status" => "ok", "total" => count($renvisArray), "results" => $renvisArray));
             }
         }
     } else if ($_GET['type'] == 'jatem2') {
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($renvisArray == null) {
                 echo json_encode(array("status" => "empty", "results" => []));
             } else {
-                echo json_encode(array("status" => "ok", "results" => $renvisArray));
+                echo json_encode(array("status" => "ok", "total" => count($renvisArray), "results" => $renvisArray));
             }
         } else {
             $id_distributor = $_GET['dst'];
@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($renvisArray == null) {
                 echo json_encode(array("status" => "empty", "results" => []));
             } else {
-                echo json_encode(array("status" => "ok", "results" => $renvisArray));
+                echo json_encode(array("status" => "ok", "total" => count($renvisArray), "results" => $renvisArray));
             }
         }
     } else if ($_GET['type'] == 'jatem3') {
@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($renvisArray == null) {
                 echo json_encode(array("status" => "empty", "results" => []));
             } else {
-                echo json_encode(array("status" => "ok", "results" => $renvisArray));
+                echo json_encode(array("status" => "ok", "total" => count($renvisArray), "results" => $renvisArray));
             }
         } else {
             $id_distributor = $_GET['dst'];
@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($renvisArray == null) {
                 echo json_encode(array("status" => "empty", "results" => []));
             } else {
-                echo json_encode(array("status" => "ok", "results" => $renvisArray));
+                echo json_encode(array("status" => "ok", "total" => count($renvisArray), "results" => $renvisArray));
             }
         }
     }
