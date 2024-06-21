@@ -2,7 +2,8 @@
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 
-$wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
+// $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
+$wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
 $template_id = '85f17083-255d-4340-af32-5dd22f483960';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -197,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 }
             } else {
                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data toko!"];
-                echo json_encode($response);
+                echo json_encode($res);
             }
         } else {
             $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data pesan!"];
