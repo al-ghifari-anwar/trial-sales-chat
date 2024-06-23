@@ -39,6 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
 
+            $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'passive'");
+
             $getAllVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id_contact' AND is_claimed = 0");
             $voucherCodes = '';
             $distance_visit = '0.001';
