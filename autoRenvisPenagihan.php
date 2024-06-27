@@ -46,6 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     if ($renvisArray == null) {
                         $insertRenvis = mysqli_query($conn, "INSERT INTO tb_renvis_jatem(id_contact,id_surat_jalan,type_renvis,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem1',$id_distributor,$id_invoice)");
 
+                        $deleteOldRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'tagih_mingguan' ");
+
                         if ($insertRenvis) {
                             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan data rencana visit! jatem1, " . $days];
                             echo json_encode($response);
