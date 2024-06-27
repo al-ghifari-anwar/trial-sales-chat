@@ -43,7 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 foreach ($storeArr as $store) {
                     $created_at = date("Y-m-d", strtotime($store['created_at']));
-                    $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " week"));
+                    $dateMinusWeek = date("Y-m-d");
+                    if ($week > 0) {
+                        $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " week"));
+                    } else {
+                        $dateMinusWeek = date("Y-m-d");
+                    }
                     $nama = $store['nama'];
                     $nomor_hp = $store['nomorhp'];
                     $id_contact = $store['id_contact'];
