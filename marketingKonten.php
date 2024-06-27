@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         $status = $res['status'];
 
                         if ($status == "success") {
-                            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim konten marketing!"];
+                            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at];
                             echo json_encode($response);
                         } else {
                             // $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim konten marketing!"];
