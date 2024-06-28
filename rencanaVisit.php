@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $id_con = $rowRenvis['id_contact'];
-                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_contact = '$id_con'");
+                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_contact = '$id_con' AND type_rencana = 'passive'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $id_con = $rowRenvis['id_contact'];
-                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_contact = '$id_con'");
+                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_contact = '$id_con' AND type_rencana = 'passive'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
