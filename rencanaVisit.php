@@ -89,6 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
+                $created_at = $rowRenvis['created_at'];
+                $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $renvisArray[] = $rowRenvis;
             }
@@ -109,6 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
+                $created_at = $rowRenvis['created_at'];
+                $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $renvisArray[] = $rowRenvis;
             }
