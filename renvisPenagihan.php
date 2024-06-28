@@ -26,6 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowRenvis['days'] = $days;
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
+                // Last Visit
+                $id_con = $rowRenvis['id_contact'];
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
+                $created_at = $rowRenvis['created_at'];
+                $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
                 $renvisArray[] = $rowRenvis;
             }
 
@@ -54,6 +59,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowRenvis['days'] = $days;
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
+                $id_con = $rowRenvis['id_contact'];
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
+                $created_at = $rowRenvis['created_at'];
+                $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
                 $renvisArray[] = $rowRenvis;
             }
 
@@ -84,6 +93,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowRenvis['days'] = $days;
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
+                $id_con = $rowRenvis['id_contact'];
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
+                $created_at = $rowRenvis['created_at'];
+                $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
                 $renvisArray[] = $rowRenvis;
             }
 
@@ -112,6 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowRenvis['days'] = $days;
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
+                $id_con = $rowRenvis['id_contact'];
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
+                $created_at = $rowRenvis['created_at'];
+                $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
                 $renvisArray[] = $rowRenvis;
             }
 
@@ -142,6 +159,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowRenvis['days'] = $days;
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
+                $id_con = $rowRenvis['id_contact'];
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
+                $created_at = $rowRenvis['created_at'];
+                $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
                 $renvisArray[] = $rowRenvis;
             }
 
@@ -170,6 +191,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowRenvis['days'] = $days;
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
+                $id_con = $rowRenvis['id_contact'];
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
+                $created_at = $rowRenvis['created_at'];
+                $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
                 $renvisArray[] = $rowRenvis;
             }
 
