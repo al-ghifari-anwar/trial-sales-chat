@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
+                $id_con = $rowRenvis['id_contact'];
                 $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
@@ -41,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
+                $id_con = $rowRenvis['id_contact'];
                 $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
@@ -145,6 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
+                $id_con = $rowRenvis['id_contact'];
                 $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
@@ -169,6 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $jatuhTempo = date('d M Y', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice'])));
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
+                $id_con = $rowRenvis['id_contact'];
                 $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
