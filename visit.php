@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
         $rowUser = $getUser->fetch_array(MYSQLI_ASSOC);
 
-        $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit','$source', $id_user)");
+        $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user)");
 
         if ($insertVisit) {
             $visitDate = date("Y-m-d H:i:s");
