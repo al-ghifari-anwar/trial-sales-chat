@@ -228,7 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
             echo json_encode($response);
         } else {
-            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengubah data kontak!"];
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengubah data kontak!", "detail" => mysqli_error($conn)];
             echo json_encode($response);
         }
 
