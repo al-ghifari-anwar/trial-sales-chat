@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $mapsUrl = $_POST['mapsUrl'];
         $address = $_POST['address'];
         $nomor_hp = $_POST['nomorhp'];
-        $nomor_hp2 = isset($_POST['nomorhp_2']) ? $_POST['nomorhp_2'] : "0";
+        $nomor_hp2 = $_POST['nomorhp_2'];
         $status = $_POST['status'];
         $id_distributor = $rowContact['id_distributor'];
         $payment_method = $_POST['payment_method'];
