@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $imgNewName = 'min-' . $dateFile . $_FILES['ktp']['name'];
 
-            if ($id_distributor == 1) {
+            if ($id_distributor != 3) {
 
                 $jmlVoucher = 5;
                 $curl = curl_init();
