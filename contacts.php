@@ -67,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $mapsUrl = $_POST['mapsUrl'];
         $address = $_POST['address'];
         $nomor_hp = $_POST['nomorhp'];
+        $nomor_hp2 = $_POST['nomorhp_2'];
         $status = $_POST['status'];
         $id_distributor = $rowContact['id_distributor'];
         $payment_method = $_POST['payment_method'];
@@ -227,7 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
             echo json_encode($response);
         } else {
-            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengubah data kontak!"];
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengubah data kontak!", "detail" => mysqli_error($conn)];
             echo json_encode($response);
         }
 
