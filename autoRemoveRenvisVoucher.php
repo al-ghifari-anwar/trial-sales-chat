@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if (date("Y-m-d", strtotime($rowVoucher['exp_date'])) < date("Y-m-d")) {
 
-            $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id' AND type_rencana = 'voucher'");
+            $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
 
             if ($removeRenvi) {
                 $response = ["response" => 200, "status" => "ok", "message" => "Vouhcer telah expired!", "detail" => "ID:" . $id_contact . "| NAME:" . $rowContact['nama']];
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         } else {
             if ($rowVoucher['is_claimed'] == 1) {
-                $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id' AND type_rencana = 'voucher'");
+                $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
 
                 if ($removeRenvi) {
                     $response = ["response" => 200, "status" => "ok", "message" => "Vouhcer telah claim!", "detail" => "ID:" . $id_contact . "| NAME:" . $rowContact['nama']];
