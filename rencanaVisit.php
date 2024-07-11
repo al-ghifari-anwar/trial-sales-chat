@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($renvisArray == null) {
                 echo json_encode(array("status" => "empty", "results" => []));
             } else {
-                echo json_encode(array("status" => "ok", "results" => $renvisArray));
+                echo json_encode(array("status" => "ok", "count" => count($renvisArray), "results" => $renvisArray));
             }
         }
     } else if ($_GET['type'] == 'passive') {
