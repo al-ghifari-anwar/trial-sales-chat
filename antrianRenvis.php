@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     echo json_encode($response);
                 }
             } else {
-                $response = ["message" => "Belum waktunya interval"];
+                $response = ["message" => "Belum waktunya interval", "detail" => "JML: " . $jmlRenvis . "| INTERVAL:" . $interval_renvis];
                 echo json_encode($response);
             }
         }
