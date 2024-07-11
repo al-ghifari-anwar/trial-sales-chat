@@ -20,12 +20,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
 
         if (date("Y-m-d", strtotime($rowVoucher['exp_date'])) < date("Y-m-d")) {
-            $response = ["response" => 200, "status" => "ok", "message" => "Vouhcer telah expired!", "detail" => "ID:" . $id_contact . "| NAME:" . $rowContact['nama']];
-            echo json_encode($response);
+
+            $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id' AND type_rencana = 'voucher'");
+
+            if ($removeRenvi) {
+                $response = ["response" => 200, "status" => "ok", "message" => "Vouhcer telah expired!", "detail" => "ID:" . $id_contact . "| NAME:" . $rowContact['nama']];
+                echo json_encode($response);
+            } else {
+                $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!", "detail" => mysqli_error($conn)];
+                echo json_encode($response);
+            }
         } else {
             if ($rowVoucher['is_claimed'] == 1) {
-                $response = ["response" => 200, "status" => "ok", "message" => "Vouhcer telah claim!", "detail" => "ID:" . $id_contact . "| NAME:" . $rowContact['nama']];
-                echo json_encode($response);
+                $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id' AND type_rencana = 'voucher'");
+
+                if ($removeRenvi) {
+                    $response = ["response" => 200, "status" => "ok", "message" => "Vouhcer telah claim!", "detail" => "ID:" . $id_contact . "| NAME:" . $rowContact['nama']];
+                    echo json_encode($response);
+                } else {
+                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!", "detail" => mysqli_error($conn)];
+                    echo json_encode($response);
+                }
             } else {
                 $response = ["response" => 200, "status" => "ok", "message" => "Vouhcer masih renvi!"];
                 echo json_encode($response);
