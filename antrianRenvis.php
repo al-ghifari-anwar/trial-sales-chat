@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     echo json_encode($response);
                 }
             } else {
-                $response = ["message" => "Belum waktunya interval", "detail" => "JML: " . $jmlRenvis . "| INTERVAL:" . $interval_renvis . "| DATE:" . $date_renvis . "| DATE MINUS:" . date("Y-m-d", strtotime("-" . $times . " days"))];
+                $response = ["message" => "Belum waktunya interval", "detail" => "JML: " . $jmlRenvis . "| INTERVAL:" . $interval_renvis . "| DATE:" . $date_renvis . "| DATE MINUS:" . date("Y-m-d", strtotime("-" . $times . " days")) . "| ID: " . $id_contact];
                 echo json_encode($response);
             }
         }
