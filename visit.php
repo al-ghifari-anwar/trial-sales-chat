@@ -106,11 +106,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'];
         $id_user = $_POST['id_user'] ? $_POST['id_user'] : 0;
         $type_renvi = $_POST['type_renvi'];
+        $is_pay = $_POST['is_pay'];
 
         $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
         $rowUser = $getUser->fetch_array(MYSQLI_ASSOC);
 
-        $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user)");
+        if ($is_pay != "0") {
+            if ($is_pay == "pay") {
+                $pay_value = $_POST['pay_value'];
+
+                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_value) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay',$pay_value)");
+            } else if ($is_pay == "pay_later") {
+                $pay_date = $_POST['pay_date'];
+
+                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay',$pay_date)");
+            } else if ($is_pay == "not_pay") {
+                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user, '$is_pay')");
+            }
+        } else {
+            $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user)");
+        }
 
         if ($insertVisit) {
             $visitDate = date("Y-m-d H:i:s");
