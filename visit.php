@@ -111,6 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
         $rowUser = $getUser->fetch_array(MYSQLI_ASSOC);
 
+        $insertVisit = false;
+
         if ($is_pay != "0") {
             if ($is_pay == "pay") {
                 $pay_value = $_POST['pay_value'];
