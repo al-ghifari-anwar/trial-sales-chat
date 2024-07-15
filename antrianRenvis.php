@@ -19,11 +19,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         // if ($date_renvis == date("Y-m-d")) {
         $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_rencana_visit WHERE id_contact = '$id_contact' AND type_rencana = 'passive' AND is_visited = 0");
 
+        $contact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact'");
+
         // while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
         $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
+        $contactArray = $contact->fetch_array(MYSQLI_ASSOC);
         // }
 
-        if ($renvisArray == null) {
+        if ($renvisArray == null && $contactArray['store_status'] != 'active') {
             $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,0,'passive',$id_distributor,0)");
 
             if ($insertRenvis) {
