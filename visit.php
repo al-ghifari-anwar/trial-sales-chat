@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'];
         $id_user = $_POST['id_user'] ? $_POST['id_user'] : 0;
         $type_renvi = $_POST['type_renvi'];
-        $is_pay = $_POST['is_pay'];
+        $is_pay = isset($_POST['is_pay']) ? $_POST['is_pay'] : '0';
 
         $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
         $rowUser = $getUser->fetch_array(MYSQLI_ASSOC);
