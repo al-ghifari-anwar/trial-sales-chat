@@ -132,6 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $full_name = "PT Top Mortar Indonesia";
 
             if ($is_pay == "pay") {
+                $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'] . " - Nominal Pembayaran: Rp. " .  number_format($pay_value, 0, ',', '.');
                 $pay_value = $_POST['pay_value'];
 
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_value) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay',$pay_value)");
