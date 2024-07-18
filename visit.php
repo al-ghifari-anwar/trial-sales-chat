@@ -120,9 +120,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $resultContact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact'");
             $rowContact = $resultContact->fetch_array(MYSQLI_ASSOC);
 
-            $getUserData = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
-            $rowUserData = $getUserData->fetch_array(MYSQLI_ASSOC);
-
             $nama = $rowContact['nama'];
             $nomor_hp = $rowContact['nomorhp'];
             $id_distributor = $rowContact['id_distributor'];
@@ -134,8 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $insertVisit = false;
 
             if ($is_pay == "pay") {
-                $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'] . " - Nominal Pembayaran: Rp. " .  number_format($pay_value, 0, ',', '.');
                 $pay_value = $_POST['pay_value'];
+                $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'] . " - Nominal Pembayaran: Rp. " .  number_format($pay_value, 0, ',', '.');
 
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_value) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay',$pay_value)");
 
