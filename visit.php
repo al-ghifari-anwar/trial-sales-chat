@@ -127,6 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
             $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
             $full_name = "PT Top Mortar Indonesia";
+            $integration_id = $rowQontak['integration_id'];
 
             $insertVisit = false;
 
