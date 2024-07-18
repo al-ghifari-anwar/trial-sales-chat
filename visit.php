@@ -131,6 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
             $full_name = "PT Top Mortar Indonesia";
 
+            $insertVisit = false;
+
             if ($is_pay == "pay") {
                 $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'] . " - Nominal Pembayaran: Rp. " .  number_format($pay_value, 0, ',', '.');
                 $pay_value = $_POST['pay_value'];
