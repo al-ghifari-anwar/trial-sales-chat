@@ -187,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 curl_close($curl);
 
-                echo $response;
+                // echo $response;
             } else if ($is_pay == "pay_later") {
                 $pay_date = $_POST['pay_date'];
 
