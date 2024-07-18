@@ -1,6 +1,6 @@
 <?php
 
-error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+// error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 
@@ -114,16 +114,136 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $insertVisit = false;
 
         if ($is_pay != "0") {
+            $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
+            $template_id = '85f17083-255d-4340-af32-5dd22f483960';
+
+            $resultContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
+            $rowContact = $resultContact->fetch_array(MYSQLI_ASSOC);
+
+            $nama = $rowContact['nama'];
+            $nomor_hp = $rowContact['nomorhp'];
+            $id_distributor = $rowContact['id_distributor'];
+
+            $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+            $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+            $full_name = "PT Top Mortar Indonesia";
+            $integration_id = $rowQontak['integration_id'];
+
+            $insertVisit = false;
+
             if ($is_pay == "pay") {
                 $pay_value = $_POST['pay_value'];
+                $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'] . " - Nominal Pembayaran: Rp. " .  number_format($pay_value, 0, ',', '.');
 
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_value) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay',$pay_value)");
+
+                $message = "Terimakasih telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.');
+
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => '{
+                    "to_number": "' . $nomor_hp . '",
+                    "to_name": "' . $nama . '",
+                    "message_template_id": "' . $template_id . '",
+                    "channel_integration_id": "' . $integration_id . '",
+                    "language": {
+                        "code": "id"
+                    },
+                    "parameters": {
+                        "body": [
+                        {
+                            "key": "1",
+                            "value": "nama",
+                            "value_text": "' . $nama . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "message",
+                            "value_text": "' . $message . '"
+                        },
+                        {
+                            "key": "3",
+                            "value": "sales",
+                            "value_text": "' . $full_name . '"
+                        }
+                        ]
+                    }
+                    }',
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Bearer ' . $wa_token,
+                        'Content-Type: application/json'
+                    ),
+                ));
+
+                $response = curl_exec($curl);
+
+                curl_close($curl);
+
+                // echo $response;
             } else if ($is_pay == "pay_later") {
                 $pay_date = $_POST['pay_date'];
 
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date')");
             } else if ($is_pay == "not_pay") {
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user, '$is_pay')");
+
+                $message = "Hari ini kami belum msnerima pembayaran mohon dibantu pembayaran nya. Terimakasih";
+
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => '{
+                    "to_number": "' . $nomor_hp . '",
+                    "to_name": "' . $nama . '",
+                    "message_template_id": "' . $template_id . '",
+                    "channel_integration_id": "' . $integration_id . '",
+                    "language": {
+                        "code": "id"
+                    },
+                    "parameters": {
+                        "body": [
+                        {
+                            "key": "1",
+                            "value": "nama",
+                            "value_text": "' . $nama . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "message",
+                            "value_text": "' . $message . '"
+                        },
+                        {
+                            "key": "3",
+                            "value": "sales",
+                            "value_text": "' . $full_name . '"
+                        }
+                        ]
+                    }
+                    }',
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Bearer ' . $wa_token,
+                        'Content-Type: application/json'
+                    ),
+                ));
+
+                $response = curl_exec($curl);
+
+                curl_close($curl);
             }
         } else {
             $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user)");
