@@ -139,6 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $message = "Terimakasih telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.');
 
+                $curl = curl_init();
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
                     CURLOPT_RETURNTRANSFER => true,
@@ -194,6 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $message = "Hari ini kami belum msnerima pembayaran mohon dibantu pembayaran nya. Terimakasih";
 
+                $curl = curl_init();
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
                     CURLOPT_RETURNTRANSFER => true,
