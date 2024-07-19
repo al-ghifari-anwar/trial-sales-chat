@@ -44,7 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 foreach ($storeArr as $store) {
                     $created_at = date("Y-m-d", strtotime($store['created_at']));
                     $dateMinusWeek = date("Y-m-d");
-                    if ($week > 0) {
+                    if ($week > 0 && $week < 2) {
+                        $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " day"));
+                    } else if ($week > 2) {
                         $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " days"));
                     } else {
                         $dateMinusWeek = date("Y-m-d");
