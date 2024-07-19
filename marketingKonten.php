@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $marketingMsgArr[] = $rowMarketingMsg;
     }
 
-    echo json_encode($marketingMsgArr);
-    die;
+    // echo json_encode($marketingMsgArr);
+    // die;
 
     if ($marketingMsgArr != null) {
 
@@ -38,6 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $storeArr[] = $rowStore;
             }
 
+            if ($week == 1) {
+                $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " day"));
+            } else if ($week > 2) {
+                $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " day"));
+            } else if ($week == 0) {
+                $dateMinusWeek = date("Y-m-d");
+            }
+
             // $response = ["response" => 200, "status" => "failed", "contacts" => $storeArr, "dst" => $id_distributor];
             // echo json_encode($response);
             // die;
@@ -46,14 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 foreach ($storeArr as $store) {
                     $created_at = date("Y-m-d", strtotime($store['created_at']));
-                    $dateMinusWeek = date("Y-m-d");
-                    if ($week == 1) {
-                        $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " day"));
-                    } else if ($week > 2) {
-                        $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " days"));
-                    } else if ($week == 0) {
-                        $dateMinusWeek = date("Y-m-d");
-                    }
+                    // $dateMinusWeek = date("Y-m-d");
+
                     $nama = $store['nama'];
                     $nomor_hp = $store['nomorhp'];
                     $id_contact = $store['id_contact'];
