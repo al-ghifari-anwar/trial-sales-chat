@@ -29,12 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
 
         foreach ($marketingKontenArray as $marketingKonten) {
-            $template_id = $marketingMsg['template_id'];
-            $image = "https://order.topmortarindonesia.com/assets/img/content_img/" . $marketingMsg['image_marketing_message'];
-            $body = $marketingMsg['body_marketing_message'];
-            $week = $marketingMsg['week_marketing_message'];
-            $target_status = $marketingMsg['target_status'];
-            $id_distributor = $marketingMsg['id_distributor'];
+            $template_id = $marketingKonten['template_id'];
+            $image = "https://order.topmortarindonesia.com/assets/img/content_img/" . $marketingKonten['image_marketing_message'];
+            $body = $marketingKonten['body_marketing_message'];
+            $week = $marketingKonten['week_marketing_message'];
+            $target_status = $marketingKonten['target_status'];
+            $id_distributor = $marketingKonten['id_distributor'];
 
             // if ($week == 1) {
             $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " days"));
