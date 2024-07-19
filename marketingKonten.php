@@ -13,20 +13,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     foreach ($storeArray as $store) {
-        $nomor_hp = $store['nomorhp'];
-        $nama = $store['nama'];
-        $id_distributor = $store['id_distributor'];
-        $created_at = $store['created_at'];
+        // $nomor_hp = $store['nomorhp'];
+        // $nama = $store['nama'];
+        // $id_distributor = $store['id_distributor'];
+        // $created_at = $store['created_at'];
 
-        $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
-        $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+        // $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+        // $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
 
-        $integration_id = $rowQontak['integration_id'];
+        // $integration_id = $rowQontak['integration_id'];
 
-        $getMarketingKonten = mysqli_query($conn, "SELECT * FROM tb_marketing_message WHERE id_distributor = '$id_distributor'");
-        while ($rowMarketingKonten = $getMarketingKonten->fetch_array(MYSQLI_ASSOC)) {
-            $marketingKontenArray[] = $rowMarketingKonten;
-        }
+        // $getMarketingKonten = mysqli_query($conn, "SELECT * FROM tb_marketing_message WHERE id_distributor = '$id_distributor'");
+        // while ($rowMarketingKonten = $getMarketingKonten->fetch_array(MYSQLI_ASSOC)) {
+        //     $marketingKontenArray[] = $rowMarketingKonten;
+        // }
 
         // foreach ($marketingKontenArray as $marketingKonten) {
         //     $template_id = $marketingKonten['template_id'];
