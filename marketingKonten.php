@@ -12,6 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $marketingMsgArr[] = $rowMarketingMsg;
     }
 
+    echo json_encode($marketingMsgArr);
+    die;
+
     if ($marketingMsgArr != null) {
 
         foreach ($marketingMsgArr as $marketingMsg) {
