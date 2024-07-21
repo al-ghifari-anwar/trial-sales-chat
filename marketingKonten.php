@@ -6,44 +6,41 @@ date_default_timezone_set('Asia/Jakarta');
 $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $getStore = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE store_status != 'blacklist'");
+    $getMarketingMsg = mysqli_query($conn, "SELECT * FROM tb_marketing_message");
 
-    while ($rowStore = $getStore->fetch_array(MYSQLI_ASSOC)) {
-        $storeArray[] = $rowStore;
+    while ($rowMarketingMsg = $getMarketingMsg->fetch_array(MYSQLI_ASSOC)) {
+        $marketingMsgArr[] = $rowMarketingMsg;
     }
 
-    foreach ($storeArray as $store) {
-        $nomor_hp = $store['nomorhp'];
-        $nama = $store['nama'];
-        $id_distributor = $store['id_distributor'];
-        $created_at = $store['created_at'];
+    if ($marketingMsgArr != null) {
 
-        $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
-        $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+        foreach ($marketingMsgArr as $marketingMsg) {
+            $template_id = $marketingMsg['template_id'];
+            $image = "https://order.topmortarindonesia.com/assets/img/content_img/" . $marketingMsg['image_marketing_message'];
+            $body = $marketingMsg['body_marketing_message'];
+            $week = $marketingMsg['week_marketing_message'];
+            $target_status = $marketingMsg['target_status'];
+            $id_distributor = $marketingMsg['id_distributor'];
 
-        $integration_id = $rowQontak['integration_id'];
+            if ($week == 0) {
+                $dateMinusWeek = date("Y-m-d");
+            } else if ($week > 0 && $week < 2) {
+                $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " day"));
+            } else if ($week > 2) {
+                $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " days"));
+            }
 
-        $getMarketingKonten = mysqli_query($conn, "SELECT * FROM tb_marketing_message WHERE id_distributor = '$id_distributor'");
-        while ($rowMarketingKonten = $getMarketingKonten->fetch_array(MYSQLI_ASSOC)) {
-            $marketingKontenArray[] = $rowMarketingKonten;
-        }
+            $getStore = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tb_city.id_distributor = '$id_distributor' AND DATE(tb_contact.created_at) = '$dateMinusWeek'");
+            $store = $getStore->fetch_array(MYSQLI_ASSOC);
 
-        foreach ($marketingKontenArray as $marketingKonten) {
-            $template_id = $marketingKonten['template_id'];
-            $image = "https://order.topmortarindonesia.com/assets/img/content_img/" . $marketingKonten['image_marketing_message'];
-            $body = $marketingKonten['body_marketing_message'];
-            $week = $marketingKonten['week_marketing_message'];
-            $target_status = $marketingKonten['target_status'];
-            $id_distributor = $marketingKonten['id_distributor'];
+            $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+            $qontak = $getQontak->fetch_array(MYSQLI_ASSOC);
 
-            // if ($week == 1) {
-            $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " days"));
-            // } else if ($week > 2) {
-            //     $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " day"));
-            // } else if ($week == 0) {
-            //     $dateMinusWeek = date("Y-m-d");
-            // }
-            if ($dateMinusWeek == $created_at) {
+            $integration_id = $qontak['integration_id'];
+
+            if ($store) {
+                $nomor_hp = $store['nomor_hp'];
+                $nama = $store['nama'];
                 // Send Message
                 $curl = curl_init();
 
@@ -110,9 +107,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     echo $response;
                 }
             } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Tidak kirim konten karna bukan waktunya!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at . "| week:" . $week];
+                $response = ["response" => 200, "status" => "failed", "message" => "Tidak ada toko untuk dikirim konten!"];
                 echo json_encode($response);
             }
         }
+    } else {
+        $response = ["response" => 200, "status" => "failed", "message" => "Konten tidak ditemukan!"];
+        echo json_encode($response);
     }
 }
