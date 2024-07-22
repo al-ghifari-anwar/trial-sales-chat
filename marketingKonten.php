@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 foreach ($storeArray as $store) {
                     // echo json_encode($store);
                     $id_contact = $store['id_contact'];
-                    // $nomor_hp = $store['nomorhp'];
+                    $nomor_hp = $store['nomorhp'];
                     // $nama = $store['nama'];
                     // $created_at = $store['created_at'];
                     // Send Message
