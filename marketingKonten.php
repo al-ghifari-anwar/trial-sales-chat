@@ -30,11 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " days"));
             }
 
-            $getStore = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tb_city.id_distributor = '$id_distributor' AND DATE(tb_contact.created_at) = '$dateMinusWeek'");
+            // $getStore = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tb_city.id_distributor = '$id_distributor' AND DATE(tb_contact.created_at) = '$dateMinusWeek'");
 
-            while ($rowStore = $getStore->fetch_array(MYSQLI_ASSOC)) {
-                $store[] = $rowStore;
-            }
+            // while ($rowStore = $getStore->fetch_array(MYSQLI_ASSOC)) {
+            //     $store[] = $rowStore;
+            // }
 
             $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
             $qontak = $getQontak->fetch_array(MYSQLI_ASSOC);
