@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             if ($storeArray != null) {
                 foreach ($storeArray as $store) {
-                    echo json_encode($store);
-                    // $id_contact = $store['id_contact'];
+                    // echo json_encode($store);
+                    $id_contact = $store['id_contact'];
                     // $nomor_hp = $store['nomorhp'];
                     // $nama = $store['nama'];
                     // $created_at = $store['created_at'];
