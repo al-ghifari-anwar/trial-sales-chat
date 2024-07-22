@@ -104,12 +104,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $status = $res['status'];
 
                 if ($status == "success") {
-                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at];
+                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at . "|week:" . $week];
                     echo json_encode($response);
                 } else {
                     echo $response;
 
-                    $response2 = ["response" => 400, "status" => "failed", "message" => "Gagal mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at];
+                    $response2 = ["response" => 400, "status" => "failed", "message" => "Gagal mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at . "|week:" . $week];
                     echo json_encode($response2);
                 }
             }
