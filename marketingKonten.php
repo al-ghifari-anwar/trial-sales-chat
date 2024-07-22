@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $id_contact = $store['id_contact'];
                     $nomor_hp = $store['nomorhp'];
                     $nama = $store['nama'];
-                    // $created_at = $store['created_at'];
+                    $created_at = $store['created_at'];
                     // Send Message
                     // $curl = curl_init();
 
