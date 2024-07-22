@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+// error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 // $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                     $response2 = ["response" => 400, "status" => "failed", "message" => "Gagal mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at . "|week:" . $week];
                     echo json_encode($response2);
-                    continue;
+                    // continue;
                 }
             }
         }
