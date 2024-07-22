@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
 
             $getStore = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tb_city.id_distributor = '$id_distributor' AND DATE(tb_contact.created_at) = '$dateMinusWeek'");
+
             while ($rowStore = $getStore->fetch_array(MYSQLI_ASSOC)) {
                 $store[] = $rowStore;
             }
@@ -41,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $integration_id = $qontak['integration_id'];
 
             foreach ($store as $store) {
-                $nomor_hp = $store['nomor_hp'];
+                $nomor_hp = $store['nomorhp'];
                 $nama = $store['nama'];
                 // Send Message
                 $curl = curl_init();
