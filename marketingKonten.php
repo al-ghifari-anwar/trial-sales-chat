@@ -111,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                     $response2 = ["response" => 400, "status" => "failed", "message" => "Gagal mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at . "|week:" . $week];
                     echo json_encode($response2);
+                    continue;
                 }
             }
         }
