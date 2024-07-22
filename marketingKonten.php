@@ -42,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $integration_id = $qontak['integration_id'];
 
             foreach ($store as $store) {
+                $id_contact = $store['id_contact'];
                 $nomor_hp = $store['nomorhp'];
                 $nama = $store['nama'];
                 $created_at = $store['created_at'];
