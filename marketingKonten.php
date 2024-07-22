@@ -105,6 +105,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     // $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim konten marketing!"];
                     // echo json_encode($response);
                     echo $response;
+
+                    $response = ["response" => 400, "status" => "failed", "message" => "Gagal mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at];
+                    echo json_encode($response);
                 }
             } else {
                 $response = ["response" => 200, "status" => "failed", "message" => "Tidak ada toko untuk dikirim konten!"];
