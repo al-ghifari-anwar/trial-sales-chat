@@ -108,6 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $type_renvi = $_POST['type_renvi'];
         $is_pay = isset($_POST['is_pay']) ? $_POST['is_pay'] : '0';
 
+
         $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
         $rowUser = $getUser->fetch_array(MYSQLI_ASSOC);
 
@@ -116,6 +117,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($is_pay != "0") {
             $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
             $template_id = '85f17083-255d-4340-af32-5dd22f483960';
+
+            $id_invoice = $_POST['id_invoice'];
+
+            $getInv = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE id_invoice = '$id_invoice'");
+            $rowInv = $getInv->fetch_array(MYSQLI_ASSOC);
+
+            $no_inv = $rowInv['no_invoice'];
 
             $resultContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
             $rowContact = $resultContact->fetch_array(MYSQLI_ASSOC);
@@ -137,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_value) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay',$pay_value)");
 
-                $message = "Terimakasih telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.');
+                $message = "Terimakasih telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . " untuk tagihan invoice " . $no_inv;
 
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
@@ -192,10 +200,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $pay_date = $_POST['pay_date'];
 
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date')");
+
+                $message = "Hari ini kami belum menerima pembayaran mohon dibantu pembayaran nya. Terimakasih";
+
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => '{
+                    "to_number": "' . $nomor_hp . '",
+                    "to_name": "' . $nama . '",
+                    "message_template_id": "' . $template_id . '",
+                    "channel_integration_id": "' . $integration_id . '",
+                    "language": {
+                        "code": "id"
+                    },
+                    "parameters": {
+                        "body": [
+                        {
+                            "key": "1",
+                            "value": "nama",
+                            "value_text": "' . $nama . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "message",
+                            "value_text": "' . $message . '"
+                        },
+                        {
+                            "key": "3",
+                            "value": "sales",
+                            "value_text": "' . $full_name . '"
+                        }
+                        ]
+                    }
+                    }',
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Bearer ' . $wa_token,
+                        'Content-Type: application/json'
+                    ),
+                ));
+
+                $response = curl_exec($curl);
+
+                curl_close($curl);
             } else if ($is_pay == "not_pay") {
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user, '$is_pay')");
 
-                $message = "Hari ini kami belum msnerima pembayaran mohon dibantu pembayaran nya. Terimakasih";
+                $message = "Hari ini kami belum menerima pembayaran mohon dibantu pembayaran nya. Terimakasih";
 
                 $curl = curl_init();
                 curl_setopt_array($curl, array(

@@ -31,16 +31,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
 
             $getStore = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tb_city.id_distributor = '$id_distributor' AND DATE(tb_contact.created_at) = '$dateMinusWeek'");
-            $store = $getStore->fetch_array(MYSQLI_ASSOC);
+
+            while ($rowStore = $getStore->fetch_array(MYSQLI_ASSOC)) {
+                $store[] = $rowStore;
+            }
 
             $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
             $qontak = $getQontak->fetch_array(MYSQLI_ASSOC);
 
             $integration_id = $qontak['integration_id'];
 
-            if ($store) {
-                $nomor_hp = $store['nomor_hp'];
+            foreach ($store as $store) {
+                $id_contact = $store['id_contact'];
+                $nomor_hp = $store['nomorhp'];
                 $nama = $store['nama'];
+                $created_at = $store['created_at'];
                 // Send Message
                 $curl = curl_init();
 
@@ -102,13 +107,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at];
                     echo json_encode($response);
                 } else {
-                    // $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim konten marketing!"];
-                    // echo json_encode($response);
                     echo $response;
+
+                    $response2 = ["response" => 400, "status" => "failed", "message" => "Gagal mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at];
+                    echo json_encode($response2);
                 }
-            } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Tidak ada toko untuk dikirim konten!"];
-                echo json_encode($response);
             }
         }
     } else {
