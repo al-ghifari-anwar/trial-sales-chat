@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             foreach ($store as $store) {
                 $nomor_hp = $store['nomorhp'];
                 $nama = $store['nama'];
+                $created_at = $store['created_at'];
                 // Send Message
                 $curl = curl_init();
 
