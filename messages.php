@@ -71,13 +71,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $mapsUrl = '';
     }
 
+    $nomor_cat_1 = isset($_POST['nomor_cat_1']) ? $_POST['nomor_cat_1'] : '';
+
     $id_contact = null;
 
     $checkKontak = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
 
     $row = $checkKontak->fetch_array(MYSQLI_ASSOC);
     if ($row == null) {
-        $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner, tgl_lahir, id_city, maps_url,termin_payment) VALUES('$nama', '$nomor_hp','$store_owner', '$tgl_lahir', $id_city, '$mapsUrl', $termin_payment)");
+        $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner, tgl_lahir, id_city, maps_url,termin_payment, nomor_cat_1) VALUES('$nama', '$nomor_hp','$store_owner', '$tgl_lahir', $id_city, '$mapsUrl', $termin_payment, '$nomor_cat_1')");
         $id_contact = mysqli_insert_id($conn);
     } else {
         $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
