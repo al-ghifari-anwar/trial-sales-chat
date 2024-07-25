@@ -108,6 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $getSuratJalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan'");
             $rowSuratJalan = $getSuratJalan->fetch_array(MYSQLI_ASSOC);
             $id_contact = $rowSuratJalan['id_contact'];
+            $id_surat_jalan = $rowSuratJalan['id_surat_jalan'];
 
             // Save record change status
             $store_status = "";
@@ -116,6 +117,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $store_status = $rowContact['store_status'];
             $statusChange = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to) VALUES($id_contact,'$store_status','active')");
 
+            // Transfer Test
+            $id_city = $rowContact['id_city'];
+            $getCity = mysqli_query($conn, "SELECT * FROM tb_city WHERE id_city = '$id_city'");
+            $rowCity = $getCity->fetch_array(MYSQLI_ASSOC);
+
+            $getTotalQty = mysqli_query($conn, "SELECT id_surat_jalan, SUM(qty_produk) AS qty_produk FROM tb_detail_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan'");
+            $rowTotalQty = $getTotalQty->fetch_array(MYSQLI_ASSOC);
+            $qty = $rowTotalQty['qty_produk'];
+
+            if ($rowCity['norek_city'] != '') {
+                $to_account = $rowCity['norek_city'];
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => "https://apibca.topmortarindonesia.com/snapIntrabank.php?qty=$qty&to=$to_account&city=$id_city&sj=$id_surat_jalan",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'GET',
+                ));
+
+                $response = curl_exec($curl);
+
+                curl_close($curl);
+            }
 
             if ($statusChange) {
                 $changeStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'active' WHERE id_contact = '$id_contact'");
