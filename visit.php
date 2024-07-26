@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             } else if ($is_pay == "pay_later") {
                 $pay_date = $_POST['pay_date'];
 
-                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date')");
+                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date,id_invoice) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date',$id_invoice)");
 
                 $message = "Hari ini kami belum menerima pembayaran mohon dibantu pembayaran nya. Terimakasih";
 
