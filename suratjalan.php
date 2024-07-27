@@ -144,6 +144,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $response = curl_exec($curl);
 
                 curl_close($curl);
+            } else if ($rowCity['norek_city'] != '' && $rowCity['bank_code'] != '') {
+                $to_account = $rowCity['norek_city'];
+                $bank_code = $rowCity['bank_code'];
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => "https://apibca.topmortarindonesia.com/snapInterbankTest.php?qty=$qty&to=$to_account&city=$id_city&sj=$id_surat_jalan&to_name=Eram%20Prabowo&bank_code=$bank_code",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'GET',
+                ));
+
+                $response = curl_exec($curl);
+
+                curl_close($curl);
             }
 
             if ($statusChange) {
