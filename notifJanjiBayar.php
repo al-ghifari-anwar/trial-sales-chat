@@ -160,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     echo json_encode($response);
                 }
             } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim notif pada customer maupun sales!"];
+                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim notif pada customer maupun sales!", "details" => $res];
                 echo json_encode($response);
             }
         } else {
