@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $rowTotalQty = $getTotalQty->fetch_array(MYSQLI_ASSOC);
             $qty = $rowTotalQty['qty_produk'];
 
-            if ($rowCity['norek_city'] != '') {
+            if ($rowCity['norek_city'] != '' && $rowCity['bank_code'] == '') {
                 $to_account = $rowCity['norek_city'];
                 $curl = curl_init();
 
