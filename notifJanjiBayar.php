@@ -166,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     echo json_encode($response);
                 }
             } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Bukan toko testing!", "details" => $res];
+                $response = ["response" => 200, "status" => "failed", "message" => "Bukan toko testing! Nomor:" . $nomor_hp . "|Pay Date:" . $pay_date . "|Date:" . date("Y-m-d")];
                 echo json_encode($response);
             }
         } else {
