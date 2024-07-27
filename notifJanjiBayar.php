@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // Send Message To Customer
             $message = "Harap melakukan pembayaran untuk invoice: " . $rowInvoice['no_invoice'] . ". Terimakasih";
 
-            $nomor_hp = $rowContact['nomor_hp'];
+            $nomor_hp = $rowContact['nomorhp'];
             $nama = $rowContact['nama'];
 
             if ($nomor_hp == '6281808152028') {
