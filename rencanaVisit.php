@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if ($_GET['type'] == 'tagih_mingguan') {
         if (isset($_GET['c'])) {
             $id_city = $_GET['c'];
-            $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_contact.store_owner, tb_contact.maps_url, tb_contact.created_at AS created_at_store, tb_contact.reputation, date_invoice, termin_payment, tb_invoice.id_invoice FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact JOIN tb_invoice ON tb_invoice.id_invoice = tb_rencana_visit.id_invoice WHERE type_rencana = 'tagih_mingguan' AND tb_contact.id_city = '$id_city' AND is_visited = 0");
+            $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_contact.store_owner, tb_contact.maps_url, tb_contact.created_at AS created_at_store, tb_contact.reputation, date_invoice, termin_payment, tb_invoice.id_invoice FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact JOIN tb_invoice ON tb_invoice.id_invoice = tb_rencana_visit.id_invoice WHERE type_rencana = 'tagih_mingguan' AND tb_contact.id_city = '$id_city' AND is_visited = 0 AND tb_invoice.status_invoice = 'waiting'");
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $id_inv = $rowRenvis['id_invoice'];
@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         } else {
             $id_distributor = $_GET['dst'];
-            $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_city.*, tb_contact.store_owner, tb_contact.maps_url, tb_contact.created_at AS created_at_store, tb_contact.reputation, date_invoice, termin_payment, tb_invoice.id_invoice FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city JOIN tb_invoice ON tb_invoice.id_invoice = tb_rencana_visit.id_invoice WHERE type_rencana = 'tagih_mingguan' AND tb_city.id_distributor = '$id_distributor' AND is_visited = 0");
+            $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_city.*, tb_contact.store_owner, tb_contact.maps_url, tb_contact.created_at AS created_at_store, tb_contact.reputation, date_invoice, termin_payment, tb_invoice.id_invoice FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city JOIN tb_invoice ON tb_invoice.id_invoice = tb_rencana_visit.id_invoice WHERE type_rencana = 'tagih_mingguan' AND tb_city.id_distributor = '$id_distributor' AND is_visited = 0  AND tb_invoice.status_invoice = 'waiting'");
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
                 $id_inv = $rowRenvis['id_invoice'];
