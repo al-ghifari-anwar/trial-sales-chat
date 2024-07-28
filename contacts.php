@@ -85,6 +85,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_promo = 0;
         }
 
+        if ($tagih_mingguan == 0) {
+            mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id' AND type_rencana = 'tagih_mingguan'");
+        }
+
         $reputation = $_POST['reputation'];
 
         $nomor_cat_1 = isset($_POST['nomor_cat_1']) ? $_POST['nomor_cat_1'] : '';
