@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $sisaHutang = number_format($invArray['total_invoice'] - $rowPayment['amount_total'], 0, '.', ',');
 
                 if ($sisaHutang > 0) {
-                    $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_rencana_visit WHERE id_contact = '$id_contact' AND type_rencana = 'tagih_mingguan' AND is_visited = 0");
+                    $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_rencana_visit WHERE id_contact = '$id_contact' AND type_rencana = 'tagih_mingguan' AND is_visited = 0 AND id_invoice = '$id_invoice'");
 
                     // while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
                     $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
