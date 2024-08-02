@@ -126,44 +126,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $rowTotalQty = $getTotalQty->fetch_array(MYSQLI_ASSOC);
             $qty = $rowTotalQty['qty_produk'];
 
-            if ($rowCity['norek_city'] != '' && $rowCity['bank_code'] == '') {
-                $to_account = $rowCity['norek_city'];
-                $curl = curl_init();
+            // if ($rowCity['norek_city'] != '' && $rowCity['bank_code'] == '') {
+            //     $to_account = $rowCity['norek_city'];
+            //     $curl = curl_init();
 
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://apibca.topmortarindonesia.com/snapIntrabank.php?qty=$qty&to=$to_account&city=$id_city&sj=$id_surat_jalan",
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'GET',
-                ));
+            //     curl_setopt_array($curl, array(
+            //         CURLOPT_URL => "https://apibca.topmortarindonesia.com/snapIntrabank.php?qty=$qty&to=$to_account&city=$id_city&sj=$id_surat_jalan",
+            //         CURLOPT_RETURNTRANSFER => true,
+            //         CURLOPT_ENCODING => '',
+            //         CURLOPT_MAXREDIRS => 10,
+            //         CURLOPT_TIMEOUT => 0,
+            //         CURLOPT_FOLLOWLOCATION => true,
+            //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            //         CURLOPT_CUSTOMREQUEST => 'GET',
+            //     ));
 
-                $response = curl_exec($curl);
+            //     $response = curl_exec($curl);
 
-                curl_close($curl);
-            } else if ($rowCity['norek_city'] != '' && $rowCity['bank_code'] != '') {
-                $to_account = $rowCity['norek_city'];
-                $bank_code = $rowCity['bank_code'];
-                $curl = curl_init();
+            //     curl_close($curl);
+            // } else if ($rowCity['norek_city'] != '' && $rowCity['bank_code'] != '') {
+            //     $to_account = $rowCity['norek_city'];
+            //     $bank_code = $rowCity['bank_code'];
+            //     $curl = curl_init();
 
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://apibca.topmortarindonesia.com/snapInterbankTest.php?qty=$qty&to=$to_account&city=$id_city&sj=$id_surat_jalan&to_name=Eram%20Prabowo&bank_code=$bank_code",
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'GET',
-                ));
+            //     curl_setopt_array($curl, array(
+            //         CURLOPT_URL => "https://apibca.topmortarindonesia.com/snapInterbankTest.php?qty=$qty&to=$to_account&city=$id_city&sj=$id_surat_jalan&to_name=Eram%20Prabowo&bank_code=$bank_code",
+            //         CURLOPT_RETURNTRANSFER => true,
+            //         CURLOPT_ENCODING => '',
+            //         CURLOPT_MAXREDIRS => 10,
+            //         CURLOPT_TIMEOUT => 0,
+            //         CURLOPT_FOLLOWLOCATION => true,
+            //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            //         CURLOPT_CUSTOMREQUEST => 'GET',
+            //     ));
 
-                $response = curl_exec($curl);
+            //     $response = curl_exec($curl);
 
-                curl_close($curl);
-            }
+            //     curl_close($curl);
+            // }
 
             if ($statusChange) {
                 $changeStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'active' WHERE id_contact = '$id_contact'");
