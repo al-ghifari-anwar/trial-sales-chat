@@ -2,6 +2,11 @@
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 
+header("Access-Control-Allow-Origin: *"); // Atau ganti '*' dengan domain tertentu jika ingin membatasi akses
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // Metode HTTP yang diizinkan
+header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Header yang diizinkan
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = md5($_POST['password']);
