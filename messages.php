@@ -90,7 +90,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $getUserData = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
     $rowUserData = $getUserData->fetch_array(MYSQLI_ASSOC);
 
-    $id_distributor = $rowUserData['id_distributor'];
+    $getContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
+    $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
+
+    $id_distributor = $rowContact['id_distributor'];
 
     $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
     $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
