@@ -145,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_value) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay',$pay_value)");
 
-                $message = "Terimakasih telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . " untuk tagihan invoice " . $no_inv;
+                $message = "Terimakasih telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
 
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
