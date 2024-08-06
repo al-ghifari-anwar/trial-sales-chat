@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode($response);
             }
         } else {
-            $response = ["message" => "Bukan toko cicilan"];
+            $response = ["message" => "Bukan toko cicilan", "detail" => "id_contact-" . $id_contact];
             echo json_encode($response);
         }
     }
