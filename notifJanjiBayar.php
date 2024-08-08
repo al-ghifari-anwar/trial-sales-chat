@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $rowUser = $getUser->fetch_array(MYSQLI_ASSOC);
 
             // Send Message To Customer
-            $message = "Harap melakukan pembayaran untuk invoice: " . $rowInvoice['no_invoice'] . ". Terimakasih";
+            $message = "Hari ini kami menunggu pambayaran bapak / ibu sesuai janji pada tanggal " . date("d F Y", strtotime($pay_date)) . " terimakasih";
 
             $nomor_hp = $rowContact['nomorhp'];
             $nama = $rowContact['nama'];
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 if ($status == "success") {
                     // Send Message To Sales
-                    $message = "Waktunya untuk melakukan tagihan kepada toko " . $rowContact['nama'] . " dengan invoice : " . $rowInvoice['no_invoice'] . " yang telah dijanjikan pada tanggal " . date("d F Y", strtotime($pay_date));
+                    $message = "Waktunya untuk melakukan tagihan kepada toko *" . $rowContact['nama'] .  "*, yang telah dijanjikan pada tanggal " . date("d F Y", strtotime($pay_date));
 
                     $nomor_hp = $rowUser['phone_user'];
                     $nama = $rowUser['full_name'];
