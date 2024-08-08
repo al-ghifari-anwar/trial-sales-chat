@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $dateMinusWeek = date("Y-m-d");
             } else if ($week > 0 && $week < 2) {
                 $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " day"));
-            } else if ($week > 2) {
+            } else if ($week >= 2) {
                 $dateMinusWeek = date("Y-m-d", strtotime("-" . $week . " days"));
             }
 
