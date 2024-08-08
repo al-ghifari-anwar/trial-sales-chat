@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $nama = $store['nama'];
                     $created_at = $store['created_at'];
 
-                    if ($nomor_hp == '6287771736555') {
+                    if ($nomor_hp == '6287771736555' || $nomor_hp == '6281808152028') {
                         // Send Message
                         $curl = curl_init();
 
