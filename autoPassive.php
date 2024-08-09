@@ -36,7 +36,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $setPassive = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'passive' WHERE id_contact = '$id_contact'");
 
                     if ($setPassive) {
-                        $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,0,'passive',$id_distributor,0)");
+                        $cekRenvis = mysqli_query($conn, "SELECT * FROM tb_rencana_visit WHERE id_contact = '$id_contact' AND type_rencana = 'passive' AND is_visited = 0");
+
+                        while ($rowRenvis = $cekRenvis->fetch_array(MYSQLI_ASSOC)) {
+                            $renvisArray[] = $rowRenvis;
+                        }
+
+                        if ($renvisArray == null) {
+                            $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,0,'passive',$id_distributor,0)");
+                        }
 
                         $response = ["response" => 200, "status" => "success", "message" => "Status changed to passive!"];
                         echo json_encode($response);
