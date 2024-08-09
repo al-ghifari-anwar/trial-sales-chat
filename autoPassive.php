@@ -12,17 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     if ($lastOrderArr != null) {
-        $twoMonths = date("Y-m-d H:i:s", strtotime("-2 month"));
+        $twoMonths = date("Y-m-d H:i:s", strtotime("-45 days"));
         // echo $twoMonths;
         foreach ($lastOrderArr as $lastOrder) {
             $id_contact = $lastOrder['id_contact'];
 
             if ($lastOrder['last_order'] < $twoMonths) {
                 $dateLastOrder = strtotime($lastOrder['last_order']);
-                $datePassive = date("Y-m-d H:i:s", strtotime("+2 month", $dateLastOrder));
+                $datePassive = date("Y-m-d H:i:s", strtotime("+45 days", $dateLastOrder));
 
-                $getContact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact'");
+                $getContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
                 $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
+
+                $id_distributor = $rowContact['id_distributor'];
 
                 $cekDate = date("Y-m-d", strtotime($datePassive));
                 $cekStatusData = mysqli_query($conn, "SELECT * FROM tb_status_change WHERE id_contact = '$id_contact' AND status_from = 'active' AND status_to = 'passive' AND created_at LIKE '%$cekDate%'");
@@ -34,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $setPassive = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'passive' WHERE id_contact = '$id_contact'");
 
                     if ($setPassive) {
+                        $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,0,'passive',$id_distributor,0)");
 
                         $response = ["response" => 200, "status" => "success", "message" => "Status changed to passive!"];
                         echo json_encode($response);
