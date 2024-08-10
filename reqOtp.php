@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!"];
                         echo json_encode($response);
                     } else {
-                        $response = ["response" => 200, "status" => "ok", "message" => "Failed creating new OTP code!", "detail" => $res];
+                        $response = ["response" => 200, "status" => "failed", "message" => "Failed creating new OTP code!", "detail" => $res];
                         echo json_encode($response);
                     }
                 } else {
