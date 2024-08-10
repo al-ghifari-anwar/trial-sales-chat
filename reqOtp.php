@@ -79,8 +79,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     curl_close($curl);
 
-                    $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!"];
-                    echo json_encode($response);
+                    $res = json_decode($res, true);
+
+                    if ($res['status'] == 'success') {
+                        $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!"];
+                        echo json_encode($response);
+                    } else {
+                        $response = ["response" => 200, "status" => "ok", "message" => "Failed creating new OTP code!", "detail" => $res];
+                        echo json_encode($response);
+                    }
                 } else {
                     $response = ["response" => 200, "status" => "failed", "message" => "Failed to create OTP!", "error" => mysqli_error($conn)];
                     echo json_encode($response);
