@@ -43,6 +43,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             // if ($nomor_hp == '6281808152028') {
 
+            // $curl = curl_init();
+            // curl_setopt_array($curl, array(
+            //     CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+            //     CURLOPT_RETURNTRANSFER => true,
+            //     CURLOPT_ENCODING => '',
+            //     CURLOPT_MAXREDIRS => 10,
+            //     CURLOPT_TIMEOUT => 0,
+            //     CURLOPT_FOLLOWLOCATION => true,
+            //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            //     CURLOPT_CUSTOMREQUEST => 'POST',
+            //     CURLOPT_POSTFIELDS => '{
+            //             "to_number": "' . $nomor_hp . '",
+            //             "to_name": "' . $nama . '",
+            //             "message_template_id": "' . $template_id . '",
+            //             "channel_integration_id": "' . $integration_id . '",
+            //             "language": {
+            //                 "code": "id"
+            //             },
+            //             "parameters": {
+            //                 "body": [
+            //                 {
+            //                     "key": "1",
+            //                     "value": "nama",
+            //                     "value_text": "' . $nama . '"
+            //                 },
+            //                 {
+            //                     "key": "2",
+            //                     "value": "message",
+            //                     "value_text": "' . $message . '"
+            //                 },
+            //                 {
+            //                     "key": "3",
+            //                     "value": "sales",
+            //                     "value_text": "' . $full_name . '"
+            //                 }
+            //                 ]
+            //             }
+            //             }',
+            //     CURLOPT_HTTPHEADER => array(
+            //         'Authorization: Bearer ' . $wa_token,
+            //         'Content-Type: application/json'
+            //     ),
+            // ));
+
+            // $response = curl_exec($curl);
+
+            // curl_close($curl);
+
+            // $res = json_decode($response, true);
+
+            // $status = $res['status'];
+
+            // if ($status == "success") {
+            // Send Message To Sales
+            $message = "Waktunya untuk melakukan tagihan kepada toko *" . $nama .  "*, yang telah dijanjikan pada tanggal " . date("d F Y", strtotime($pay_date));
+
+            $nomor_hp = $rowUser['phone_user'];
+            $nama = $rowUser['full_name'];
+
             $curl = curl_init();
             curl_setopt_array($curl, array(
                 CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
@@ -96,77 +155,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $status = $res['status'];
 
             if ($status == "success") {
-                // Send Message To Sales
-                $message = "Waktunya untuk melakukan tagihan kepada toko *" . $rowContact['nama'] .  "*, yang telah dijanjikan pada tanggal " . date("d F Y", strtotime($pay_date));
-
-                $nomor_hp = $rowUser['phone_user'];
-                $nama = $rowUser['full_name'];
-
-                $curl = curl_init();
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => '{
-                        "to_number": "' . $nomor_hp . '",
-                        "to_name": "' . $nama . '",
-                        "message_template_id": "' . $template_id . '",
-                        "channel_integration_id": "' . $integration_id . '",
-                        "language": {
-                            "code": "id"
-                        },
-                        "parameters": {
-                            "body": [
-                            {
-                                "key": "1",
-                                "value": "nama",
-                                "value_text": "' . $nama . '"
-                            },
-                            {
-                                "key": "2",
-                                "value": "message",
-                                "value_text": "' . $message . '"
-                            },
-                            {
-                                "key": "3",
-                                "value": "sales",
-                                "value_text": "' . $full_name . '"
-                            }
-                            ]
-                        }
-                        }',
-                    CURLOPT_HTTPHEADER => array(
-                        'Authorization: Bearer ' . $wa_token,
-                        'Content-Type: application/json'
-                    ),
-                ));
-
-                $response = curl_exec($curl);
-
-                curl_close($curl);
-
-                $res = json_decode($response, true);
-
-                $status = $res['status'];
-
-                if ($status == "success") {
-                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim notif pada customer dan sales!"];
-                    echo json_encode($response);
-                } else {
-                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim notif pada customer tapi gagal kirim notif sales!", "details" => $res];
-                    echo json_encode($response);
-                }
+                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim notif pada customer dan sales!"];
+                echo json_encode($response);
             } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim notif pada customer maupun sales!", "details" => $res];
+                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim notif pada customer tapi gagal kirim notif sales!", "details" => $res];
                 echo json_encode($response);
             }
             // } else {
-            //     $response = ["response" => 200, "status" => "failed", "message" => "Bukan toko testing! Nomor:" . $nomor_hp . "|Pay Date:" . $pay_date . "|Date:" . date("Y-m-d")];
+            //     $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim notif pada customer maupun sales!", "details" => $res];
             //     echo json_encode($response);
             // }
         } else {
