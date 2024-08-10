@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS => '{
                         "to_number": "' . $nomor_hp_sales . '",
-                        "to_name": "' . $nama . '",
+                        "to_name": "' . $nama_sales . '",
                         "message_template_id": "' . $template_id . '",
                         "channel_integration_id": "' . $integration_id . '",
                         "language": {
@@ -155,7 +155,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $status = $res['status'];
 
             if ($status == "success") {
-                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim notif pada customer dan sales!"];
+                $data = [
+                    'nomor' => $nomor_hp_sales,
+                    'nama' => $nama_sales,
+                    'id_user' => $rowUser['id_user']
+                ];
+                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim notif pada customer dan sales!", "detail" => $data];
                 echo json_encode($response);
             } else {
                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim notif pada customer tapi gagal kirim notif sales!", "details" => $res];
