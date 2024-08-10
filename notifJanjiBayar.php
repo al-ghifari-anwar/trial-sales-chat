@@ -99,8 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // Send Message To Sales
             $message = "Waktunya untuk melakukan tagihan kepada toko *" . $nama .  "*, yang telah dijanjikan pada tanggal " . date("d F Y", strtotime($pay_date));
 
-            $nomor_hp = $rowUser['phone_user'];
-            $nama = $rowUser['full_name'];
+            $nomor_hp_sales = $rowUser['phone_user'];
+            $nama_sales = $rowUser['full_name'];
 
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS => '{
-                        "to_number": "' . $nomor_hp . '",
+                        "to_number": "' . $nomor_hp_sales . '",
                         "to_name": "' . $nama . '",
                         "message_template_id": "' . $template_id . '",
                         "channel_integration_id": "' . $integration_id . '",
@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             {
                                 "key": "1",
                                 "value": "nama",
-                                "value_text": "' . $nama . '"
+                                "value_text": "' . $nama_sales . '"
                             },
                             {
                                 "key": "2",
