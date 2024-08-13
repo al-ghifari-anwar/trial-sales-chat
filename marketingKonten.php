@@ -50,20 +50,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $created_at = $store['created_at'];
 
                     if (date("Y-m-d", strtotime($created_at)) == $dateMinusWeek) {
-                        // if ($nomor_hp == '6287771736555' || $nomor_hp == '6281808152028') {
-                        // Send Message
-                        $curl = curl_init();
+                        if ($store['store_status'] != 'blacklist') {
+                            // Send Message
+                            $curl = curl_init();
 
-                        curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => '',
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => '{
+                            curl_setopt_array($curl, array(
+                                CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                                CURLOPT_RETURNTRANSFER => true,
+                                CURLOPT_ENCODING => '',
+                                CURLOPT_MAXREDIRS => 10,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_FOLLOWLOCATION => true,
+                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                CURLOPT_CUSTOMREQUEST => 'POST',
+                                CURLOPT_POSTFIELDS => '{
                                             "to_number": "' . $nomor_hp . '",
                                             "to_name": "' . $nama . '",
                                             "message_template_id": "' . $template_id . '",
@@ -94,31 +94,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                                 ]
                                             }
                                             }',
-                            CURLOPT_HTTPHEADER => array(
-                                'Authorization: Bearer ' . $wa_token,
-                                'Content-Type: application/json'
-                            ),
-                        ));
+                                CURLOPT_HTTPHEADER => array(
+                                    'Authorization: Bearer ' . $wa_token,
+                                    'Content-Type: application/json'
+                                ),
+                            ));
 
-                        $response = curl_exec($curl);
+                            $response = curl_exec($curl);
 
-                        curl_close($curl);
+                            curl_close($curl);
 
-                        $res = json_decode($response, true);
+                            $res = json_decode($response, true);
 
-                        $status = $res['status'];
+                            $status = $res['status'];
 
-                        if ($status == "success") {
-                            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at . "|week:" . $week];
-                            echo json_encode($response);
-                        } else {
-                            echo $response;
+                            if ($status == "success") {
+                                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at . "|week:" . $week];
+                                echo json_encode($response);
+                            } else {
+                                echo $response;
 
-                            $response2 = ["response" => 400, "status" => "failed", "message" => "Gagal mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at . "|week:" . $week];
-                            echo json_encode($response2);
-                            // continue;
+                                $response2 = ["response" => 400, "status" => "failed", "message" => "Gagal mengirim konten marketing!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at . "|week:" . $week];
+                                echo json_encode($response2);
+                                // continue;
+                            }
                         }
-                        // }
                     } else {
                         $response2 = ["response" => 400, "status" => "failed", "message" => "Belum waktunya kirim!", "details" => 'Contact:' . $id_contact . "|Nama:" . $nama . "|" . $nomor_hp . "| DateMinus: " . $dateMinusWeek . "| CreatedAt: " . $created_at . "|week:" . $week];
                         echo json_encode($response2);
