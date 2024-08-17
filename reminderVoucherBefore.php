@@ -2,7 +2,7 @@
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
-$wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
+$wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
 $template_id = '46231ab1-3a21-4501-af81-3c96a8e3ead1';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
