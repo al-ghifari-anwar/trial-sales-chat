@@ -100,9 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if (isset($_POST['message_body'])) {
         $integration_id = $rowQontak['integration_id'];
-        if ($rowUserData['id_distributor'] == 4) {
-            $integration_id = $rowUserData['integration_id'];
-        }
+        // if ($rowUserData['id_distributor'] == 4) {
+        //     $integration_id = $rowUserData['integration_id'];
+        // }
         $message = $_POST['message_body'];
         if ($id_contact != null) {
             ini_set('display_errors', 1);
