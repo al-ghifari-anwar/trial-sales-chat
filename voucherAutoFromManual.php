@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             if ($is_claimed == 0) {
                 // Send again
-                $getCountVoucher = mysqli_query($conn, "SELECT SUM(point_voucher) as total_point FROM tb_voucher WHERE DATE(date_voucher) = '$date_voucher' AND id_contact = '$id_contact'");
+                $getCountVoucher = mysqli_query($conn, "SELECT SUM(point_voucher) as total_point FROM tb_voucher WHERE DATE(date_voucher) = '$date_voucher' AND id_contact = '$id_contact' AND is_claimed = 0");
                 $rowCountVoucher = $getCountVoucher->fetch_array(MYSQLI_ASSOC);
 
                 if ($rowCountVoucher != null) {
