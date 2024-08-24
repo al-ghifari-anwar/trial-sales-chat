@@ -33,15 +33,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         'id_contact' => $id_contact,
                         'point_voucher' => $total_point
                     ];
-                    $response = ["response" => 200, "status" => "ok", "message" => "Sent new voucher!", "detail" => $total_point];
+                    $response = ["response" => 200, "status" => "ok", "message" => "Sent new voucher!", "detail" => $detail];
                     echo json_encode($response);
                 } else {
                     $detail = [
-                        'id_contact' => $id_contact,
-                        'point_voucher' => $total_point
+                        'id_contact' => $id_contact
                     ];
 
-                    $response = ["response" => 200, "status" => "failed", "message" => "Null!", "detail" => $total_point];
+                    $response = ["response" => 200, "status" => "failed", "message" => "Null!", "detail" => $detail];
                     echo json_encode($response);
                 }
             } else {
