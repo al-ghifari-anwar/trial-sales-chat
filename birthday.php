@@ -126,7 +126,7 @@ foreach ($transArray as $arr) {
                     // $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
                     // $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
                     // $integration_id = $rowQontak['integration_id'];
-                    $template_vc = "65410b84-da1f-4c8d-9fb1-0dc4b94f8345";
+                    $template_vc = "3eb08679-a41f-485a-abee-5f25b4191ad6";
                     $message = "Selamat ulang tahun! Selamat anda mendapatkan Voucher. Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal " . date("d M, Y", strtotime("+30 days")) . ". Kode voucher: " . $vouchers;
                     // Send message
                     curl_setopt_array($curl, array(
@@ -220,11 +220,11 @@ foreach ($transArray as $arr) {
                                 },
                                 "parameters": {
                                     "header":{
-                                        "format":"IMAGE",
+                                        "format":"VIDEO",
                                         "params": [
                                             {
                                                 "key":"url",
-                                                "value":"https://saleswa.topmortarindonesia.com/img/bday_' . $nomor_hp . '.jpg"
+                                                "value":"https://saleswa.topmortarindonesia.com/vid/ultahnew.mp4"
                                             },
                                             {
                                                 "key":"filename",
