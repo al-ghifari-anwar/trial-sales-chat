@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $rowContactVoucher = $getContactVoucher->fetch_array(MYSQLI_ASSOC);
 
             $is_claimed = $rowContactVoucher['is_claimed'];
-            $date_voucher = $rowContactVoucher['date_voucher'];
+            $date_voucher = date("Y-m-d", strtotime($rowContactVoucher['date_voucher']));
 
             if ($is_claimed == 0) {
                 // Send again
