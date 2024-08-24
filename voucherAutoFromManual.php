@@ -36,7 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $response = ["response" => 200, "status" => "ok", "message" => "Sent new voucher!", "detail" => $total_point];
                     echo json_encode($response);
                 } else {
-                    $response = ["response" => 200, "status" => "failed", "message" => "Null!"];
+                    $detail = [
+                        'id_contact' => $id_contact,
+                        'point_voucher' => $total_point
+                    ];
+
+                    $response = ["response" => 200, "status" => "failed", "message" => "Null!", "detail" => $total_point];
                     echo json_encode($response);
                 }
             } else {
