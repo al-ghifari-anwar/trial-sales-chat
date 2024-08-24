@@ -37,7 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     echo json_encode($response);
                 } else {
                     $detail = [
-                        'id_contact' => $id_contact
+                        'id_contact' => $id_contact,
+                        'date_voucher' => $date_voucher
                     ];
 
                     $response = ["response" => 200, "status" => "failed", "message" => "Null!", "detail" => $detail];
