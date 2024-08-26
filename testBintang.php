@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $hasil = $post['hasil'];
 
     $data = [
-        'id' => $id,
         'jam' => date("H:i", strtotime($jam)),
         'tanggal' => date("Y-m-d", strtotime($tanggal)),
         'hasil' => $hasil
