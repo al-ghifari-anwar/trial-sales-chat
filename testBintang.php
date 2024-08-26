@@ -4,10 +4,11 @@ include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $id = $_POST['id'];
-    $jam = $_POST['jam'];
-    $tanggal = $_POST['tanggal'];
-    $berat = $_POST['berat'];
+    $post = json_decode(file_get_contents('php://input'), true) != null ? json_decode(file_get_contents('php://input'), true) : $_POST;
+    $id = $post['id'];
+    $jam = $post['jam'];
+    $tanggal = $post['tanggal'];
+    $berat = $post['berat'];
 
     $data = [
         'id' => $id,
