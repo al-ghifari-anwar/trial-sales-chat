@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'hasil' => $hasil
     ];
 
-    $insert = mysqli_query($conn, "INSERT INTO tb_penimbangan(material_penimbangan,jam_penimbangan,tgl_penimbangan,hasil_penimbangan) VALUES('$material','$jam','$tanggal','$hasil')");
+    $insert = mysqli_query($conn, "INSERT INTO tb_penimbangan(material_penimbangan,jam_penimbangan,tgl_penimbangan,hasil_penimbangan) VALUES('$material','$jam','$tanggal',$hasil)");
 
     if ($insert) {
         $response = ["code" => 200, "status" => "ok", "message" => "Success input data", "data" => $data];
