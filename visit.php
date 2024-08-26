@@ -195,6 +195,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 curl_close($curl);
 
+                $res = json_decode($response, true);
+
+                if ($res['status'] == 'success') {
+                    $nomor_hp_admin = "6289636224827";
+                    $nama_admin = "April";
+                    $message = "Toko " . $nama . "telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => '{
+                    "to_number": "' . $nomor_hp_admin . '",
+                    "to_name": "' . $nama_admin . '",
+                    "message_template_id": "' . $template_id . '",
+                    "channel_integration_id": "' . $integration_id . '",
+                    "language": {
+                        "code": "id"
+                    },
+                    "parameters": {
+                        "body": [
+                        {
+                            "key": "1",
+                            "value": "nama",
+                            "value_text": "' . $nama . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "message",
+                            "value_text": "' . $message . '"
+                        },
+                        {
+                            "key": "3",
+                            "value": "sales",
+                            "value_text": "' . $full_name . '"
+                        }
+                        ]
+                    }
+                    }',
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: Bearer ' . $wa_token,
+                            'Content-Type: application/json'
+                        ),
+                    ));
+
+                    $response = curl_exec($curl);
+
+                    curl_close($curl);
+                }
+
                 // echo $response;
             } else if ($is_pay == "pay_later") {
                 $pay_date = $_POST['pay_date'];

@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim reminder voucher!"];
                 echo json_encode($response);
             } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim reminder voucher!"];
+                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim reminder voucher!", 'detail' => $res];
                 echo json_encode($response);
             }
         } else {
