@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $response = ["code" => 200, "status" => "ok", "message" => "Success input data", "data" => $data];
         echo json_encode($response);
     } else {
-        $response = ["code" => 400, "status" => "failed", "message" => "Failed input data", "data" => $data];
+        $response = ["code" => 400, "status" => "failed", "message" => "Failed input data", "detail" => mysqli_error($conn)];
         echo json_encode($response);
     }
 } else {
