@@ -5,20 +5,28 @@ date_default_timezone_set('Asia/Jakarta');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post = json_decode(file_get_contents('php://input'), true) != null ? json_decode(file_get_contents('php://input'), true) : $_POST;
-    $id = $post['id'];
-    $jam = $post['jam'];
-    $tanggal = $post['tanggal'];
-    $berat = $post['berat'];
+
+    $material = $post['material'];
+    $jam = date("H:i", strtotime($post['jam']));
+    $tanggal = date("Y-m-d", strtotime($post['tanggal']));
+    $hasil = $post['hasil'];
 
     $data = [
         'id' => $id,
-        'jam' => $jam,
-        'tanggal' => $tanggal,
-        'berat' => $berat
+        'jam' => date("H:i", strtotime($jam)),
+        'tanggal' => date("Y-m-d", strtotime($tanggal)),
+        'hasil' => $hasil
     ];
 
-    $response = ["code" => 200, "status" => "ok", "message" => "Success", "data" => $data];
-    echo json_encode($response);
+    $insert = mysqli_query($conn, "INSERT INTO tb_penimbangan(material_penimbangan,jam_penimbangan,tgl_penimbangan,hasil_penimbangan) VALUES('$material','$jam','$tanggal','$hasil')");
+
+    if ($insert) {
+        $response = ["code" => 200, "status" => "ok", "message" => "Success input data", "data" => $data];
+        echo json_encode($response);
+    } else {
+        $response = ["code" => 400, "status" => "failed", "message" => "Failed input data", "data" => $data];
+        echo json_encode($response);
+    }
 } else {
     $response = ["code" => 404, "status" => "failed", "message" => "Not Found", "detail" => "Wrong request method"];
     echo json_encode($response);
