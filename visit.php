@@ -305,6 +305,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $response = curl_exec($curl);
 
                 curl_close($curl);
+
+                $res = json_decode($response, true);
+
+                if ($res['status'] == 'success') {
+                    $nomor_hp_admin = "6289636224827";
+                    $nama_admin = "April";
+                    $message = "Toko " . $nama . " menjanjikan pembayaran pada tanggal " . date("Y-m-d", strtotime($pay_date));
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => '{
+                    "to_number": "' . $nomor_hp_admin . '",
+                    "to_name": "' . $nama_admin . '",
+                    "message_template_id": "' . $template_id . '",
+                    "channel_integration_id": "' . $integration_id . '",
+                    "language": {
+                        "code": "id"
+                    },
+                    "parameters": {
+                        "body": [
+                        {
+                            "key": "1",
+                            "value": "nama",
+                            "value_text": "' . $nama . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "message",
+                            "value_text": "' . $message . '"
+                        },
+                        {
+                            "key": "3",
+                            "value": "sales",
+                            "value_text": "' . $full_name . '"
+                        }
+                        ]
+                    }
+                    }',
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: Bearer ' . $wa_token,
+                            'Content-Type: application/json'
+                        ),
+                    ));
+
+                    $response = curl_exec($curl);
+
+                    curl_close($curl);
+                }
             } else if ($is_pay == "not_pay") {
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user, '$is_pay')");
 
@@ -357,6 +412,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $response = curl_exec($curl);
 
                 curl_close($curl);
+
+                $res = json_decode($response, true);
+
+                if ($res['status'] == 'success') {
+                    $nomor_hp_admin = "6289636224827";
+                    $nama_admin = "April";
+                    $message = "Toko " . $nama . " hari ini belum melakukan pembayaran ";
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => '{
+                    "to_number": "' . $nomor_hp_admin . '",
+                    "to_name": "' . $nama_admin . '",
+                    "message_template_id": "' . $template_id . '",
+                    "channel_integration_id": "' . $integration_id . '",
+                    "language": {
+                        "code": "id"
+                    },
+                    "parameters": {
+                        "body": [
+                        {
+                            "key": "1",
+                            "value": "nama",
+                            "value_text": "' . $nama . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "message",
+                            "value_text": "' . $message . '"
+                        },
+                        {
+                            "key": "3",
+                            "value": "sales",
+                            "value_text": "' . $full_name . '"
+                        }
+                        ]
+                    }
+                    }',
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: Bearer ' . $wa_token,
+                            'Content-Type: application/json'
+                        ),
+                    ));
+
+                    $response = curl_exec($curl);
+
+                    curl_close($curl);
+                }
             }
         } else {
             $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user)");
