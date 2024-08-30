@@ -3,7 +3,7 @@ error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 
 // $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
-$wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
+// $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
 $template_id = '85f17083-255d-4340-af32-5dd22f483960';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -97,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
     $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+    $wa_token = $rowQontak['token'];
 
     if (isset($_POST['message_body'])) {
         $integration_id = $rowQontak['integration_id'];
