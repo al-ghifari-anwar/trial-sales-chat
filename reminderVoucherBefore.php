@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $oneWeek = date("Y-m-d", strtotime("-3 week"));
         $dateVoucher = date("Y-m-d", strtotime($getVoucherArr['date_voucher']));
 
-        $codeArr = null;
+        $codeArr = array();
         if ($oneWeek == $dateVoucher) {
             $id_contact = $getVoucherArr['id_contact'];
             $nomor_hp = $getVoucherArr['nomorhp'];
@@ -42,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
             $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
             $integration_id = $rowQontak['integration_id'];
+            $wa_token = $rowQontak['token'];
 
             // Send Message
             $curl = curl_init();
