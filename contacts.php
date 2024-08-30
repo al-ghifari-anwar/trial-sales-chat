@@ -150,6 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
                     $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
                     $integration_id = $rowQontak['integration_id'];
+                    $wa_token = $rowQontak['token'];
 
                     $message = "Terimakasih telah bargabung menjadi bagian dari TOP Mortar! Nikmati layanan kilat 1 hari kerja 'Pesan Hari Ini, Kirim Hari Ini' hanya dengan pembelian 10 sak. Nantikan promo-promo menarik lainnya Bersama Top Mortar, mari kita maju bersama! Selamat anda kode voucher. Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal " . date("d M, Y", strtotime("+30 days")) . ". Kode Voucher: " . $vouchers;
                     // Send message

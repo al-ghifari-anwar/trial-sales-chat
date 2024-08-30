@@ -39,7 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
             $qontak = $getQontak->fetch_array(MYSQLI_ASSOC);
 
+
             $integration_id = $qontak['integration_id'];
+            $wa_token = $qontak['token'];
 
             if ($storeArray != null) {
                 foreach ($storeArray as $store) {

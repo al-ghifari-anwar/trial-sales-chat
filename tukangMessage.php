@@ -92,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if (isset($_POST['message_body'])) {
         $integration_id = $rowQontak['integration_id'];
+        $wa_token = $rowQontak['token'];
         if ($id_tukang != null) {
             ini_set('display_errors', 1);
             error_reporting(E_ALL);

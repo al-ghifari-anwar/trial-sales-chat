@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
 
             $integration_id = $rowQontak['integration_id'];
+            $wa_token = $rowQontak['token'];
             // echo json_encode($sisaHutang);
             if ($sisaHutang > 0) {
                 // if ($id_distributor == 2) {

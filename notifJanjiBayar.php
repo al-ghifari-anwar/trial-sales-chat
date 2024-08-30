@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
             $full_name = "PT Top Mortar Indonesia";
             $integration_id = $rowQontak['integration_id'];
+            $wa_token = $rowQontak['token'];
 
             $getInvoice = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE id_invoice = '$id_invoice'");
             $rowInvoice = $getInvoice->fetch_array(MYSQLI_ASSOC);

@@ -24,6 +24,7 @@ foreach ($transArray as $arr) {
         $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
         $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
         $integration_id = $rowQontak['integration_id'];
+        $wa_token = $rowQontak['token'];
 
         $nomor_forward = '';
         if ($id_distributor == 1) {

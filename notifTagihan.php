@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
 
         $integration_id = $rowQontak['integration_id'];
+        $wa_token = $rowQontak['token'];
 
         if ($nomor_hp == "6287774436555" || $nomor_hp == "6281808152028") {
             $message = "Laporan rekap piutang: https://order.topmortarindonesia.com/wh-tagihan?c=0&dst=$id_distributor";
