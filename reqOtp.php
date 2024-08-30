@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     curl_close($curl);
 
-                    $res = json_decode($res, true);
+                    $res = json_decode($response, true);
 
                     if ($res['status'] == 'success') {
                         $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!"];
