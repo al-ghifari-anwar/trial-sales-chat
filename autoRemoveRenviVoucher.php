@@ -24,34 +24,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             if ($exp_voucher <= date("Y-m-d")) {
                 // Remove Renvi
-                $detail = [
-                    'id_contact' => $id_contact,
-                    'exp_voucher' => $exp_voucher,
-                    'id_voucher' => $rowContactVoucher['id_voucher']
-                ];
-                $response = ["response" => 200, "status" => "ok", "message" => "Renvi removed!", "detail" => $detail];
-                echo json_encode($response);
-                // $getCountVoucher = mysqli_query($conn, "SELECT SUM(point_voucher) as total_point FROM tb_voucher WHERE DATE(date_voucher) = '$date_voucher' AND id_contact = '$id_contact' AND is_claimed = 0");
-                // $rowCountVoucher = $getCountVoucher->fetch_array(MYSQLI_ASSOC);
+                $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
 
-                // if ($rowCountVoucher != null) {
-                //     // Send
-                //     $total_point = $rowCountVoucher['total_point'];
-                //     $detail = [
-                //         'id_contact' => $id_contact,
-                //         'point_voucher' => $total_point
-                //     ];
-                //     $response = ["response" => 200, "status" => "ok", "message" => "Sent new voucher!", "detail" => $detail];
-                //     echo json_encode($response);
-                // } else {
-                //     $detail = [
-                //         'id_contact' => $id_contact,
-                //         'date_voucher' => $date_voucher
-                //     ];
+                if ($removeRenvi) {
+                    // Send
+                    $total_point = $rowCountVoucher['total_point'];
+                    $detail = [
+                        'id_contact' => $id_contact,
+                        'exp_voucher' => $exp_voucher
+                    ];
+                    $response = ["response" => 200, "status" => "ok", "message" => "Renvi removed!", "detail" => $detail];
+                    echo json_encode($response);
+                } else {
+                    $detail = [
+                        'id_contact' => $id_contact,
+                        'date_voucher' => $date_voucher
+                    ];
 
-                //     $response = ["response" => 200, "status" => "failed", "message" => "Null!", "detail" => $detail];
-                //     echo json_encode($response);
-                // }
+                    $response = ["response" => 200, "status" => "failed", "message" => "Failed to remove renvi!", "detail" => $detail];
+                    echo json_encode($response);
+                }
             } else {
                 $response = ["response" => 200, "status" => "failed", "message" => "Already claimed!"];
                 echo json_encode($response);
