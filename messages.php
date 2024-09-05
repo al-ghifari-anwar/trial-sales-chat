@@ -104,6 +104,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($rowUserData['id_distributor'] == 4) {
             $integration_id = $rowUserData['integration_id'];
             $template_id = 'c64f15db-c5f0-4d9b-9888-4b24624d9e5c';
+            if ($rowUserData['level_user'] == 'admin') {
+                $integration_id = "EGzGoRR6sw6B5FhpJsG_Y2HB8g9f1U6amBOC9VJHITY";
+                $template_id = '85f17083-255d-4340-af32-5dd22f483960';
+            }
         }
         $message = $_POST['message_body'];
         if ($id_contact != null) {
