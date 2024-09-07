@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $date_voucher = date("Y-m-d", strtotime($rowContactVoucher['date_voucher']));
             $exp_voucher = date("Y-m-d", strtotime($rowContactVoucher['exp_date']));
 
-            if ($exp_voucher <= date("Y-m-d")) {
+            if ($exp_voucher <= date("Y-m-d") || $is_claimed = 1) {
                 // Remove Renvi
                 $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
 
