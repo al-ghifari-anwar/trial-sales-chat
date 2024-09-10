@@ -231,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             $insertAction = mysqli_query($conn, "INSERT INTO tb_action_bid(id_bid, field_action_bid) VALUES($id_bid, 'Send new message')");
 
                             if ($insertAction) {
-                                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim pesan, log terimpan!"];
+                                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim pesan, log terimpan!", "detail" => $res];
                                 echo json_encode($response);
                             } else {
                                 $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan record bid!"];
