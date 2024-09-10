@@ -84,6 +84,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $full_name = $_POST['full_name'];
         $id_distributor = $_POST['id_distributor'];
         $is_notify = $_POST['is_notify'];
+        $is_absen = 0;
+        if ($level_user == 'penagihan' || $level_user = 'sales' || $level_user == 'courier') {
+            $is_absen = 1;
+        }
 
         $checkUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE username = '$username'");
 
@@ -93,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $response = ["response" => 200, "status" => "failed", "message" => "Username already taken, please use another username!"];
             echo json_encode($response);
         } else {
-            $result = mysqli_query($conn, "INSERT INTO tb_user(full_name,username, password, level_user, id_city, phone_user, id_distributor, is_notify) VALUES('$full_name','$username', '$password', '$level_user', '$id_city','$phone_user',$id_distributor, $is_notify)");
+            $result = mysqli_query($conn, "INSERT INTO tb_user(full_name,username, password, level_user, id_city, phone_user, id_distributor, is_notify, is_absen) VALUES('$full_name','$username', '$password', '$level_user', '$id_city','$phone_user',$id_distributor, $is_notify, $is_absen)");
 
             if ($result) {
                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data user!"];
