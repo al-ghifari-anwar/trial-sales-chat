@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if ($is_pay != "0") {
             $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
-            $template_id = '85f17083-255d-4340-af32-5dd22f483960';
+            $template_id = 'c80d503f-bc62-450e-87e2-b7e794855145';
 
             $id_invoice = $_POST['id_invoice'];
 
