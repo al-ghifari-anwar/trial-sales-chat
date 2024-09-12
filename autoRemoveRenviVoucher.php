@@ -24,28 +24,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             if ($exp_voucher <= date("Y-m-d") || $is_claimed = 1) {
                 // Remove Renvi
-                $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
+                // $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
 
-                if ($removeRenvi) {
-                    // Send
-                    $total_point = $rowCountVoucher['total_point'];
-                    $detail = [
-                        'id_contact' => $id_contact,
-                        'exp_voucher' => $exp_voucher
-                    ];
-                    $response = ["response" => 200, "status" => "ok", "message" => "Renvi removed!", "detail" => $detail];
-                    echo json_encode($response);
-                } else {
-                    $detail = [
-                        'id_contact' => $id_contact,
-                        'date_voucher' => $date_voucher
-                    ];
+                // if ($removeRenvi) {
+                // Send
+                $total_point = $rowCountVoucher['total_point'];
+                $detail = [
+                    'id_contact' => $id_contact,
+                    'exp_voucher' => $exp_voucher,
+                    'date_voucher' => $date_voucher,
+                    'id_voucher' => $rowContactVoucher['id_voucher']
+                ];
+                $response = ["response" => 200, "status" => "ok", "message" => "Renvi removed!", "detail" => $detail];
+                echo json_encode($response);
+                // } else {
+                //     $detail = [
+                //         'id_contact' => $id_contact,
+                //         'date_voucher' => $date_voucher
+                //     ];
 
-                    $response = ["response" => 200, "status" => "failed", "message" => "Failed to remove renvi!", "detail" => $detail];
-                    echo json_encode($response);
-                }
+                //     $response = ["response" => 200, "status" => "failed", "message" => "Failed to remove renvi!", "detail" => $detail];
+                //     echo json_encode($response);
+                // }
             } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Already claimed!"];
+                $response = ["response" => 200, "status" => "failed", "message" => "Still active!"];
                 echo json_encode($response);
             }
         }
