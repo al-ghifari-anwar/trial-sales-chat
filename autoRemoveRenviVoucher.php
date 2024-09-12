@@ -47,7 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 //     echo json_encode($response);
                 // }
             } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Still active!"];
+                $detail = [
+                    'id_contact' => $id_contact,
+                    'exp_voucher' => $exp_voucher,
+                    'date_voucher' => $date_voucher,
+                    'id_voucher' => $rowContactVoucher['id_voucher']
+                ];
+
+                $response = ["response" => 200, "status" => "failed", "message" => "Still active!", "detail" => $detail];
                 echo json_encode($response);
             }
         }
