@@ -35,7 +35,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     'date_voucher' => $date_voucher,
                     'id_voucher' => $rowContactVoucher['id_voucher']
                 ];
-                $response = ["response" => 200, "status" => "ok", "message" => "Renvi removed!", "detail" => $detail];
+                $response = ["response" => 200, "status" => "ok", "message" => "Renvi expired removed!", "detail" => $detail];
+                echo json_encode($response);
+                // } else {
+                //     $detail = [
+                //         'id_contact' => $id_contact,
+                //         'date_voucher' => $date_voucher
+                //     ];
+
+                //     $response = ["response" => 200, "status" => "failed", "message" => "Failed to remove renvi!", "detail" => $detail];
+                //     echo json_encode($response);
+                // }
+            } else if ($is_claimed == 1) {
+                // Remove Renvi
+                // $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
+
+                // if ($removeRenvi) {
+                // Send
+                $total_point = $rowCountVoucher['total_point'];
+                $detail = [
+                    'id_contact' => $id_contact,
+                    'exp_voucher' => $exp_voucher,
+                    'date_voucher' => $date_voucher,
+                    'id_voucher' => $rowContactVoucher['id_voucher']
+                ];
+                $response = ["response" => 200, "status" => "ok", "message" => "Renvi claimed removed!", "detail" => $detail];
                 echo json_encode($response);
                 // } else {
                 //     $detail = [
