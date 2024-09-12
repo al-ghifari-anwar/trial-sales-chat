@@ -19,32 +19,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $getContact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact'");
         $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
 
-        if (date("Y-m-d", strtotime($rowVoucher['exp_date'])) < date("Y-m-d")) {
+        // if (date("Y-m-d", strtotime($rowVoucher['exp_date'])) < date("Y-m-d")) {
 
-            $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
+        //     $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
 
-            if ($removeRenvi) {
-                $response = ["response" => 200, "status" => "ok", "message" => "Vouhcer telah expired!", "detail" => "ID:" . $id_contact . "| NAME:" . $rowContact['nama']];
-                echo json_encode($response);
-            } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!", "detail" => mysqli_error($conn)];
-                echo json_encode($response);
-            }
-        } else {
-            if ($rowVoucher['is_claimed'] == 1) {
-                $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
+        //     if ($removeRenvi) {
+        //         $response = ["response" => 200, "status" => "ok", "message" => "Vouhcer telah expired!", "detail" => "ID:" . $id_contact . "| NAME:" . $rowContact['nama']];
+        //         echo json_encode($response);
+        //     } else {
+        //         $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!", "detail" => mysqli_error($conn)];
+        //         echo json_encode($response);
+        //     }
+        // } else {
+        //     if ($rowVoucher['is_claimed'] == 1) {
+        //         $removeRenvi = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'voucher'");
 
-                if ($removeRenvi) {
-                    $response = ["response" => 200, "status" => "ok", "message" => "Vouhcer telah claim!", "detail" => "ID:" . $id_contact . "| NAME:" . $rowContact['nama']];
-                    echo json_encode($response);
-                } else {
-                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!", "detail" => mysqli_error($conn)];
-                    echo json_encode($response);
-                }
-            } else {
-                $response = ["response" => 200, "status" => "ok", "message" => "Vouhcer masih renvi!"];
-                echo json_encode($response);
-            }
-        }
+        //         if ($removeRenvi) {
+        //             $response = ["response" => 200, "status" => "ok", "message" => "Vouhcer telah claim!", "detail" => "ID:" . $id_contact . "| NAME:" . $rowContact['nama']];
+        //             echo json_encode($response);
+        //         } else {
+        //             $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan data rencana visit!", "detail" => mysqli_error($conn)];
+        //             echo json_encode($response);
+        //         }
+        //     } else {
+        //         $response = ["response" => 200, "status" => "ok", "message" => "Vouhcer masih renvi!"];
+        //         echo json_encode($response);
+        //     }
+        // }
     }
 }
