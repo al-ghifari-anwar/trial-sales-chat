@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $created_at = $rowRenvis['created_at'];
                 $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
-                if (date('Y-m-d', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice']))) >= $date_now) {
+                if (date('Y-m-d', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice']))) <= $date_now) {
                     $renvisArray[] = $rowRenvis;
                 }
             }
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $created_at = $rowRenvis['created_at'];
                 $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
-                if (date('Y-m-d', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice']))) >= $date_now) {
+                if (date('Y-m-d', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice']))) <= $date_now) {
                     $renvisArray[] = $rowRenvis;
                 }
             }
