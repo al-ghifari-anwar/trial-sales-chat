@@ -229,7 +229,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         {
                             "key": "1",
                             "value": "nama",
-                            "value_text": "' . $nama . '"
+                            "value_text": "' . $nama_admin . '"
                         },
                         {
                             "key": "2",
@@ -344,7 +344,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         {
                             "key": "1",
                             "value": "nama",
-                            "value_text": "' . $nama . '"
+                            "value_text": "' . $nama_admin . '"
                         },
                         {
                             "key": "2",
@@ -455,7 +455,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         {
                             "key": "1",
                             "value": "nama",
-                            "value_text": "' . $nama . '"
+                            "value_text": "' . $nama_admin . '"
                         },
                         {
                             "key": "2",

@@ -29,6 +29,8 @@ foreach ($transArray as $arr) {
         $nomor_forward = '';
         if ($id_distributor == 1) {
             $nomor_forward = '6287757904850';
+        } else if ($id_distributor == 2) {
+            $nomor_forward = '6282111110710';
         } else {
             $nomor_forward = '6281128500888';
         }
@@ -79,7 +81,7 @@ foreach ($transArray as $arr) {
                     if ($pembelianSak <= 100) {
                         $jmlVoucher = 1;
                     } else if ($pembelianSak > 100) {
-                        $jmlVoucher = 2;
+                        $jmlVoucher = 1;
                     }
                 } else {
                     if ($reputation == 'good') {
