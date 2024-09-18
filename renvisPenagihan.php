@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $date_now = date("Y-m-d");
         if (isset($_GET['c'])) {
             $id_city = $_GET['c'];
-            $getRenvis = mysqli_query($conn, "SELECT tb_renvis_jatem.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_contact.store_owner, tb_contact.maps_url, tb_contact.created_at AS created_at_store, date_invoice, termin_payment, tb_renvis_jatem.id_invoice, tb_contact.reputation, tb_invoice.status_invoice FROM tb_renvis_jatem JOIN tb_contact ON tb_contact.id_contact = tb_renvis_jatem.id_contact JOIN tb_invoice ON tb_invoice.id_invoice = tb_renvis_jatem.id_invoice WHERE type_renvis = 'jatem1' AND tb_contact.id_city = '$id_city' AND is_visited = 0 AND DATE(date_invoice) <= '$date_now' AND visit_date IS NULL");
+            $getRenvis = mysqli_query($conn, "SELECT tb_renvis_jatem.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_contact.store_owner, tb_contact.maps_url, tb_contact.created_at AS created_at_store, date_invoice, termin_payment, tb_renvis_jatem.id_invoice, tb_contact.reputation, tb_invoice.status_invoice FROM tb_renvis_jatem JOIN tb_contact ON tb_contact.id_contact = tb_renvis_jatem.id_contact JOIN tb_invoice ON tb_invoice.id_invoice = tb_renvis_jatem.id_invoice WHERE type_renvis = 'jatem1' AND tb_contact.id_city = '$id_city' AND is_visited = 0 AND visit_date IS NULL");
 
 
             while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
@@ -68,7 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $created_at = $rowRenvis['created_at'];
                 $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
-                $renvisArray[] = $rowRenvis;
+                if (date('Y-m-d', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice']))) >= $date_now) {
+                    $renvisArray[] = $rowRenvis;
+                }
             }
 
             if ($renvisArray == null) {
