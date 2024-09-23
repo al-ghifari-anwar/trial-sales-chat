@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $id_con = $rowRenvis['id_contact'];
-                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' AND source_visit != 'normal' ORDER BY date_visit DESC LIMIT 1");
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con'  AND source_visit IN ('jatem1','jatem2','jatem3','weekly','voucher','passive') ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
                 $created_at = $rowRenvis['created_at'];
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $id_con = $rowRenvis['id_contact'];
-                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' AND source_visit != 'normal' ORDER BY date_visit DESC LIMIT 1");
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con'  AND source_visit IN ('jatem1','jatem2','jatem3','weekly','voucher','passive') ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
                 $created_at = $rowRenvis['created_at'];
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_contact = '$id_con' AND type_rencana = 'passive'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $date_margin = date("Y-m-d", strtotime("-1 month"));
-                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' AND source_visit != 'normal' AND date_visit >= '$date_margin' ORDER BY date_visit DESC LIMIT 1");
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' AND source_visit IN ('jatem1','jatem2','jatem3','weekly','voucher','passive') AND date_visit >= '$date_margin' ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
                 $created_at = $rowRenvis['created_at'];
@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_contact = '$id_con' AND type_rencana = 'passive'");
                 $resCount = $count->fetch_array(MYSQLI_ASSOC);
                 $date_margin = date("Y-m-d", strtotime("-1 month"));
-                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' AND source_visit != 'normal' AND date_visit >= '$date_margin' ORDER BY date_visit DESC LIMIT 1");
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con'  AND source_visit IN ('jatem1','jatem2','jatem3','weekly','voucher','passive') AND date_visit >= '$date_margin' ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
                 $created_at = $rowRenvis['created_at'];
@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $id_con = $rowRenvis['id_contact'];
-                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' AND source_visit != 'normal' ORDER BY date_visit DESC LIMIT 1");
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con'  AND source_visit IN ('jatem1','jatem2','jatem3','weekly','voucher','passive') ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
                 $created_at = $rowRenvis['created_at'];
@@ -175,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowRenvis['jatuh_tempo'] = $jatuhTempo;
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
                 $id_con = $rowRenvis['id_contact'];
-                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' AND source_visit != 'normal' ORDER BY date_visit DESC LIMIT 1");
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con'  AND source_visit IN ('jatem1','jatem2','jatem3','weekly','voucher','passive') ORDER BY date_visit DESC LIMIT 1");
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
                 $created_at = $rowRenvis['created_at'];
