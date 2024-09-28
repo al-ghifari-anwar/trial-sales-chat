@@ -151,6 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
                     $integration_id = $rowQontak['integration_id'];
                     $wa_token = $rowQontak['token'];
+                    $template_id = "77b9cbfa-4ea7-48d6-a081-da07e7901802";
 
                     $message = "Terimakasih telah bargabung menjadi bagian dari TOP Mortar! Nikmati layanan kilat 1 hari kerja 'Pesan Hari Ini, Kirim Hari Ini' hanya dengan pembelian 10 sak. Nantikan promo-promo menarik lainnya Bersama Top Mortar, mari kita maju bersama! Selamat anda kode voucher. Tukarkan voucher anda dengan produk-produk unggulan kami sebelum tanggal " . date("d M, Y", strtotime("+30 days")) . ". Kode Voucher: " . $vouchers;
                     // Send message
@@ -175,15 +176,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     },
                                     "parameters": {
                                         "header":{
-                                            "format":"IMAGE",
+                                            "format":"VIDEO",
                                             "params": [
                                                 {
                                                     "key":"url",
-                                                    "value":"https://saleswa.topmortarindonesia.com/img/flyer_toko_baru.png"
+                                                    "value":"https://saleswa.topmortarindonesia.com/vids/send_voucher.png"
                                                 },
                                                 {
                                                     "key":"filename",
-                                                    "value":"bday.jpg"
+                                                    "value":"bday.mp4"
                                                 }
                                             ]
                                         },

@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
             $integration_id = $rowQontak['integration_id'];
             $wa_token = $rowQontak['token'];
+            $template_id = "d1c9b16c-99c5-41b4-9641-6a6d2be18624";
 
             // Send Message
             $curl = curl_init();
@@ -66,15 +67,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     },
                     "parameters": {
                         "header":{
-                            "format":"IMAGE",
+                            "format":"VIDEO",
                             "params": [
                                 {
                                     "key":"url",
-                                    "value":"https://saleswa.topmortarindonesia.com/img/vc_reminderBfr.jpg"
+                                    "value":"https://saleswa.topmortarindonesia.com/vids/reminder_2.mp4"
                                 },
                                 {
                                     "key":"filename",
-                                    "value":"bday.jpg"
+                                    "value":"bday.mp4"
                                 }
                             ]
                         },
