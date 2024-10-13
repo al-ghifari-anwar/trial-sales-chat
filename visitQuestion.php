@@ -7,6 +7,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $getQuestion = mysqli_query($conn, "SELECT * FROM tb_visit_question");
 
     while ($rowQuestion = $getQuestion->fetch_array(MYSQLI_ASSOC)) {
+        $options = $rowQuestion['answer_option'];
+        if ($options != null) {
+            $options = explode(",", $options);
+        }
+        $rowQuestion['answer_option'] = $options;
         $arrayQuestion[] = $rowQuestion;
     }
 
