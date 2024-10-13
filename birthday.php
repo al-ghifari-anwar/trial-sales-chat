@@ -28,7 +28,7 @@ foreach ($transArray as $arr) {
 
         $nomor_forward = '';
         if ($id_distributor == 1) {
-            $nomor_forward = '6287757904850';
+            $nomor_forward = '6282143365316';
         } else if ($id_distributor == 2) {
             $nomor_forward = '6282111110710';
         } else {
