@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($answer_type == 'text' || $answer_type == 'radio' || $answer_type == 'date') {
             $text_answer = $answer['text_answer'];
 
-            $insertAnswer = mysqli_query($conn, "INSERT INTO tb_visit_answer(id_question,text_question,text_answer,id_visit) VALUES($id_question,'$text_question','$text_answer',$id_visit)");
+            $insertAnswer = mysqli_query($conn, "INSERT INTO tb_visit_answer(text_question,text_answer,id_visit) VALUES('$text_question','$text_answer',$id_visit)");
 
             if ($insertAnswer) {
                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             foreach ($selected_answers as $selected_answer) {
 
-                $insertAnswer = mysqli_query($conn, "INSERT INTO tb_visit_answer(id_question,text_question,text_answer,id_visit) VALUES($id_question,'$text_question','$selected_answer',$id_visit)");
+                $insertAnswer = mysqli_query($conn, "INSERT INTO tb_visit_answer(text_question,text_answer,id_visit) VALUES('$text_question','$selected_answer',$id_visit)");
 
                 if ($insertAnswer) {
                     $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
