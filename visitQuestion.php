@@ -25,13 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $answers = $_POST['array_answer'];
     $answers = json_decode($answers);
 
-    echo $answers;
-    die;
+    // echo $answers;
+    // die;
 
     foreach ($answers as $answer) {
         $id_question = $answer['id_visit_question'];
-        // echo $id_question;
-        // die;
+        echo $answer;
+        die;
 
         $getQuestion = mysqli_query($conn, "SELECT * FROM tb_visit_question WHERE id_visit_question = '$id_question'");
         $rowQuestion = $getQuestion->fetch_array(MYSQLI_ASSOC);
