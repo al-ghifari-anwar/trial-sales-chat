@@ -25,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $answers = $_POST['array_answer'];
     $answers = json_decode($answers, true);
 
-    // echo $answers;
-    // die;
+    echo $answers[0];
+    die;
 
     foreach ($answers as $answer) {
         $id_question = $answer['id_visit_question'];
