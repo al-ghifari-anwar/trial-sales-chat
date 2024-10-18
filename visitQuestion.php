@@ -37,25 +37,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($answer_type == 'text' || $answer_type == 'radio' || $answer_type == 'date') {
             $text_answer = $answer['text_answer'];
 
-            $insertAnswer = mysqli_query($conn, "INSERT INTO tb_visit_answer(id_question,text_question,text_answer) VALUES($id_question,'$text_question','$text_answer')");
+            $insertAnswer = mysqli_query($conn, "INSERT INTO tb_visit_answer(id_question,text_question,text_answer,id_visit) VALUES($id_question,'$text_question','$text_answer',$id_visit)");
 
-            // if ($insertAnswer) {
-            //     $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
-            //     echo json_encode($response);
-            // } else {
-            //     $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim jawaban!"];
-            //     echo json_encode($response);
-            // }
+            if ($insertAnswer) {
+                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
+                echo json_encode($response);
+            } else {
+                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim jawaban!", "detail" => mysqli_error($conn)];
+                echo json_encode($response);
+            }
         } else if ($answer_type == 'checkbox') {
             $selected_answers = $answer['selected_answer'];
 
             foreach ($selected_answers as $selected_answer) {
 
-                $insertAnswer = mysqli_query($conn, "INSERT INTO tb_visit_answer(id_question,text_question,text_answer) VALUES($id_question,'$text_question','$selected_answer')");
+                $insertAnswer = mysqli_query($conn, "INSERT INTO tb_visit_answer(id_question,text_question,text_answer,id_visit) VALUES($id_question,'$text_question','$selected_answer',$id_visit)");
+
+                if ($insertAnswer) {
+                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
+                    echo json_encode($response);
+                } else {
+                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim jawaban!", "detail" => mysqli_error($conn)];
+                    echo json_encode($response);
+                }
             }
         }
     }
 
-    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
-    echo json_encode($response);
+    // $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
+    // echo json_encode($response);
 }
