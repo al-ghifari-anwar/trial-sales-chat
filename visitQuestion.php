@@ -23,7 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_visit = $_POST['id_visit'];
     $answers = $_POST['array_answer'];
-    $answers = json_decode($answers);
+    $decode_answers = html_entity_decode($answers);
+    $answers = json_decode($decode_answers, true);
     // $answers = json_encode($answers);
 
     echo $answers;
