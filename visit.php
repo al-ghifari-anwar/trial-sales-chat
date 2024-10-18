@@ -530,7 +530,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if ($insertVisit) {
             $id_bid = $rowBid['id_bid'];
-            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim absen!"];
+            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim absen!", "id_visit" => $id_visit];
             echo json_encode($response);
         } else {
             $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan absen! " . mysqli_error($conn), "detail" => mysqli_error($conn)];
