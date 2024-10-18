@@ -517,7 +517,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
 
         $id_bid = $rowBid['id_bid'];
-        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan!", "id_visit" => $id_visit];
+        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan!", "id_visit" => (string)$id_visit];
         echo json_encode($response);
         // } else {
         //     $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan laporan! " . mysqli_error($conn), "detail" => mysqli_error($conn)];
