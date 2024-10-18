@@ -113,6 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $rowUser = $getUser->fetch_array(MYSQLI_ASSOC);
 
         $insertVisit = false;
+        $id_visit = 0;
 
         if ($is_pay != "0") {
             $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
@@ -145,6 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'] . " - Nominal Pembayaran: Rp. " .  number_format($pay_value, 0, ',', '.');
 
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_value) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay',$pay_value)");
+                $id_visit = mysqli_insert_id($conn);
 
                 $message = "Terimakasih telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
 
@@ -260,6 +262,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $pay_date = $_POST['pay_date'];
 
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date,id_invoice) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date',$id_invoice)");
+                $id_visit = mysqli_insert_id($conn);
 
                 $message = "Hari ini kami belum menerima pembayaran mohon dibantu pembayaran nya. Terimakasih";
 
@@ -371,6 +374,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 }
             } else if ($is_pay == "not_pay") {
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user, '$is_pay')");
+                $id_visit = mysqli_insert_id($conn);
 
                 $message = "Hari ini kami belum menerima pembayaran mohon dibantu pembayaran nya. Terimakasih";
 
@@ -483,6 +487,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         } else {
             $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user)");
+            $id_visit = mysqli_insert_id($conn);
         }
 
         // if ($insertVisit) {
@@ -512,7 +517,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
 
         $id_bid = $rowBid['id_bid'];
-        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan!"];
+        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan!", "id_visit" => $id_visit];
         echo json_encode($response);
         // } else {
         //     $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan laporan! " . mysqli_error($conn), "detail" => mysqli_error($conn)];
@@ -530,7 +535,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if ($insertVisit) {
             $id_bid = $rowBid['id_bid'];
-            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim absen!", "id_visit" => $id_visit];
+            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim absen!"];
             echo json_encode($response);
         } else {
             $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan absen! " . mysqli_error($conn), "detail" => mysqli_error($conn)];
