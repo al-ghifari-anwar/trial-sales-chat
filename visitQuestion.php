@@ -48,13 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $insertAnswer = mysqli_query($conn, "INSERT INTO tb_visit_answer(text_question,text_answer,id_visit) VALUES('$text_question','$text_answer',$id_visit)");
 
-            if ($insertAnswer) {
-                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
-                echo json_encode($response);
-            } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim jawaban!", "detail" => mysqli_error($conn)];
-                echo json_encode($response);
-            }
+            // if ($insertAnswer) {
+            //     $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
+            //     echo json_encode($response);
+            // } else {
+            //     $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim jawaban!", "detail" => mysqli_error($conn)];
+            //     echo json_encode($response);
+            // }
         } else if ($answer_type == 'checkbox') {
             $selected_answers = $answer['selected_answer'];
 
@@ -62,13 +62,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $insertAnswer = mysqli_query($conn, "INSERT INTO tb_visit_answer(text_question,text_answer,id_visit) VALUES('$text_question','$selected_answer',$id_visit)");
 
-                if ($insertAnswer) {
-                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
-                    echo json_encode($response);
-                } else {
-                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim jawaban!", "detail" => mysqli_error($conn)];
-                    echo json_encode($response);
-                }
+                // if ($insertAnswer) {
+                //     $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
+                //     echo json_encode($response);
+                // } else {
+                //     $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim jawaban!", "detail" => mysqli_error($conn)];
+                //     echo json_encode($response);
+                // }
             }
         } else {
             $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim jawaban!", "detail" => "Tipe jawaban tidak ada"];
@@ -76,6 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 
-    // $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
-    // echo json_encode($response);
+    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
+    echo json_encode($response);
 }
