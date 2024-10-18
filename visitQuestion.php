@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     foreach ($answers as $answer) {
         $id_question = $answer['id_visit_question'];
 
-        $getQuestion = mysqli_query($conn, "SELECT * FROM tb_visit_question WHERE id_question = '$id_question'");
+        $getQuestion = mysqli_query($conn, "SELECT * FROM tb_visit_question WHERE id_visit_question = '$id_question'");
         $rowQuestion = $getQuestion->fetch_array(MYSQLI_ASSOC);
 
         $answer_type = $rowQuestion['answer_type'];
