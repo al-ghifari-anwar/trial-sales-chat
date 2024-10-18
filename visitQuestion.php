@@ -20,4 +20,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else {
         echo json_encode(array("status" => "ok", "results" => $arrayQuestion));
     }
+} else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $id_question = $_POST['id_question'];
+    $text_answer = $_POST['text_answer'];
+
+    $getQuestion = mysqli_query($conn, "SELECT * FROM tb_visit_question WHERE id_question = '$id_question'");
+    $rowQuestion = $getQuestion->fetch_array(MYSQLI_ASSOC);
+
+    $answer_type = $rowQuestion['answer_type'];
+    $text_question = $rowQuestion['text_question'];
+
+    if ($answer_type == 'text' || $answer_type == 'radio' || $answer_type == 'date') {
+        $insertAnswer = mysqli_query($conn, "INSERT INTO tb_visit_answer(id_question,text_question,text_answer) VALUES($id_question,'$text_question','$text_answer')");
+
+        if ($insertAnswer) {
+            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim jawaban!"];
+            echo json_encode($response);
+        } else {
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim jawaban!"];
+            echo json_encode($response);
+        }
+    }
 }

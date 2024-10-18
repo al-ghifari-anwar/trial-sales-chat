@@ -526,6 +526,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $source = $_POST['source'] == null ? 'absen_in' : $_POST['source'];
 
         $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_gudang, $distance_visit, '$laporan_visit', '$source', $id_user)");
+        $id_visit = mysqli_insert_id($conn);
 
         if ($insertVisit) {
             $id_bid = $rowBid['id_bid'];
