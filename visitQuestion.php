@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $id_visit = $_POST['id_visit'];
     $answers = $_POST['array_answer'];
     $answers = json_decode($answers, true);
+    $answers = json_encode($answers);
 
     echo $answers;
     die;
