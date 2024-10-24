@@ -248,7 +248,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             {
                                 "key": "1",
                                 "value": "nama",
+                                "value_text": "' . $nama . '"
+                            },
+                            {
+                                "key": "2",
+                                "value": "message",
                                 "value_text": "' . $message . '"
+                            },
+                            {
+                                "key": "3",
+                                "value": "sales",
+                                "value_text": "' . $full_name . '"
                             }
                             ]
                         }
