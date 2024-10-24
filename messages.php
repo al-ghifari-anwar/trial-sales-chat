@@ -103,11 +103,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $integration_id = $rowQontak['integration_id'];
         if ($rowUserData['id_distributor'] == 4) {
             $integration_id = $rowUserData['integration_id'];
-            $template_id = 'c64f15db-c5f0-4d9b-9888-4b24624d9e5c';
+            $template_id = '117cfa6d-772d-480f-97e5-cbf9ad6acb74';
             if ($rowUserData['level_user'] == 'admin' || $rowUserData['level_user'] == 'salesleader') {
                 $wa_token = "EGzGoRR6sw6B5FhpJsG_Y2HB8g9f1U6amBOC9VJHITY";
                 $integration_id = "38654c8b-76a1-45d9-a5ae-969e4bf3fb83";
-                $template_id = '85f17083-255d-4340-af32-5dd22f483960';
+                $template_id = 'c64f15db-c5f0-4d9b-9888-4b24624d9e5c';
+                // $template_id = '85f17083-255d-4340-af32-5dd22f483960';
             }
         }
         $message = $_POST['message_body'];
