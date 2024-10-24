@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($rowUserData['level_user'] == 'admin' || $rowUserData['level_user'] == 'salesleader') {
                 $wa_token = "EGzGoRR6sw6B5FhpJsG_Y2HB8g9f1U6amBOC9VJHITY";
                 $integration_id = "38654c8b-76a1-45d9-a5ae-969e4bf3fb83";
-                $template_id = 'c64f15db-c5f0-4d9b-9888-4b24624d9e5c';
+                $template_id = 'c80d503f-bc62-450e-87e2-b7e794855145';
                 // $template_id = '85f17083-255d-4340-af32-5dd22f483960';
             }
         }
