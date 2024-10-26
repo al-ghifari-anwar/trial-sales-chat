@@ -12,10 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         // echo mysqli_error($conn);
 
-        $answerArray = array();
         while ($rowVisitAnswer = $getVisitAnswer->fetch_array(MYSQLI_ASSOC)) {
             $text_question = $rowVisitAnswer['text_question'];
             $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' AND text_question = '$text_question'");
+            $answerArray = array();
             while ($rowAnswer = $getAnswer->fetch_array(MYSQLI_ASSOC)) {
                 $answerArray[] = $rowAnswer['text_answer'];
             }
