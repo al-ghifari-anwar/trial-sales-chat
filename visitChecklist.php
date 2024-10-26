@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $text_question = $rowVisitAnswer['text_qeustion'];
             $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' AND text_question = '$text_question'");
             while ($rowAnswer = $getAnswer->fetch_array(MYSQLI_ASSOC)) {
-                $answerArray[] = $rowAnswer;
+                $answerArray[] = $rowAnswer['text_answer'];
             }
             $rowVisitAnswer['answers'] = $answerArray;
             $visitAnswerArray[] = $rowVisitAnswer;
