@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['v'])) {
         $id_visit = $_GET['v'];
 
-        $getVisitAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' AND text_question != '' GROUP BY text_answer");
+        $getVisitAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' AND text_question != '' GROUP BY text_question");
 
         // echo mysqli_error($conn);
 
