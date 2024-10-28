@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
                 $id_visit = $rowVisit['id_visit'];
-                $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit'");
+                $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' LIMIT 1");
                 $rowVisit['has_checklist'] = $getAnswer != null ? "1" : "0";
                 $visitArray[] = $rowVisit;
             }
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
                 $id_visit = $rowVisit['id_visit'];
-                $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit'");
+                $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' LIMIT 1");
                 $rowVisit['has_checklist'] = $getAnswer != null ? "1" : "0";
                 $visitArray[] = $rowVisit;
             }
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
                     $id_visit = $rowVisit['id_visit'];
-                    $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit'");
+                    $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' LIMIT 1");
                     $rowVisit['has_checklist'] = $getAnswer != null ? "1" : "0";
                     $visitArray[] = $rowVisit;
                 }
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
                     $id_visit = $rowVisit['id_visit'];
-                    $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit'");
+                    $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' LIMIT 1");
                     $rowVisit['has_checklist'] = $getAnswer != null ? "1" : "0";
                     $visitArray[] = $rowVisit;
                 }
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
                     $id_visit = $rowVisit['id_visit'];
-                    $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit'");
+                    $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' LIMIT 1");
                     $rowVisit['has_checklist'] = $getAnswer != null ? "1" : "0";
                     $visitArray[] = $rowVisit;
                 }
@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         while ($rowUser = $getUser->fetch_array(MYSQLI_ASSOC)) {
             $id_visit = $rowVisit['id_visit'];
-            $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit'");
+            $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' LIMIT 1");
             $rowVisit['has_checklist'] = $getAnswer != null ? "1" : "0";
             $userArray[] = $rowUser;
         }
