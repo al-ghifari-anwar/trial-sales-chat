@@ -227,10 +227,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 if ($res['status'] == 'success') {
                     $nomor_hp_admin = "6289636224827";
                     $nama_admin = "April";
-                    if ($id_distributor == 2) {
-                        $nomor_hp_admin = "6289520332335";
-                        $nama_admin = "Dea";
-                    }
+                    // if ($id_distributor == 2) {
+                    //     $nomor_hp_admin = "6289520332335";
+                    //     $nama_admin = "Dea";
+                    // }
                     $message = "Toko " . $nama . "telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
                     $curl = curl_init();
                     curl_setopt_array($curl, array(
@@ -343,10 +343,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 if ($res['status'] == 'success') {
                     $nomor_hp_admin = "6289636224827";
                     $nama_admin = "April";
-                    if ($id_distributor == 2) {
-                        $nomor_hp_admin = "6289520332335";
-                        $nama_admin = "Dea";
-                    }
+                    // if ($id_distributor == 2) {
+                    //     $nomor_hp_admin = "6289520332335";
+                    //     $nama_admin = "Dea";
+                    // }
                     $message = "Toko " . $nama . " menjanjikan pembayaran pada tanggal " . date("Y-m-d", strtotime($pay_date));
                     $curl = curl_init();
                     curl_setopt_array($curl, array(
@@ -455,10 +455,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 if ($res['status'] == 'success') {
                     $nomor_hp_admin = "6289636224827";
                     $nama_admin = "April";
-                    if ($id_distributor == 2) {
-                        $nomor_hp_admin = "6289520332335";
-                        $nama_admin = "Dea";
-                    }
+                    // if ($id_distributor == 2) {
+                    //     $nomor_hp_admin = "6289520332335";
+                    //     $nama_admin = "Dea";
+                    // }
                     $message = "Toko " . $nama . " hari ini belum melakukan pembayaran ";
                     $curl = curl_init();
                     curl_setopt_array($curl, array(
