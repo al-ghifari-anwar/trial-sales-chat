@@ -397,6 +397,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     curl_close($curl);
                 }
             } else if ($is_pay == "not_pay") {
+                // $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date,id_invoice) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date',$id_invoice)");
+
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user, '$is_pay')");
                 $id_visit = mysqli_insert_id($conn);
 
