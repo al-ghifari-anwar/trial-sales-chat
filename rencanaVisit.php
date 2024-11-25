@@ -189,5 +189,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(array("status" => "ok", "results" => $renvisArray));
             }
         }
-    }
+    } else if ($_GET['type'] == 'mg') {
+        if (isset($_GET['c'])) {
+            $id_city = $_GET['c'];
+            $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_contact.store_owner, tb_contact.maps_url, tb_contact.created_at AS created_at_store, tb_contact.reputation, tb_contact.id_contact, tb_contact.pass_contact FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact WHERE type_rencana = 'mg' AND tb_contact.id_city = '$id_city' AND is_visited = 0 AND store_status != 'blacklist' GROUP BY tb_rencana_visit.id_contact");
+
+            while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
+                $id_con = $rowRenvis['id_contact'];
+                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_contact = '$id_con' AND type_rencana = 'mg'");
+                $resCount = $count->fetch_array(MYSQLI_ASSOC);
+                $date_margin = date("Y-m-d", strtotime("-1 month"));
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con' AND source_visit IN ('jatem1','jatem2','jatem3','weekly','voucher','passive','renvisales') AND date_visit >= '$date_margin' ORDER BY date_visit DESC LIMIT 1");
+                $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
+                $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
+                $created_at = $rowRenvis['created_at'];
+                $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
+                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
+                $renvisArray[] = $rowRenvis;
+            }
+
+            if ($renvisArray == null) {
+                echo json_encode(array("status" => "empty", "results" => []));
+            } else {
+                echo json_encode(array("status" => "ok", "results" => $renvisArray));
+            }
+        } else {
+            $id_distributor = $_GET['dst'];
+            $getRenvis = mysqli_query($conn, "SELECT tb_rencana_visit.*, tb_contact.nama, tb_contact.nomorhp, tb_contact.id_city, tb_contact.store_status, tb_city.*, tb_contact.store_owner, tb_contact.maps_url, tb_contact.created_at AS created_at_store, tb_contact.reputation, tb_contact.id_contact, tb_contact.pass_contact FROM tb_rencana_visit JOIN tb_contact ON tb_contact.id_contact = tb_rencana_visit.id_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE type_rencana = 'mg' AND tb_city.id_distributor = '$id_distributor' AND is_visited = 0 AND store_status != 'blacklist' GROUP BY tb_rencana_visit.id_contact");
+
+            while ($rowRenvis = $getRenvis->fetch_array(MYSQLI_ASSOC)) {
+                $id_con = $rowRenvis['id_contact'];
+                $count = mysqli_query($conn, "SELECT COUNT(*) AS jmlRenvis FROM tb_rencana_visit WHERE id_contact = '$id_con' AND type_rencana = 'mg'");
+                $resCount = $count->fetch_array(MYSQLI_ASSOC);
+                $date_margin = date("Y-m-d", strtotime("-1 month"));
+                $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_con'  AND source_visit IN ('jatem1','jatem2','jatem3','weekly','voucher','passive','renvisales') AND date_visit >= '$date_margin' ORDER BY date_visit DESC LIMIT 1");
+                $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
+                $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
+                $created_at = $rowRenvis['created_at'];
+                $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
+                $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
+                $renvisArray[] = $rowRenvis;
+            }
+
+            if ($renvisArray == null) {
+                echo json_encode(array("status" => "empty", "results" => []));
+            } else {
+                echo json_encode(array("status" => "ok", "results" => $renvisArray));
+            }
+        }
 }
