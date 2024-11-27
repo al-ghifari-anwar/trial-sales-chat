@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     foreach ($invoiceArray as $invoice) {
         $id_invoice = $invoice['id_invoice'];
+        $id_contact = $invoice['id_contact'];
         // Calculate sisa hari jatuh tempo
         $jatuhTempo = date('d M Y', strtotime("+" . $invoice['termin_payment'] . " days", strtotime($invoice['date_invoice'])));
         $date1 = new DateTime(date("Y-m-d"));
@@ -23,8 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $days = $operan . $days;
 
         if ($days >= 45) {
-            $response = ["response" => 200, "status" => "ok", "message" => "Store is bad", "id_invoice" => $id_invoice, "jatem" => $jatuhTempo];
-            echo json_encode($response);
+            $setBad = mysqli_query($conn, "UPDATE tb_contact SET reputation = 'bad' WHERE id_contact = '$id_contact'");
+
+            if ($setBad) {
+                $response = ["response" => 200, "status" => "ok", "message" => "Store is bad", "id_invoice" => $id_invoice, "jatem" => $jatuhTempo];
+                echo json_encode($response);
+            } else {
+                $response = ["response" => 200, "status" => "failed", "message" => "Failed update reputation", "id_invoice" => $id_invoice, "jatem" => $jatuhTempo];
+                echo json_encode($response);
+            }
         } else {
             $response = ["response" => 200, "status" => "ok", "message" => "Store is not bad"];
             echo json_encode($response);
