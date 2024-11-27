@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $days = $operan . $days;
 
         if ($days >= 45) {
-            $response = ["response" => 200, "status" => "ok", "message" => "Store is bad", "id_invoice" => $id_invoice];
+            $response = ["response" => 200, "status" => "ok", "message" => "Store is bad", "id_invoice" => $id_invoice, "jatem" => $jatuhTempo];
             echo json_encode($response);
         } else {
             $response = ["response" => 200, "status" => "ok", "message" => "Store is not bad"];
