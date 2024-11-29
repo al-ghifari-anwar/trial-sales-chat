@@ -99,15 +99,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_skill = $_POST['id_skill'];
         $nama_lengkap = $_POST['nama_lengkap'];
 
-        $result = mysqli_query($conn, "INSERT INTO tb_tukang(nama, nomorhp, tgl_lahir, id_city, maps_url, address,tukang_status, id_skill, nama_lengkap) VALUES('$nama', '$nomor_hp', '$tgl_lahir','$id_city', '$mapsUrl', '$address','$status','$id_skill', '$nama_lengkap')");
+        $checkNomor = mysqli_query($conn, "SELECT * FROM tb_tukang WHERE nomorhp = '$nomor_hp'");
+        $rowNomor = $checkNomor->fetch_array(MYSQLI_ASSOC);
 
-        if ($result) {
-            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data tukang!"];
-            echo json_encode($response);
+        if ($rowNomor == null) {
+
+            $result = mysqli_query($conn, "INSERT INTO tb_tukang(nama, nomorhp, tgl_lahir, id_city, maps_url, address,tukang_status, id_skill, nama_lengkap) VALUES('$nama', '$nomor_hp', '$tgl_lahir','$id_city', '$mapsUrl', '$address','$status','$id_skill', '$nama_lengkap')");
+
+            if ($result) {
+                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data tukang!"];
+                echo json_encode($response);
+            } else {
+                $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data tukang!"];
+                echo json_encode($response);
+            }
+            mysqli_close($conn);
         } else {
-            $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data tukang!"];
+            $response = ["response" => 200, "status" => "failed", "message" => "Nomor sudah terdaftar!"];
             echo json_encode($response);
         }
-        mysqli_close($conn);
     }
 }
