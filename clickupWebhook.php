@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $event = $_GET['cw_event'];
 
-        $result = mysqli_query($conn, "SELECT * FROM tb_clickup_webhook WHERE cw_event = '$event'");
+        $result = mysqli_query($conn, "SELECT * FROM tb_clickup_webhook WHERE cw_event = '$event' ORDER BY created_at DESC");
 
         if ($result) {
 
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     } else {
 
-        $result = mysqli_query($conn, "SELECT * FROM tb_clickup_webhook");
+        $result = mysqli_query($conn, "SELECT * FROM tb_clickup_webhook ORDER BY created_at DESC");
 
         if ($result) {
 
@@ -119,11 +119,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if ($input !== null) {
 
+        $taskId = $input['task_id'];
+        $webhookId = $input['webhook_id'];
         $event = $input['event'];
         $webhookData = mysqli_real_escape_string($conn, json_encode($input));
-        $jsonString = json_encode($webhookData, JSON_PRETTY_PRINT);
+        $data = json_encode($webhookData, JSON_PRETTY_PRINT);
 
-        $query = "INSERT INTO tb_clickup_webhook (cw_data, cw_event) VALUES ('$jsonString', '$event')";
+        $query = "INSERT INTO tb_clickup_webhook (cw_task_id, cw_webhook_id, cw_event, cw_data) VALUES ('$taskId', '$webhookId', '$event', '$data')";
 
         if (mysqli_query($conn, $query)) {
             echo json_encode(array("status" => "ok", "message" => "Data stored successfully"));
