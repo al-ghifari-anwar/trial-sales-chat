@@ -1,8 +1,8 @@
 <?php
-error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
-include_once("config.php");
+// error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+// include_once("config.php");
 
-// $conn = new mysqli("185.201.8.148", "user_bintang", "123123!", "admin_dev_saleschat");
+$conn = new mysqli("185.201.8.148", "user_bintang", "123123!", "admin_dev_saleschat");
 // if ($conn->connect_error) {
 //     die("Connection failed: " . $conn->connect_error);
 //     return;
@@ -80,4 +80,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     }
 
+} else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $input = json_decode(file_get_contents("php://input"), true);
+
+    if ($input !== null) {
+
+        $event = $input['event'];
+        $webhookData = mysqli_real_escape_string($conn, json_encode($input));
+        $jsonString = json_encode($webhookData, JSON_PRETTY_PRINT);
+
+        $query = "INSERT INTO tb_clickup_webhook (webhook, event) VALUES ('$jsonString', '$event')";
+
+        if (mysqli_query($conn, $query)) {
+            echo json_encode(array("status" => "ok", "message" => "Data stored successfully"));
+        } else {
+            echo json_encode(array("status" => "failed", "error" => mysqli_error($conn)));
+        }
+
+    } else {
+        echo json_encode(array("status" => "failed", "error" => "Invalid JSON input"));
+    }
+
+    mysqli_close($conn);
+
+} else {
+    echo json_encode(array("status" => "failed", "error" => "Invalid request method"));
 }
