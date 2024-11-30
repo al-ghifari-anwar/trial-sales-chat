@@ -10,7 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     while ($rowActive = $resultActive->fetch_array(MYSQLI_ASSOC)) {
         $month = $rowActive['month_active'];
         $countActive = mysqli_query($conn, "SELECT COUNT(*) AS jml_active FROM (SELECT id_contact FROM tb_status_change WHERE status_from != 'active' AND status_to = 'active' AND YEAR(created_at) = '$year' AND MONTH(created_at) = '$month' GROUP BY id_contact) t");
-        $rowActive['jml_active'] = $month;
+        $rowCount = $countActive->fetch_array(MYSQLI_ASSOC);
+        $rowActive['jml_active'] = $rowCount['jml_active'];
         $arrayActive[] = $rowActive;
     }
 
