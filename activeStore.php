@@ -8,7 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['city'])) {
         $id_city = $_GET['city'];
 
-        $resultActive = mysqli_query($conn, "SELECT MONTH(created_at) AS month_active FROM tb_status_change JOIN tb_contact ON tb_contact.id_contact = tb_status_change.id_contact WHERE status_from != 'active' AND status_to = 'active' AND id_city = '$id_city' AND YEAR(created_at) = '$year' GROUP BY MONTH(created_at)");
+        $resultActive = mysqli_query($conn, "SELECT MONTH(tb_status_changer.created_at) AS month_active FROM tb_status_change JOIN tb_contact ON tb_contact.id_contact = tb_status_change.id_contact WHERE status_from != 'active' AND status_to = 'active' AND id_city = '$id_city' AND YEAR(created_at) = '$year' GROUP BY MONTH(created_at)");
+
 
         while ($rowActive = $resultActive->fetch_array(MYSQLI_ASSOC)) {
             $month = $rowActive['month_active'];
