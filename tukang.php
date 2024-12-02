@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $result = mysqli_query($conn, "SELECT * FROM tb_tukang JOIN tb_skill ON tb_skill.id_skill = tb_tukang.id_skill WHERE tb_tukang.id_city = '$id_city'");
         } else {
             $id_dist = $_GET['dist'];
-            $result = mysqli_query($conn, "SELECT * FROM tb_tukang JOIN tb_skill ON tb_skill.id_skill = tb_tukang.id_skill JOIN tb_city.id_city = tb_tukang.id_city WHERE id_distributor = '$id_dist'");
+            $result = mysqli_query($conn, "SELECT * FROM tb_tukang JOIN tb_skill ON tb_skill.id_skill = tb_tukang.id_skill JOIN tb_city ON tb_city.id_city = tb_tukang.id_city WHERE id_distributor = '$id_dist'");
         }
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
