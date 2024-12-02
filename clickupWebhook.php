@@ -13,7 +13,37 @@ include_once("config.php");
 set_time_limit(30);
 header('Content-Type: application/json');
 
-$curlChance = 5;
+$curlClickUpChance = 5;
+$clickUpToken = "pk_66658751_Z5F1B52LQLC4XMA0CKNZRQ3FZ6DO3NH4";
+$curlWaChance = 2;
+$templateCreated = "b654d032-02d6-41f7-b1d8-66c5d28211e8";
+$templateStatusUpdated = "089cc73a-2bcb-45e2-9f87-3ff65abcea4c";
+$listUsers = [
+    [
+        "email" => "keerouk.ink@gmail.com",
+        "phone" => "62895636998639",
+    ],
+    [
+        "email" => "mochammadrafliramadani@gmail.com",
+        "phone" => "62895636998639",
+    ],
+    [
+        "email" => "diahnurkhasanah5@gmail.com",
+        "phone" => "6285770348227",
+    ],
+    [
+        "email" => "alghifari.anwar2002@gmail.com",
+        "phone" => "6285546112267",
+    ],
+    [
+        "email" => "hart.jessica.jh@gmail.com",
+        "phone" => "6287771736555",
+    ],
+    [
+        "email" => "nunsafitri@gmail.com",
+        "phone" => "6281802358317",
+    ],
+];
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
@@ -77,6 +107,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $historyItems = $input['history_items'][count($input['history_items'])-1];
         } else if ($event == 'taskStatusUpdated') {
             $historyItems = $input['history_items'][0];
+            if ($historyItems['before']['status'] == null) {
+                echo json_encode(array("status" => "ok", "results" => "This is a new data"));
+                return;
+            }
         }
 
         $webhookData = mysqli_real_escape_string($conn, json_encode($input));
@@ -114,8 +148,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $messageText = "Status $taskName telah berubah dari $taskStatusBefore menjadi $taskStatusAfter. $taskTriggerBy baru saja menyerahkan task kepada anda, segera tinjau sebelum $taskDueDate. Cek lebih detail mengenai task tersebut di ClickUp.. $taskUrl";
         }
 
+        $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = 1");
+        $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+        $waToken = $rowQontak['token'];
+        $integrationId = $rowQontak['integration_id'];
+
         $emailArray = array_map(function($item) {
-            return $item['email'];
+
+            $user = getUserByEmail($item['email']);
+
+            if ($user != null) {
+
+                $targetPhone = $user['phone'];
+                $targetName = $item['username'];
+
+                tryNotifToWhatsapp($targetPhone, $targetName);
+                return $item['email'];
+                // echo json_encode($user);
+                // $responseNotif = tryNotifToWhatsapp($targetPhone, $targetName);
+                // echo $responseNotif;
+            }
+
         }, json_decode($taskNotifTo, true));
 
         $emailArrayEncoded = json_encode(mysqli_real_escape_string($conn, json_encode($emailArray)));
@@ -123,7 +176,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         // echo json_encode([
         //     "message_to" => $emailArray,
-        //     "task_detail" => $taskDetail,
+        //     // "task_detail" => $taskDetail,
+        //     // "response_notif" => json_decode($responseNotif, true),
         //     "message_text" => $messageText,
         // ]);
         // return;
@@ -151,8 +205,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 */
 
 function getClickUpTask($taskId) {
+    global $clickUpToken;
     $url = "https://api.clickup.com/api/v2/task/$taskId";
-    $apiToken = "pk_66658751_Z5F1B52LQLC4XMA0CKNZRQ3FZ6DO3NH4";
     $ch = curl_init();
 
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -163,7 +217,7 @@ function getClickUpTask($taskId) {
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Authorization: ' . $apiToken,
+        'Authorization: ' . $clickUpToken,
         'Content-Type: application/json'
     ]);
 
@@ -185,11 +239,11 @@ function tryToGetTaskDetail($taskId) {
     $taskDetailResponse = getClickUpTask($taskId);
     $taskDetailResponseJson = json_decode($taskDetailResponse, true);
 
-    global $curlChance;
+    global $curlClickUpChance;
 
     if ($taskDetailResponseJson['status'] == 'failed') {
-        if ($curlChance > 0) {
-            $curlChance --;
+        if ($curlClickUpChance > 0) {
+            $curlClickUpChance --;
             return tryToGetTaskDetail($taskId);
         }
     }
@@ -197,11 +251,157 @@ function tryToGetTaskDetail($taskId) {
     return json_encode($taskDetailResponseJson);
 }
 
-function convertDateTime($timestampMs, $dateOutFormat = "d M Y") {
+function notifToWhatsapp($targetPhone, $targetName) {
+
+    global $waToken, $event, $templateCreated, $templateStatusUpdated, $integrationId, $taskName, $taskStatusBefore, $taskStatusAfter, $taskTriggerBy, $taskPriority, $taskDueDate, $taskUrl;
+
+    if ($event == 'taskCreated') {
+
+        $postFields = '{
+            "to_number": "' . $targetPhone . '",
+            "to_name": "' . $targetName . ' - ClickUp Created",
+            "message_template_id": "' . $templateCreated . '",
+            "channel_integration_id": "' . $integrationId . '",
+            "language": {
+                "code": "id"
+            },
+            "parameters": {
+                "body": [
+                    {
+                        "key": "1",
+                        "value": "priority",
+                        "value_text": "' . $taskPriority . '"
+                    },
+                    {
+                        "key": "2",
+                        "value": "taskname",
+                        "value_text": "' . $taskName . '"
+                    },
+                    {
+                        "key": "3",
+                        "value": "triggerby",
+                        "value_text": "' . $taskTriggerBy . '"
+                    },
+                    {
+                        "key": "4",
+                        "value": "duedate",
+                        "value_text": "' . $taskDueDate . '"
+                    },
+                    {
+                        "key": "5",
+                        "value": "url",
+                        "value_text": "' . $taskUrl . '"
+                    }
+                ]
+            }
+        }';
+
+    } else if ($event == 'taskStatusUpdated') {
+
+        $postFields = '{
+            "to_number": "' . $targetPhone . '",
+            "to_name": "' . $targetName . ' - ClickUp Status Updated",
+            "message_template_id": "' . $templateStatusUpdated . '",
+            "channel_integration_id": "' . $integrationId . '",
+            "language": {
+                "code": "id"
+            },
+            "parameters": {
+                "body": [
+                    {
+                        "key": "1",
+                        "value": "taskname",
+                        "value_text": "' . $taskName . '"
+                    },
+                    {
+                        "key": "2",
+                        "value": "statusbefore",
+                        "value_text": "' . $taskStatusBefore . '"
+                    },
+                    {
+                        "key": "3",
+                        "value": "statusafter",
+                        "value_text": "' . $taskStatusAfter . '"
+                    },
+                    {
+                        "key": "4",
+                        "value": "triggerby",
+                        "value_text": "' . $taskTriggerBy . '"
+                    },
+                    {
+                        "key": "5",
+                        "value": "priority",
+                        "value_text": "' . $taskPriority . '"
+                    },
+                    {
+                        "key": "6",
+                        "value": "duedate",
+                        "value_text": "' . $taskDueDate . '"
+                    },
+                    {
+                        "key": "7",
+                        "value": "url",
+                        "value_text": "' . $taskUrl . '"
+                    }
+                ]
+            }
+        }';
+
+    }
+    
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $postFields,
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer ' . $waToken,
+            'Content-Type: application/json'
+        ),
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+
+    return $response;;
+}
+
+function tryNotifToWhatsapp($targetPhone, $targetName) {
+    $response = notifToWhatsapp($targetPhone, $targetName);
+    $responseObject = json_decode($response, true);
+
+    global $curlWaChance;
+
+    if ($responseObject['status'] == 'error' && $curlWaChance > 0) {
+        $curlWaChance --;
+        return tryNotifToWhatsapp($targetPhone, $targetName);
+    }
+
+    return json_encode($responseObject);
+}
+
+function convertDateTime($timestampMs, $dateOutFormat = "d F Y") {
 
     $timestampSec = $timestampMs / 1000;
     $formattedDate = date($dateOutFormat, $timestampSec);
 
     return $formattedDate;
 
+}
+
+function getUserByEmail($email) {
+    global $listUsers;
+    foreach ($listUsers as $user) {
+        if ($user['email'] === $email) {
+            return $user;
+        }
+    }
+    return null;
 }
