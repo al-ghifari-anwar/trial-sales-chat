@@ -253,7 +253,7 @@ function tryToGetTaskDetail($taskId) {
 
 function notifToWhatsapp($targetPhone, $targetName) {
 
-    global $waToken, $event, $templateStatusUpdated, $integrationId, $taskName, $taskStatusBefore, $taskStatusAfter, $taskTriggerBy, $taskPriority, $taskDueDate, $taskUrl;
+    global $waToken, $event, $templateCreated, $templateStatusUpdated, $integrationId, $taskName, $taskStatusBefore, $taskStatusAfter, $taskTriggerBy, $taskPriority, $taskDueDate, $taskUrl;
 
     if ($event == 'taskCreated') {
 
