@@ -107,7 +107,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $historyItems = $input['history_items'][count($input['history_items'])-1];
         } else if ($event == 'taskStatusUpdated') {
             $historyItems = $input['history_items'][0];
-            if ($historyItems['before']['status'] == null) {
+            if (isset($historyItems['before']['status'])) {
+                if ($historyItems['before']['status'] == null) {
+                    echo json_encode(array("status" => "ok", "results" => "This is a new data"));
+                    return;
+                }
+            } else {
                 echo json_encode(array("status" => "ok", "results" => "This is a new data"));
                 return;
             }
@@ -128,6 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
 
         $taskName = $taskDetail['name'];
+        $dateDone = $taskDetail['date_done'];
 
         if ($event == 'taskStatusUpdated') {
             $taskStatusBefore = $historyItems['before']['status'];
@@ -139,6 +145,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $taskPriority = $taskDetail['priority']['priority'];
         $taskDueDate = convertDateTime($taskDetail['due_date']);
         $taskUrl = $taskDetail['url'];
+
+        if (isset($dateDone) && $dateDone != null) {
+            $cwDateDone = convertDateTime($dateDone, "Y-m-d h:i:s");
+        } else {
+            $cwDateDone = null;
+        }
 
         $messageTo = $taskNotifTo;
 
@@ -162,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $targetPhone = $user['phone'];
                 $targetName = $item['username'];
 
-                tryNotifToWhatsapp($targetPhone, $targetName);
+                // tryNotifToWhatsapp($targetPhone, $targetName);
                 return $item['email'];
                 // echo json_encode($user);
                 // $responseNotif = tryNotifToWhatsapp($targetPhone, $targetName);
@@ -182,10 +194,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         // ]);
         // return;
 
-        $query = "INSERT INTO tb_clickup_webhook (cw_task_id, cw_webhook_id, cw_event, cw_message_to, cw_message_text, cw_data, cw_task_detail) VALUES ('$taskId', '$webhookId', '$event', '$emailArrayEncoded', '$messageText', '$data', '$taskDetailEncoded')";
+        $availableTask = mysqli_query($conn, "SELECT * FROM tb_clickup_webhook WHERE cw_task_id = '$taskId'");
 
-        if (mysqli_query($conn, $query)) {
-            echo json_encode(array("status" => "ok", "message" => "Data stored successfully"));
+        if ($availableTask) {
+
+            if (mysqli_num_rows($availableTask) > 0) {
+
+                if ($cwDateDone != null) {
+                    $query = "UPDATE tb_clickup_webhook SET cw_event = '$event', cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_date_done = '$cwDateDone', cw_data = '$data', cw_task_detail = '$taskDetailEncoded' WHERE cw_task_id = '$taskId'";
+                } else {
+                    $query = "UPDATE tb_clickup_webhook SET cw_event = '$event', cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_date_done = null, cw_data = '$data', cw_task_detail = '$taskDetailEncoded' WHERE cw_task_id = '$taskId'";
+                }
+
+                if (mysqli_query($conn, $query)) {
+                    echo json_encode(array("status" => "ok", "message" => "Data updated successfully"));
+                } else {
+                    echo json_encode(array("status" => "failed", "error" => mysqli_error($conn)));
+                }
+
+            } else {
+
+                $query = "INSERT INTO tb_clickup_webhook (cw_task_id, cw_webhook_id, cw_event, cw_message_to, cw_message_text, cw_data, cw_task_detail) VALUES ('$taskId', '$webhookId', '$event', '$emailArrayEncoded', '$messageText', '$data', '$taskDetailEncoded')";
+
+                if (mysqli_query($conn, $query)) {
+                    echo json_encode(array("status" => "ok", "message" => "Data stored successfully"));
+                } else {
+                    echo json_encode(array("status" => "failed", "error" => mysqli_error($conn)));
+                }
+
+            }
+
         } else {
             echo json_encode(array("status" => "failed", "error" => mysqli_error($conn)));
         }
