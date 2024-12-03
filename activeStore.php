@@ -5,19 +5,40 @@ include_once("config.php");
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $year = date("Y");
 
-    $resultActive = mysqli_query($conn, "SELECT MONTH(created_at) AS month_active FROM tb_status_change WHERE status_from != 'active' AND status_to = 'active' AND YEAR(created_at) = '$year' GROUP BY MONTH(created_at)");
+    if (isset($_GET['city'])) {
+        $id_city = $_GET['city'];
 
-    while ($rowActive = $resultActive->fetch_array(MYSQLI_ASSOC)) {
-        $month = $rowActive['month_active'];
-        $countActive = mysqli_query($conn, "SELECT COUNT(*) AS jml_active FROM (SELECT id_contact FROM tb_status_change WHERE status_from != 'active' AND status_to = 'active' AND YEAR(created_at) = '$year' AND MONTH(created_at) = '$month' GROUP BY id_contact) t");
-        $rowCount = $countActive->fetch_array(MYSQLI_ASSOC);
-        $rowActive['jml_active'] = $rowCount['jml_active'];
-        $arrayActive[] = $rowActive;
-    }
+        $resultActive = mysqli_query($conn, "SELECT MONTH(tb_status_change.created_at) AS month_active FROM tb_status_change JOIN tb_contact ON tb_contact.id_contact = tb_status_change.id_contact WHERE status_from != 'active' AND status_to = 'active' AND id_city = '$id_city' AND YEAR(tb_status_change.created_at) = '$year' GROUP BY MONTH(tb_status_change.created_at)");
 
-    if ($arrayActive == null) {
-        echo json_encode(array("status" => "failed", "results" => []));
+
+        while ($rowActive = $resultActive->fetch_array(MYSQLI_ASSOC)) {
+            $month = $rowActive['month_active'];
+            $countActive = mysqli_query($conn, "SELECT COUNT(*) AS jml_active FROM (SELECT tb_status_change.id_contact FROM tb_status_change JOIN tb_contact ON tb_contact.id_contact = tb_status_change.id_contact WHERE status_from != 'active' AND status_to = 'active' AND id_city = '$id_city' AND YEAR(tb_status_change.created_at) = '$year' AND MONTH(tb_status_change.created_at) = '$month' GROUP BY id_contact) t");
+            $rowCount = $countActive->fetch_array(MYSQLI_ASSOC);
+            $rowActive['jml_active'] = $rowCount['jml_active'];
+            $arrayActive[] = $rowActive;
+        }
+
+        if ($arrayActive == null) {
+            echo json_encode(array("status" => "failed", "results" => []));
+        } else {
+            echo json_encode(array("status" => "ok", "results" => $arrayActive));
+        }
     } else {
-        echo json_encode(array("status" => "ok", "results" => $arrayActive));
+        $resultActive = mysqli_query($conn, "SELECT MONTH(created_at) AS month_active FROM tb_status_change WHERE status_from != 'active' AND status_to = 'active' AND YEAR(created_at) = '$year' GROUP BY MONTH(created_at)");
+
+        while ($rowActive = $resultActive->fetch_array(MYSQLI_ASSOC)) {
+            $month = $rowActive['month_active'];
+            $countActive = mysqli_query($conn, "SELECT COUNT(*) AS jml_active FROM (SELECT id_contact FROM tb_status_change WHERE status_from != 'active' AND status_to = 'active' AND YEAR(created_at) = '$year' AND MONTH(created_at) = '$month' GROUP BY id_contact) t");
+            $rowCount = $countActive->fetch_array(MYSQLI_ASSOC);
+            $rowActive['jml_active'] = $rowCount['jml_active'];
+            $arrayActive[] = $rowActive;
+        }
+
+        if ($arrayActive == null) {
+            echo json_encode(array("status" => "failed", "results" => []));
+        } else {
+            echo json_encode(array("status" => "ok", "results" => $arrayActive));
+        }
     }
 }
