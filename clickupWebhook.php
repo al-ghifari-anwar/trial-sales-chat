@@ -21,32 +21,32 @@ $templateStatusUpdated = "089cc73a-2bcb-45e2-9f87-3ff65abcea4c";
 $listUsers = [
     [
         "email" => "keerouk.ink@gmail.com",
-        "username" => "User 1",
+        "username" => "M Rafli Ramadani",
         "phone" => "62895636998639",
     ],
     [
         "email" => "mochammadrafliramadani@gmail.com",
-        "username" => "User 2",
+        "username" => "Mochammad Rafli Ramadani",
         "phone" => "62895636998639",
     ],
     [
         "email" => "diahnurkhasanah5@gmail.com",
-        "username" => "User 3",
+        "username" => "Diah Nur Khasanah",
         "phone" => "6285770348227",
     ],
     [
         "email" => "alghifari.anwar2002@gmail.com",
-        "username" => "User 4",
+        "username" => "Al Ghifari Anwar",
         "phone" => "6285546112267",
     ],
     [
         "email" => "hart.jessica.jh@gmail.com",
-        "username" => "User 5",
+        "username" => "Jessica Hart",
         "phone" => "6287771736555",
     ],
     [
         "email" => "nunsafitri@gmail.com",
-        "username" => "User 6",
+        "username" => "Nun Safitri",
         "phone" => "6281802358317",
     ],
 ];
