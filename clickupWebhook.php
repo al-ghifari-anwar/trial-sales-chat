@@ -102,6 +102,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $taskId = $input['task_id'];
         $webhookId = $input['webhook_id'];
         $event = $input['event'];
+        $dateNow = date('Y-m-d H:i:s');
+        $errorMessage = null;
 
         if ($event == 'taskCreated') {
             $historyItems = $input['history_items'][count($input['history_items'])-1];
@@ -118,6 +120,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         }
 
+        // Check available task
+        $availableTask = mysqli_query($conn, "SELECT * FROM tb_clickup_webhook WHERE cw_task_id = '$taskId' AND cw_event = '$event'");
+
         $webhookData = mysqli_real_escape_string($conn, json_encode($input));
         $data = json_encode($webhookData, JSON_PRETTY_PRINT);
 
@@ -125,6 +130,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $taskDetailResponseJson = json_decode($taskDetailResponse, true);
 
         if ($taskDetailResponseJson['status'] == 'failed') {
+            if ($availableTask && mysqli_num_rows($availableTask) > 0) {
+                $errorMessage = json_encode($taskDetailResponseJson['error']);
+                $query = "UPDATE tb_clickup_webhook SET cw_error = '$errorMessage' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
+
+                if (mysqli_query($conn, $query)) {
+                    echo json_encode(
+                        array(
+                            "status" => "failed",
+                            "message" => "Data updated successfully with err.",
+                            "error" => json_decode($taskDetailResponseJson['error'], true),
+                        )
+                    );
+                    return;
+                }
+    
+            }
             echo $taskDetailResponse;
             return;
         } else {
@@ -162,10 +183,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = 1");
         $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+        // $waToken = '123';
         $waToken = $rowQontak['token'];
         $integrationId = $rowQontak['integration_id'];
 
         $emailArray = array_map(function($item) {
+
+            // global $availableTask, $conn, $errorMessage;
 
             $user = getUserByEmail($item['email']);
 
@@ -174,11 +198,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $targetPhone = $user['phone'];
                 $targetName = $item['username'];
 
+                // $notifWaResponse = tryNotifToWhatsapp($targetPhone, $targetName);
+                // $notifWaResponseJson = json_decode($notifWaResponse, true);
+
+                // if ($notifWaResponseJson['status'] == 'failed' && $availableTask && mysqli_num_rows($availableTask) > 0) {
+
+                //     $errorMessage = json_encode($notifWaResponseJson['error']);
+                //     $query = "UPDATE tb_clickup_webhook SET cw_error = null WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
+
+                //     if (mysqli_query($conn, $query)) {
+                //         echo $errorMessage;
+                //         echo json_encode(
+                //             array(
+                //                 "status" => "failed",
+                //                 "message" => "Data updated successfully with err.",
+                //                 "error" => $notifWaResponseJson['error'],
+                //             )
+                //         );
+                //         return $item['email'];
+
+                //     }
+
+                // }
+
                 // tryNotifToWhatsapp($targetPhone, $targetName);
                 return $item['email'];
-                // echo json_encode($user);
-                // $responseNotif = tryNotifToWhatsapp($targetPhone, $targetName);
-                // echo $responseNotif;
             }
 
         }, json_decode($taskNotifTo, true));
@@ -194,16 +238,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         // ]);
         // return;
 
-        $availableTask = mysqli_query($conn, "SELECT * FROM tb_clickup_webhook WHERE cw_task_id = '$taskId'");
-
         if ($availableTask) {
 
             if (mysqli_num_rows($availableTask) > 0) {
 
                 if ($cwDateDone != null) {
-                    $query = "UPDATE tb_clickup_webhook SET cw_event = '$event', cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_date_done = '$cwDateDone', cw_data = '$data', cw_task_detail = '$taskDetailEncoded' WHERE cw_task_id = '$taskId'";
+                    $dateNow = date('Y-m-d H:i:s');
+                    $query = "UPDATE tb_clickup_webhook SET cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_date_done = '$cwDateDone', cw_data = '$data', cw_task_detail = '$taskDetailEncoded' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
                 } else {
-                    $query = "UPDATE tb_clickup_webhook SET cw_event = '$event', cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_date_done = null, cw_data = '$data', cw_task_detail = '$taskDetailEncoded' WHERE cw_task_id = '$taskId'";
+                    $query = "UPDATE tb_clickup_webhook SET cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_date_done = null, cw_data = '$data', cw_task_detail = '$taskDetailEncoded' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
                 }
 
                 if (mysqli_query($conn, $query)) {
@@ -405,10 +448,17 @@ function notifToWhatsapp($targetPhone, $targetName) {
     ));
 
     $response = curl_exec($curl);
+    $responseObject = json_decode($response, true);
+
+    if (curl_errno($curl)) {
+        return json_encode(array("status" => "failed", "error" => curl_error($curl)));
+    } else if (isset($responseObject['status']) && $responseObject['status'] == 'error') {
+        return json_encode(array("status" => "failed", "error" => $responseObject['error']));
+    }
 
     curl_close($curl);
 
-    return $response;;
+    return json_encode(array("status" => "ok", "data" => $response));
 }
 
 function tryNotifToWhatsapp($targetPhone, $targetName) {
