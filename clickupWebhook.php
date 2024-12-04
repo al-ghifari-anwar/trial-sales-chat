@@ -13,9 +13,9 @@ include_once("config.php");
 set_time_limit(30);
 header('Content-Type: application/json');
 
-$curlClickUpChance = 5;
+$curlClickUpChance = 10;
 $clickUpToken = "pk_66658751_Z5F1B52LQLC4XMA0CKNZRQ3FZ6DO3NH4";
-$curlWaChance = 2;
+$curlWaChance = 5;
 $templateCreated = "b654d032-02d6-41f7-b1d8-66c5d28211e8";
 $templateStatusUpdated = "089cc73a-2bcb-45e2-9f87-3ff65abcea4c";
 $listUsers = [
