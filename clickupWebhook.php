@@ -153,8 +153,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 if ($user != null) {
                                     $targetPhone = $user['phone'];
                                     $targetName = $user['username'];
-                                    // tryNotifToWhatsapp($targetPhone, $targetName);
-                                    echo json_encode(array('target' => $targetName . '-' . $targetPhone));
+                                    tryNotifToWhatsapp($targetPhone, $targetName);
+                                    // echo json_encode(array('target' => $targetName . '-' . $targetPhone));
                                 }
                             }
                         }
@@ -330,7 +330,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 // }
 
-                // tryNotifToWhatsapp($targetPhone, $targetName);
+                tryNotifToWhatsapp($targetPhone, $targetName);
                 return $item['email'];
             }
 
