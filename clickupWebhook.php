@@ -66,14 +66,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $cwDataObject = json_decode($cwDataString, true);
                 $cwData = json_decode($cwDataObject, true);
                 $row['cw_data'] = $cwData;
+
                 $cwMessageToString = $row['cw_message_to'];
-                $cwMessageToObject = json_decode($cwMessageToString, true);
-                $cwMessageTo = json_decode($cwMessageToObject, true);
-                $row['cw_message_to'] = $cwMessageTo;
+                if ($cwMessageToString != null) {
+                    $cwMessageToObject = json_decode($cwMessageToString, true);
+                    $cwMessageTo = json_decode($cwMessageToObject, true);
+                    $row['cw_message_to'] = $cwMessageTo;
+                }
+
                 $cwTaskDetailString = $row['cw_task_detail'];
-                $cwTaskDetailObject = json_decode($cwTaskDetailString, true);
-                $cwTaskDetail = json_decode($cwTaskDetailObject, true);
-                $row['cw_task_detail'] = $cwTaskDetail;
+                if ($cwTaskDetailString != null) {
+                    $cwTaskDetailObject = json_decode($cwTaskDetailString, true);
+                    $cwTaskDetail = json_decode($cwTaskDetailObject, true);
+                    $row['cw_task_detail'] = $cwTaskDetail;
+                }
+
+                $cwErrorlString = $row['cw_error'];
+                if ($cwErrorlString != null) {
+                    $cwErrorObject = json_decode($cwErrorlString, true);
+                    $cwError = json_decode($cwErrorObject, true);
+                    $row['cw_error'] = $cwError;
+                }
+                
                 $transArray[] = $row;
             }
 
@@ -102,16 +116,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $taskId = $input['task_id'];
         $webhookId = $input['webhook_id'];
         $event = $input['event'];
+        $dateNow = date('Y-m-d H:i:s');
+        $errorMessage = null;
 
         if ($event == 'taskCreated') {
             $historyItems = $input['history_items'][count($input['history_items'])-1];
         } else if ($event == 'taskStatusUpdated') {
             $historyItems = $input['history_items'][0];
-            if ($historyItems['before']['status'] == null) {
+            if (isset($historyItems['before']['status'])) {
+                if ($historyItems['before']['status'] == null) {
+                    echo json_encode(array("status" => "ok", "results" => "This is a new data"));
+                    return;
+                }
+            } else {
                 echo json_encode(array("status" => "ok", "results" => "This is a new data"));
                 return;
             }
         }
+
+        // Check available task
+        $availableTask = mysqli_query($conn, "SELECT * FROM tb_clickup_webhook WHERE cw_task_id = '$taskId' AND cw_event = '$event'");
 
         $webhookData = mysqli_real_escape_string($conn, json_encode($input));
         $data = json_encode($webhookData, JSON_PRETTY_PRINT);
@@ -120,14 +144,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $taskDetailResponseJson = json_decode($taskDetailResponse, true);
 
         if ($taskDetailResponseJson['status'] == 'failed') {
-            echo $taskDetailResponse;
+
+            $errorMessage = json_encode(mysqli_real_escape_string($conn, $taskDetailResponseJson['error']));
+
+            if ($availableTask && mysqli_num_rows($availableTask) > 0) {
+
+                $query = "UPDATE tb_clickup_webhook SET cw_error = '$errorMessage' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
+
+                if (mysqli_query($conn, $query)) {
+                    echo json_encode(
+                        array(
+                            "status" => "failed",
+                            "message" => "Data updated successfully with err.",
+                            "error" => json_decode($taskDetailResponseJson['error'], true),
+                        )
+                    );
+                    return;
+                }
+    
+            } else {
+
+                $query = "INSERT INTO tb_clickup_webhook (cw_task_id, cw_webhook_id, cw_event, cw_data, cw_error) VALUES ('$taskId', '$webhookId', '$event', '$data', '$errorMessage')";
+
+                if (mysqli_query($conn, $query)) {
+                    echo json_encode(
+                        array(
+                            "status" => "failed",
+                            "message" => "Data stored successfully with err.",
+                            "error" => json_decode($taskDetailResponseJson['error'], true),
+                        )
+                    );
+                    return;
+                }
+
+            }
+
+            echo $taskDetailResponse;            
             return;
+
         } else {
             $taskDetailString = $taskDetailResponseJson['data'];
             $taskDetail = json_decode($taskDetailString, true);
         }
 
         $taskName = $taskDetail['name'];
+        $dateDone = $taskDetail['date_done'];
 
         if ($event == 'taskStatusUpdated') {
             $taskStatusBefore = $historyItems['before']['status'];
@@ -140,6 +201,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $taskDueDate = convertDateTime($taskDetail['due_date']);
         $taskUrl = $taskDetail['url'];
 
+        if (isset($dateDone) && $dateDone != null) {
+            $cwDateDone = convertDateTime($dateDone, "Y-m-d h:i:s");
+        } else {
+            $cwDateDone = null;
+        }
+
         $messageTo = $taskNotifTo;
 
         if ($event == 'taskCreated') {
@@ -150,10 +217,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = 1");
         $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+        // $waToken = '123';
         $waToken = $rowQontak['token'];
         $integrationId = $rowQontak['integration_id'];
 
         $emailArray = array_map(function($item) {
+
+            // global $availableTask, $conn, $errorMessage;
 
             $user = getUserByEmail($item['email']);
 
@@ -162,11 +232,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $targetPhone = $user['phone'];
                 $targetName = $item['username'];
 
-                tryNotifToWhatsapp($targetPhone, $targetName);
+                // $notifWaResponse = tryNotifToWhatsapp($targetPhone, $targetName);
+                // $notifWaResponseJson = json_decode($notifWaResponse, true);
+
+                // if ($notifWaResponseJson['status'] == 'failed' && $availableTask && mysqli_num_rows($availableTask) > 0) {
+
+                //     $errorMessage = json_encode($notifWaResponseJson['error']);
+                //     $query = "UPDATE tb_clickup_webhook SET cw_error = null WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
+
+                //     if (mysqli_query($conn, $query)) {
+                //         echo $errorMessage;
+                //         echo json_encode(
+                //             array(
+                //                 "status" => "failed",
+                //                 "message" => "Data updated successfully with err.",
+                //                 "error" => $notifWaResponseJson['error'],
+                //             )
+                //         );
+                //         return $item['email'];
+
+                //     }
+
+                // }
+
+                // tryNotifToWhatsapp($targetPhone, $targetName);
                 return $item['email'];
-                // echo json_encode($user);
-                // $responseNotif = tryNotifToWhatsapp($targetPhone, $targetName);
-                // echo $responseNotif;
             }
 
         }, json_decode($taskNotifTo, true));
@@ -182,10 +272,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         // ]);
         // return;
 
-        $query = "INSERT INTO tb_clickup_webhook (cw_task_id, cw_webhook_id, cw_event, cw_message_to, cw_message_text, cw_data, cw_task_detail) VALUES ('$taskId', '$webhookId', '$event', '$emailArrayEncoded', '$messageText', '$data', '$taskDetailEncoded')";
+        if ($availableTask) {
 
-        if (mysqli_query($conn, $query)) {
-            echo json_encode(array("status" => "ok", "message" => "Data stored successfully"));
+            if (mysqli_num_rows($availableTask) > 0) {
+
+                if ($cwDateDone != null) {
+                    $dateNow = date('Y-m-d H:i:s');
+                    $query = "UPDATE tb_clickup_webhook SET cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_error = null, cw_date_done = '$cwDateDone', cw_data = '$data', cw_task_detail = '$taskDetailEncoded' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
+                } else {
+                    $query = "UPDATE tb_clickup_webhook SET cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_error = null, cw_date_done = null, cw_data = '$data', cw_task_detail = '$taskDetailEncoded' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
+                }
+
+                if (mysqli_query($conn, $query)) {
+                    echo json_encode(array("status" => "ok", "message" => "Data updated successfully"));
+                } else {
+                    echo json_encode(array("status" => "failed", "error" => mysqli_error($conn)));
+                }
+
+            } else {
+
+                $query = "INSERT INTO tb_clickup_webhook (cw_task_id, cw_webhook_id, cw_event, cw_message_to, cw_message_text, cw_error, cw_data, cw_task_detail) VALUES ('$taskId', '$webhookId', '$event', '$emailArrayEncoded', '$messageText', null, '$data', '$taskDetailEncoded')";
+
+                if (mysqli_query($conn, $query)) {
+                    echo json_encode(array("status" => "ok", "message" => "Data stored successfully"));
+                } else {
+                    echo json_encode(array("status" => "failed", "error" => mysqli_error($conn)));
+                }
+
+            }
+
         } else {
             echo json_encode(array("status" => "failed", "error" => mysqli_error($conn)));
         }
@@ -367,10 +482,17 @@ function notifToWhatsapp($targetPhone, $targetName) {
     ));
 
     $response = curl_exec($curl);
+    $responseObject = json_decode($response, true);
+
+    if (curl_errno($curl)) {
+        return json_encode(array("status" => "failed", "error" => curl_error($curl)));
+    } else if (isset($responseObject['status']) && $responseObject['status'] == 'error') {
+        return json_encode(array("status" => "failed", "error" => $responseObject['error']));
+    }
 
     curl_close($curl);
 
-    return $response;;
+    return json_encode(array("status" => "ok", "data" => $response));
 }
 
 function tryNotifToWhatsapp($targetPhone, $targetName) {
