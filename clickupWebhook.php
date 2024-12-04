@@ -16,6 +16,8 @@ header('Content-Type: application/json');
 $curlClickUpChance = 10;
 $clickUpToken = "pk_66658751_Z5F1B52LQLC4XMA0CKNZRQ3FZ6DO3NH4";
 $curlWaChance = 5;
+$templateReminderToday = "-";
+$templateReminderTomorrow = "-";
 $templateCreated = "b654d032-02d6-41f7-b1d8-66c5d28211e8";
 $templateStatusUpdated = "089cc73a-2bcb-45e2-9f87-3ff65abcea4c";
 $listUsers = [
@@ -137,6 +139,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if (json_last_error() === JSON_ERROR_NONE) {
 
                 if (isset($reminder)) {
+
+                    $taskName = $cwTaskDetail['name'];
+                    $taskUrl = $cwTaskDetail['url'];
                     
                     foreach ($transArray as $key => $value) {
 
@@ -153,7 +158,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 if ($user != null) {
                                     $targetPhone = $user['phone'];
                                     $targetName = $user['username'];
-                                    tryNotifToWhatsapp($targetPhone, $targetName);
+                                    tryNotifToWhatsapp($targetPhone, $targetName, $reminder);
+                                    // echo $responseWa;
                                     // echo json_encode(array('target' => $targetName . '-' . $targetPhone));
                                 }
                             }
@@ -441,57 +447,19 @@ function tryToGetTaskDetail($taskId) {
     return json_encode($taskDetailResponseJson);
 }
 
-function notifToWhatsapp($targetPhone, $targetName) {
+function notifToWhatsapp($targetPhone, $targetName, $reminder) {
 
-    global $waToken, $event, $templateCreated, $templateStatusUpdated, $integrationId, $taskName, $taskStatusBefore, $taskStatusAfter, $taskTriggerBy, $taskPriority, $taskDueDate, $taskUrl;
+    global $waToken, $event, $templateReminderToday, $templateReminderTomorrow, $templateCreated, $templateStatusUpdated, $integrationId, $taskName, $taskStatusBefore, $taskStatusAfter, $taskTriggerBy, $taskPriority, $taskDueDate, $taskUrl;
 
-    if ($event == 'taskCreated') {
+    if ($reminder != null) {
 
-        $postFields = '{
-            "to_number": "' . $targetPhone . '",
-            "to_name": "' . $targetName . ' - ClickUp Created",
-            "message_template_id": "' . $templateCreated . '",
-            "channel_integration_id": "' . $integrationId . '",
-            "language": {
-                "code": "id"
-            },
-            "parameters": {
-                "body": [
-                    {
-                        "key": "1",
-                        "value": "priority",
-                        "value_text": "' . $taskPriority . '"
-                    },
-                    {
-                        "key": "2",
-                        "value": "taskname",
-                        "value_text": "' . $taskName . '"
-                    },
-                    {
-                        "key": "3",
-                        "value": "triggerby",
-                        "value_text": "' . $taskTriggerBy . '"
-                    },
-                    {
-                        "key": "4",
-                        "value": "duedate",
-                        "value_text": "' . $taskDueDate . '"
-                    },
-                    {
-                        "key": "5",
-                        "value": "url",
-                        "value_text": "' . $taskUrl . '"
-                    }
-                ]
-            }
-        }';
-
-    } else if ($event == 'taskStatusUpdated') {
+        if ($reminder == 'today') $templateReminder = $templateReminderToday;
+        else $templateReminder = $templateReminderTomorrow;
 
         $postFields = '{
             "to_number": "' . $targetPhone . '",
-            "to_name": "' . $targetName . ' - ClickUp Status Updated",
-            "message_template_id": "' . $templateStatusUpdated . '",
+            "to_name": "' . $targetName . ' - ClickUp Reminder",
+            "message_template_id": "' . $templateReminder . '",
             "channel_integration_id": "' . $integrationId . '",
             "language": {
                 "code": "id"
@@ -505,37 +473,108 @@ function notifToWhatsapp($targetPhone, $targetName) {
                     },
                     {
                         "key": "2",
-                        "value": "statusbefore",
-                        "value_text": "' . $taskStatusBefore . '"
-                    },
-                    {
-                        "key": "3",
-                        "value": "statusafter",
-                        "value_text": "' . $taskStatusAfter . '"
-                    },
-                    {
-                        "key": "4",
-                        "value": "triggerby",
-                        "value_text": "' . $taskTriggerBy . '"
-                    },
-                    {
-                        "key": "5",
-                        "value": "priority",
-                        "value_text": "' . $taskPriority . '"
-                    },
-                    {
-                        "key": "6",
-                        "value": "duedate",
-                        "value_text": "' . $taskDueDate . '"
-                    },
-                    {
-                        "key": "7",
                         "value": "url",
                         "value_text": "' . $taskUrl . '"
                     }
                 ]
             }
         }';
+
+    } else {
+
+        if ($event == 'taskCreated') {
+
+            $postFields = '{
+                "to_number": "' . $targetPhone . '",
+                "to_name": "' . $targetName . ' - ClickUp Created",
+                "message_template_id": "' . $templateCreated . '",
+                "channel_integration_id": "' . $integrationId . '",
+                "language": {
+                    "code": "id"
+                },
+                "parameters": {
+                    "body": [
+                        {
+                            "key": "1",
+                            "value": "priority",
+                            "value_text": "' . $taskPriority . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "taskname",
+                            "value_text": "' . $taskName . '"
+                        },
+                        {
+                            "key": "3",
+                            "value": "triggerby",
+                            "value_text": "' . $taskTriggerBy . '"
+                        },
+                        {
+                            "key": "4",
+                            "value": "duedate",
+                            "value_text": "' . $taskDueDate . '"
+                        },
+                        {
+                            "key": "5",
+                            "value": "url",
+                            "value_text": "' . $taskUrl . '"
+                        }
+                    ]
+                }
+            }';
+    
+        } else if ($event == 'taskStatusUpdated') {
+    
+            $postFields = '{
+                "to_number": "' . $targetPhone . '",
+                "to_name": "' . $targetName . ' - ClickUp Status Updated",
+                "message_template_id": "' . $templateStatusUpdated . '",
+                "channel_integration_id": "' . $integrationId . '",
+                "language": {
+                    "code": "id"
+                },
+                "parameters": {
+                    "body": [
+                        {
+                            "key": "1",
+                            "value": "taskname",
+                            "value_text": "' . $taskName . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "statusbefore",
+                            "value_text": "' . $taskStatusBefore . '"
+                        },
+                        {
+                            "key": "3",
+                            "value": "statusafter",
+                            "value_text": "' . $taskStatusAfter . '"
+                        },
+                        {
+                            "key": "4",
+                            "value": "triggerby",
+                            "value_text": "' . $taskTriggerBy . '"
+                        },
+                        {
+                            "key": "5",
+                            "value": "priority",
+                            "value_text": "' . $taskPriority . '"
+                        },
+                        {
+                            "key": "6",
+                            "value": "duedate",
+                            "value_text": "' . $taskDueDate . '"
+                        },
+                        {
+                            "key": "7",
+                            "value": "url",
+                            "value_text": "' . $taskUrl . '"
+                        }
+                    ]
+                }
+            }';
+    
+        }
 
     }
     
@@ -570,15 +609,15 @@ function notifToWhatsapp($targetPhone, $targetName) {
     return json_encode(array("status" => "ok", "data" => $response));
 }
 
-function tryNotifToWhatsapp($targetPhone, $targetName) {
-    $response = notifToWhatsapp($targetPhone, $targetName);
+function tryNotifToWhatsapp($targetPhone, $targetName, $reminder = null) {
+    $response = notifToWhatsapp($targetPhone, $targetName, $reminder);
     $responseObject = json_decode($response, true);
 
     global $curlWaChance;
 
     if ($responseObject['status'] == 'error' && $curlWaChance > 0) {
         $curlWaChance --;
-        return tryNotifToWhatsapp($targetPhone, $targetName);
+        return tryNotifToWhatsapp($targetPhone, $targetName, $reminder);
     }
 
     return json_encode($responseObject);
