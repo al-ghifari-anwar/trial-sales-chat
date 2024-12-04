@@ -21,26 +21,32 @@ $templateStatusUpdated = "089cc73a-2bcb-45e2-9f87-3ff65abcea4c";
 $listUsers = [
     [
         "email" => "keerouk.ink@gmail.com",
+        "username" => "User 1",
         "phone" => "62895636998639",
     ],
     [
         "email" => "mochammadrafliramadani@gmail.com",
+        "username" => "User 2",
         "phone" => "62895636998639",
     ],
     [
         "email" => "diahnurkhasanah5@gmail.com",
+        "username" => "User 3",
         "phone" => "6285770348227",
     ],
     [
         "email" => "alghifari.anwar2002@gmail.com",
+        "username" => "User 4",
         "phone" => "6285546112267",
     ],
     [
         "email" => "hart.jessica.jh@gmail.com",
+        "username" => "User 5",
         "phone" => "6287771736555",
     ],
     [
         "email" => "nunsafitri@gmail.com",
+        "username" => "User 6",
         "phone" => "6281802358317",
     ],
 ];
@@ -53,7 +59,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if (isset($_GET['cw_event'])) {
         $event = $_GET['cw_event'];
         $result = mysqli_query($conn, "SELECT * FROM tb_clickup_webhook WHERE cw_event = '$event' ORDER BY created_at DESC");
-    } else {
+    } else if (isset($_GET['reminder'])) {
+
+        $reminder = $_GET['reminder'];
+        
+        if ($reminder == 'today') {
+            $query = "SELECT * 
+                FROM tb_clickup_webhook 
+                WHERE cw_date_done IS NULL
+                AND DATE(cw_due_date) LIKE CONCAT(CURDATE(), '%')
+                AND (cw_task_id, cw_event) IN (
+                    SELECT cw_task_id, MAX(cw_event) 
+                    FROM tb_clickup_webhook 
+                    WHERE cw_date_done IS NULL
+                    AND DATE(cw_due_date) LIKE CONCAT(CURDATE(), '%')
+                    GROUP BY cw_task_id
+                )
+            ";
+        } else if ($reminder == 'tomorrow') {
+            $query = "SELECT * 
+                    FROM tb_clickup_webhook 
+                    WHERE cw_date_done IS NULL
+                    AND DATE(cw_due_date) LIKE CONCAT(CURDATE() + INTERVAL 1 DAY, '%')
+                    AND (cw_task_id, cw_event) IN (
+                        SELECT cw_task_id, MAX(cw_event) 
+                        FROM tb_clickup_webhook 
+                        WHERE cw_date_done IS NULL
+                        AND DATE(cw_due_date) LIKE CONCAT(CURDATE() + INTERVAL 1 DAY, '%')
+                        GROUP BY cw_task_id
+                    )
+                ";
+        } else {
+            echo json_encode(array("status" => "failed", "error" => 'Not found'));
+            return;
+        }
+
+        $result = mysqli_query($conn, $query);
+
+    } else{
         $result = mysqli_query($conn, "SELECT * FROM tb_clickup_webhook ORDER BY created_at DESC");
     }
 
@@ -92,7 +135,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
 
             if (json_last_error() === JSON_ERROR_NONE) {
-                echo json_encode(array("status" => "ok", "results" => $transArray));
+
+                if (isset($reminder)) {
+                    
+                    foreach ($transArray as $key => $value) {
+
+                        $cwId = $value['cw_id'];
+                        $listEmail = $value['cw_message_to'];
+                        $query = "UPDATE tb_clickup_webhook SET remindered = '$reminder' WHERE cw_id = '$cwId'";
+
+                        if (mysqli_query($conn, $query)) {
+
+                            $cwIdArray[] = $cwId;
+                            foreach ($listEmail as $email) {
+                                $user = getUserByEmail($email);
+
+                                if ($user != null) {
+                                    $targetPhone = $user['phone'];
+                                    $targetName = $user['username'];
+                                    // tryNotifToWhatsapp($targetPhone, $targetName);
+                                    echo json_encode(array('target' => $targetName . '-' . $targetPhone));
+                                }
+                            }
+                        }
+                    }
+
+                    $cwIdArray = json_encode($cwIdArray);
+                    echo json_encode(array("status" => "ok", "message" => "Data '$cwIdArray' updated reminder successfully"));
+
+                } else {
+                    echo json_encode(array("status" => "ok", "results" => $transArray));
+                }
+
             } else {
                 echo json_encode(array("status" => "empty", "message" => "Error decoding JSON: " . json_last_error_msg(), "results" => []));;
             }
@@ -149,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             if ($availableTask && mysqli_num_rows($availableTask) > 0) {
 
-                $query = "UPDATE tb_clickup_webhook SET cw_error = '$errorMessage' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
+                $query = "UPDATE tb_clickup_webhook SET cw_error = '$errorMessage', cw_due_date = null WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
 
                 if (mysqli_query($conn, $query)) {
                     echo json_encode(
@@ -164,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     
             } else {
 
-                $query = "INSERT INTO tb_clickup_webhook (cw_task_id, cw_webhook_id, cw_event, cw_data, cw_error) VALUES ('$taskId', '$webhookId', '$event', '$data', '$errorMessage')";
+                $query = "INSERT INTO tb_clickup_webhook (cw_task_id, cw_webhook_id, cw_event, cw_data, cw_error, cw_due_date) VALUES ('$taskId', '$webhookId', '$event', '$data', '$errorMessage', null)";
 
                 if (mysqli_query($conn, $query)) {
                     echo json_encode(
@@ -199,6 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $taskNotifTo = json_encode($taskDetail['assignees']);
         $taskPriority = $taskDetail['priority']['priority'];
         $taskDueDate = convertDateTime($taskDetail['due_date']);
+        $cwDueDate = convertDateTime($taskDetail['due_date'], "Y-m-d h:i:s");
         $taskUrl = $taskDetail['url'];
 
         if (isset($dateDone) && $dateDone != null) {
@@ -278,9 +353,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 if ($cwDateDone != null) {
                     $dateNow = date('Y-m-d H:i:s');
-                    $query = "UPDATE tb_clickup_webhook SET cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_error = null, cw_date_done = '$cwDateDone', cw_data = '$data', cw_task_detail = '$taskDetailEncoded' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
+                    $query = "UPDATE tb_clickup_webhook SET cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_error = null, cw_date_done = '$cwDateDone', cw_data = '$data', cw_task_detail = '$taskDetailEncoded', cw_due_date = '$cwDueDate' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
                 } else {
-                    $query = "UPDATE tb_clickup_webhook SET cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_error = null, cw_date_done = null, cw_data = '$data', cw_task_detail = '$taskDetailEncoded' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
+                    $query = "UPDATE tb_clickup_webhook SET cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_error = null, cw_date_done = null, cw_data = '$data', cw_task_detail = '$taskDetailEncoded', cw_due_date = '$cwDueDate' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
                 }
 
                 if (mysqli_query($conn, $query)) {
@@ -291,7 +366,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             } else {
 
-                $query = "INSERT INTO tb_clickup_webhook (cw_task_id, cw_webhook_id, cw_event, cw_message_to, cw_message_text, cw_error, cw_data, cw_task_detail) VALUES ('$taskId', '$webhookId', '$event', '$emailArrayEncoded', '$messageText', null, '$data', '$taskDetailEncoded')";
+                $query = "INSERT INTO tb_clickup_webhook (cw_task_id, cw_webhook_id, cw_event, cw_message_to, cw_message_text, cw_error, cw_data, cw_task_detail, cw_due_date) VALUES ('$taskId', '$webhookId', '$event', '$emailArrayEncoded', '$messageText', null, '$data', '$taskDetailEncoded', '$cwDueDate')";
 
                 if (mysqli_query($conn, $query)) {
                     echo json_encode(array("status" => "ok", "message" => "Data stored successfully"));
