@@ -1,6 +1,7 @@
 <?php
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
+date_default_timezone_set('Asia/Jakarta');
 
 // $conn = new mysqli("185.201.8.148", "user_bintang", "123123!", "admin_dev_saleschat");
 // if ($conn->connect_error) {
@@ -13,34 +14,43 @@ include_once("config.php");
 set_time_limit(30);
 header('Content-Type: application/json');
 
-$curlClickUpChance = 5;
-$clickUpToken = "pk_66658751_Z5F1B52LQLC4XMA0CKNZRQ3FZ6DO3NH4";
-$curlWaChance = 2;
+$curlClickUpChance = 10;
+// $clickUpToken = "pk_66658751_Z5F1B52LQLC4XMA0CKNZRQ3FZ6DO3NH4"; // My Workspace
+$clickUpToken = "pk_66658751_PQ0WLFO995BF10U4L598N5C96TQDGXMX"; // Pt Top Mortar's Workspace
+$curlWaChance = 5;
+$templateReminderToday = "58db1978-17d9-4ad8-9ec1-226b2d99e1b2";
+$templateReminderTomorrow = "56fd1f7d-0d23-4e64-a489-ca1f1af4d620";
 $templateCreated = "b654d032-02d6-41f7-b1d8-66c5d28211e8";
 $templateStatusUpdated = "089cc73a-2bcb-45e2-9f87-3ff65abcea4c";
 $listUsers = [
     [
         "email" => "keerouk.ink@gmail.com",
+        "username" => "M Rafli Ramadani",
         "phone" => "62895636998639",
     ],
     [
         "email" => "mochammadrafliramadani@gmail.com",
+        "username" => "Mochammad Rafli Ramadani",
         "phone" => "62895636998639",
     ],
     [
         "email" => "diahnurkhasanah5@gmail.com",
+        "username" => "Diah Nur Khasanah",
         "phone" => "6285770348227",
     ],
     [
         "email" => "alghifari.anwar2002@gmail.com",
+        "username" => "Al Ghifari Anwar",
         "phone" => "6285546112267",
     ],
     [
         "email" => "hart.jessica.jh@gmail.com",
+        "username" => "Jessica Hart",
         "phone" => "6287771736555",
     ],
     [
         "email" => "nunsafitri@gmail.com",
+        "username" => "Nun Safitri",
         "phone" => "6281802358317",
     ],
 ];
@@ -53,7 +63,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if (isset($_GET['cw_event'])) {
         $event = $_GET['cw_event'];
         $result = mysqli_query($conn, "SELECT * FROM tb_clickup_webhook WHERE cw_event = '$event' ORDER BY created_at DESC");
-    } else {
+    } else if (isset($_GET['reminder'])) {
+
+        $reminder = $_GET['reminder'];
+        
+        if ($reminder == 'today') {
+            $query = "SELECT * 
+                FROM tb_clickup_webhook 
+                WHERE cw_date_done IS NULL
+                AND DATE(cw_due_date) LIKE CONCAT(CURDATE(), '%')
+                AND (cw_task_id, cw_event) IN (
+                    SELECT cw_task_id, MAX(cw_event) 
+                    FROM tb_clickup_webhook 
+                    WHERE cw_date_done IS NULL
+                    AND DATE(cw_due_date) LIKE CONCAT(CURDATE(), '%')
+                    GROUP BY cw_task_id
+                )
+            ";
+        } else if ($reminder == 'tomorrow') {
+            $query = "SELECT * 
+                    FROM tb_clickup_webhook 
+                    WHERE cw_date_done IS NULL
+                    AND DATE(cw_due_date) LIKE CONCAT(CURDATE() + INTERVAL 1 DAY, '%')
+                    AND (cw_task_id, cw_event) IN (
+                        SELECT cw_task_id, MAX(cw_event) 
+                        FROM tb_clickup_webhook 
+                        WHERE cw_date_done IS NULL
+                        AND DATE(cw_due_date) LIKE CONCAT(CURDATE() + INTERVAL 1 DAY, '%')
+                        GROUP BY cw_task_id
+                    )
+                ";
+        } else {
+            echo json_encode(array("status" => "failed", "error" => 'Not found'));
+            return;
+        }
+
+        $result = mysqli_query($conn, $query);
+
+    } else{
         $result = mysqli_query($conn, "SELECT * FROM tb_clickup_webhook ORDER BY created_at DESC");
     }
 
@@ -66,19 +113,73 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $cwDataObject = json_decode($cwDataString, true);
                 $cwData = json_decode($cwDataObject, true);
                 $row['cw_data'] = $cwData;
+
                 $cwMessageToString = $row['cw_message_to'];
-                $cwMessageToObject = json_decode($cwMessageToString, true);
-                $cwMessageTo = json_decode($cwMessageToObject, true);
-                $row['cw_message_to'] = $cwMessageTo;
+                if ($cwMessageToString != null) {
+                    $cwMessageToObject = json_decode($cwMessageToString, true);
+                    $cwMessageTo = json_decode($cwMessageToObject, true);
+                    $row['cw_message_to'] = $cwMessageTo;
+                }
+
                 $cwTaskDetailString = $row['cw_task_detail'];
-                $cwTaskDetailObject = json_decode($cwTaskDetailString, true);
-                $cwTaskDetail = json_decode($cwTaskDetailObject, true);
-                $row['cw_task_detail'] = $cwTaskDetail;
+                if ($cwTaskDetailString != null) {
+                    $cwTaskDetailObject = json_decode($cwTaskDetailString, true);
+                    $cwTaskDetail = json_decode($cwTaskDetailObject, true);
+                    $row['cw_task_detail'] = $cwTaskDetail;
+                }
+
+                $cwErrorlString = $row['cw_error'];
+                if ($cwErrorlString != null) {
+                    $cwErrorObject = json_decode($cwErrorlString, true);
+                    $cwError = json_decode($cwErrorObject, true);
+                    $row['cw_error'] = $cwError;
+                }
+                
                 $transArray[] = $row;
             }
 
             if (json_last_error() === JSON_ERROR_NONE) {
-                echo json_encode(array("status" => "ok", "results" => $transArray));
+
+                if (isset($reminder)) {
+
+                    $taskName = $cwTaskDetail['name'];
+                    $taskUrl = $cwTaskDetail['url'];
+                    $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = 1");
+                    $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+                    // $waToken = '123';
+                    $waToken = $rowQontak['token'];
+                    $integrationId = $rowQontak['integration_id'];
+                    
+                    foreach ($transArray as $key => $value) {
+
+                        $cwId = $value['cw_id'];
+                        $listEmail = $value['cw_message_to'];
+                        $query = "UPDATE tb_clickup_webhook SET remindered = '$reminder' WHERE cw_id = '$cwId'";
+
+                        if (mysqli_query($conn, $query)) {
+
+                            $cwIdArray[] = $cwId;
+                            foreach ($listEmail as $email) {
+                                $user = getUserByEmail($email);
+
+                                if ($user != null) {
+                                    $targetPhone = $user['phone'];
+                                    $targetName = $user['username'];
+                                    tryNotifToWhatsapp($targetPhone, $targetName, $reminder);
+                                    // echo $responseWa;
+                                    // echo json_encode(array('target' => $targetName . '-' . $targetPhone));
+                                }
+                            }
+                        }
+                    }
+
+                    $cwIdArray = json_encode($cwIdArray);
+                    echo json_encode(array("status" => "ok", "message" => "Data '$cwIdArray' updated reminder successfully"));
+
+                } else {
+                    echo json_encode(array("status" => "ok", "results" => $transArray));
+                }
+
             } else {
                 echo json_encode(array("status" => "empty", "message" => "Error decoding JSON: " . json_last_error_msg(), "results" => []));;
             }
@@ -102,16 +203,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $taskId = $input['task_id'];
         $webhookId = $input['webhook_id'];
         $event = $input['event'];
+        $dateNow = date('Y-m-d H:i:s');
+        $errorMessage = null;
 
         if ($event == 'taskCreated') {
             $historyItems = $input['history_items'][count($input['history_items'])-1];
         } else if ($event == 'taskStatusUpdated') {
             $historyItems = $input['history_items'][0];
-            if ($historyItems['before']['status'] == null) {
+            if (isset($historyItems['before']['status'])) {
+                if ($historyItems['before']['status'] == null) {
+                    echo json_encode(array("status" => "ok", "results" => "This is a new data"));
+                    return;
+                }
+            } else {
                 echo json_encode(array("status" => "ok", "results" => "This is a new data"));
                 return;
             }
         }
+
+        // Check available task
+        $availableTask = mysqli_query($conn, "SELECT * FROM tb_clickup_webhook WHERE cw_task_id = '$taskId' AND cw_event = '$event'");
 
         $webhookData = mysqli_real_escape_string($conn, json_encode($input));
         $data = json_encode($webhookData, JSON_PRETTY_PRINT);
@@ -120,14 +231,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $taskDetailResponseJson = json_decode($taskDetailResponse, true);
 
         if ($taskDetailResponseJson['status'] == 'failed') {
-            echo $taskDetailResponse;
+
+            $errorMessage = json_encode(mysqli_real_escape_string($conn, $taskDetailResponseJson['error']));
+
+            if ($availableTask && mysqli_num_rows($availableTask) > 0) {
+
+                $query = "UPDATE tb_clickup_webhook SET cw_error = '$errorMessage', cw_due_date = null WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
+
+                if (mysqli_query($conn, $query)) {
+                    echo json_encode(
+                        array(
+                            "status" => "failed",
+                            "message" => "Data updated successfully with err.",
+                            "error" => json_decode($taskDetailResponseJson['error'], true),
+                        )
+                    );
+                    return;
+                }
+    
+            } else {
+
+                $query = "INSERT INTO tb_clickup_webhook (cw_task_id, cw_webhook_id, cw_event, cw_data, cw_error, cw_due_date) VALUES ('$taskId', '$webhookId', '$event', '$data', '$errorMessage', null)";
+
+                if (mysqli_query($conn, $query)) {
+                    echo json_encode(
+                        array(
+                            "status" => "failed",
+                            "message" => "Data stored successfully with err.",
+                            "error" => json_decode($taskDetailResponseJson['error'], true),
+                        )
+                    );
+                    return;
+                }
+
+            }
+
+            echo $taskDetailResponse;            
             return;
+
         } else {
             $taskDetailString = $taskDetailResponseJson['data'];
             $taskDetail = json_decode($taskDetailString, true);
         }
 
         $taskName = $taskDetail['name'];
+        $dateDone = $taskDetail['date_done'];
 
         if ($event == 'taskStatusUpdated') {
             $taskStatusBefore = $historyItems['before']['status'];
@@ -138,7 +286,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $taskNotifTo = json_encode($taskDetail['assignees']);
         $taskPriority = $taskDetail['priority']['priority'];
         $taskDueDate = convertDateTime($taskDetail['due_date']);
+        $cwDueDate = convertDateTime($taskDetail['due_date'], "Y-m-d h:i:s");
         $taskUrl = $taskDetail['url'];
+
+        if (isset($dateDone) && $dateDone != null) {
+            $cwDateDone = convertDateTime($dateDone, "Y-m-d h:i:s");
+        } else {
+            $cwDateDone = null;
+        }
 
         $messageTo = $taskNotifTo;
 
@@ -150,10 +305,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = 1");
         $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+        // $waToken = '123';
         $waToken = $rowQontak['token'];
         $integrationId = $rowQontak['integration_id'];
 
         $emailArray = array_map(function($item) {
+
+            // global $availableTask, $conn, $errorMessage;
 
             $user = getUserByEmail($item['email']);
 
@@ -162,11 +320,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $targetPhone = $user['phone'];
                 $targetName = $item['username'];
 
+                // $notifWaResponse = tryNotifToWhatsapp($targetPhone, $targetName);
+                // $notifWaResponseJson = json_decode($notifWaResponse, true);
+
+                // if ($notifWaResponseJson['status'] == 'failed' && $availableTask && mysqli_num_rows($availableTask) > 0) {
+
+                //     $errorMessage = json_encode($notifWaResponseJson['error']);
+                //     $query = "UPDATE tb_clickup_webhook SET cw_error = null WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
+
+                //     if (mysqli_query($conn, $query)) {
+                //         echo $errorMessage;
+                //         echo json_encode(
+                //             array(
+                //                 "status" => "failed",
+                //                 "message" => "Data updated successfully with err.",
+                //                 "error" => $notifWaResponseJson['error'],
+                //             )
+                //         );
+                //         return $item['email'];
+
+                //     }
+
+                // }
+
                 tryNotifToWhatsapp($targetPhone, $targetName);
                 return $item['email'];
-                // echo json_encode($user);
-                // $responseNotif = tryNotifToWhatsapp($targetPhone, $targetName);
-                // echo $responseNotif;
             }
 
         }, json_decode($taskNotifTo, true));
@@ -182,10 +360,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         // ]);
         // return;
 
-        $query = "INSERT INTO tb_clickup_webhook (cw_task_id, cw_webhook_id, cw_event, cw_message_to, cw_message_text, cw_data, cw_task_detail) VALUES ('$taskId', '$webhookId', '$event', '$emailArrayEncoded', '$messageText', '$data', '$taskDetailEncoded')";
+        if ($availableTask) {
 
-        if (mysqli_query($conn, $query)) {
-            echo json_encode(array("status" => "ok", "message" => "Data stored successfully"));
+            if (mysqli_num_rows($availableTask) > 0) {
+
+                if ($cwDateDone != null) {
+                    $dateNow = date('Y-m-d H:i:s');
+                    $query = "UPDATE tb_clickup_webhook SET cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_error = null, cw_date_done = '$cwDateDone', cw_data = '$data', cw_task_detail = '$taskDetailEncoded', cw_due_date = '$cwDueDate' WHERE cw_task_id = '$taskId'";
+                } else {
+                    $query = "UPDATE tb_clickup_webhook SET cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_error = null, cw_date_done = null, cw_data = '$data', cw_task_detail = '$taskDetailEncoded', cw_due_date = '$cwDueDate' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
+                }
+
+                if (mysqli_query($conn, $query)) {
+                    echo json_encode(array("status" => "ok", "message" => "Data updated successfully"));
+                } else {
+                    echo json_encode(array("status" => "failed", "error" => mysqli_error($conn)));
+                }
+
+            } else {
+
+                $query = "INSERT INTO tb_clickup_webhook (cw_task_id, cw_webhook_id, cw_event, cw_message_to, cw_message_text, cw_error, cw_data, cw_task_detail, cw_due_date) VALUES ('$taskId', '$webhookId', '$event', '$emailArrayEncoded', '$messageText', null, '$data', '$taskDetailEncoded', '$cwDueDate')";
+
+                if (mysqli_query($conn, $query)) {
+                    echo json_encode(array("status" => "ok", "message" => "Data stored successfully"));
+                } else {
+                    echo json_encode(array("status" => "failed", "error" => mysqli_error($conn)));
+                }
+
+            }
+
         } else {
             echo json_encode(array("status" => "failed", "error" => mysqli_error($conn)));
         }
@@ -251,57 +454,19 @@ function tryToGetTaskDetail($taskId) {
     return json_encode($taskDetailResponseJson);
 }
 
-function notifToWhatsapp($targetPhone, $targetName) {
+function notifToWhatsapp($targetPhone, $targetName, $reminder) {
 
-    global $waToken, $event, $templateCreated, $templateStatusUpdated, $integrationId, $taskName, $taskStatusBefore, $taskStatusAfter, $taskTriggerBy, $taskPriority, $taskDueDate, $taskUrl;
+    global $waToken, $integrationId, $event, $templateReminderToday, $templateReminderTomorrow, $templateCreated, $templateStatusUpdated, $taskName, $taskStatusBefore, $taskStatusAfter, $taskTriggerBy, $taskPriority, $taskDueDate, $taskUrl;
 
-    if ($event == 'taskCreated') {
+    if ($reminder != null) {
 
-        $postFields = '{
-            "to_number": "' . $targetPhone . '",
-            "to_name": "' . $targetName . ' - ClickUp Created",
-            "message_template_id": "' . $templateCreated . '",
-            "channel_integration_id": "' . $integrationId . '",
-            "language": {
-                "code": "id"
-            },
-            "parameters": {
-                "body": [
-                    {
-                        "key": "1",
-                        "value": "priority",
-                        "value_text": "' . $taskPriority . '"
-                    },
-                    {
-                        "key": "2",
-                        "value": "taskname",
-                        "value_text": "' . $taskName . '"
-                    },
-                    {
-                        "key": "3",
-                        "value": "triggerby",
-                        "value_text": "' . $taskTriggerBy . '"
-                    },
-                    {
-                        "key": "4",
-                        "value": "duedate",
-                        "value_text": "' . $taskDueDate . '"
-                    },
-                    {
-                        "key": "5",
-                        "value": "url",
-                        "value_text": "' . $taskUrl . '"
-                    }
-                ]
-            }
-        }';
-
-    } else if ($event == 'taskStatusUpdated') {
+        if ($reminder == 'today') $templateReminder = $templateReminderToday;
+        else $templateReminder = $templateReminderTomorrow;
 
         $postFields = '{
             "to_number": "' . $targetPhone . '",
-            "to_name": "' . $targetName . ' - ClickUp Status Updated",
-            "message_template_id": "' . $templateStatusUpdated . '",
+            "to_name": "' . $targetName . ' - ClickUp Reminder",
+            "message_template_id": "' . $templateReminder . '",
             "channel_integration_id": "' . $integrationId . '",
             "language": {
                 "code": "id"
@@ -315,37 +480,108 @@ function notifToWhatsapp($targetPhone, $targetName) {
                     },
                     {
                         "key": "2",
-                        "value": "statusbefore",
-                        "value_text": "' . $taskStatusBefore . '"
-                    },
-                    {
-                        "key": "3",
-                        "value": "statusafter",
-                        "value_text": "' . $taskStatusAfter . '"
-                    },
-                    {
-                        "key": "4",
-                        "value": "triggerby",
-                        "value_text": "' . $taskTriggerBy . '"
-                    },
-                    {
-                        "key": "5",
-                        "value": "priority",
-                        "value_text": "' . $taskPriority . '"
-                    },
-                    {
-                        "key": "6",
-                        "value": "duedate",
-                        "value_text": "' . $taskDueDate . '"
-                    },
-                    {
-                        "key": "7",
                         "value": "url",
                         "value_text": "' . $taskUrl . '"
                     }
                 ]
             }
         }';
+
+    } else {
+
+        if ($event == 'taskCreated') {
+
+            $postFields = '{
+                "to_number": "' . $targetPhone . '",
+                "to_name": "' . $targetName . ' - ClickUp Created",
+                "message_template_id": "' . $templateCreated . '",
+                "channel_integration_id": "' . $integrationId . '",
+                "language": {
+                    "code": "id"
+                },
+                "parameters": {
+                    "body": [
+                        {
+                            "key": "1",
+                            "value": "priority",
+                            "value_text": "' . $taskPriority . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "taskname",
+                            "value_text": "' . $taskName . '"
+                        },
+                        {
+                            "key": "3",
+                            "value": "triggerby",
+                            "value_text": "' . $taskTriggerBy . '"
+                        },
+                        {
+                            "key": "4",
+                            "value": "duedate",
+                            "value_text": "' . $taskDueDate . '"
+                        },
+                        {
+                            "key": "5",
+                            "value": "url",
+                            "value_text": "' . $taskUrl . '"
+                        }
+                    ]
+                }
+            }';
+    
+        } else if ($event == 'taskStatusUpdated') {
+    
+            $postFields = '{
+                "to_number": "' . $targetPhone . '",
+                "to_name": "' . $targetName . ' - ClickUp Status Updated",
+                "message_template_id": "' . $templateStatusUpdated . '",
+                "channel_integration_id": "' . $integrationId . '",
+                "language": {
+                    "code": "id"
+                },
+                "parameters": {
+                    "body": [
+                        {
+                            "key": "1",
+                            "value": "taskname",
+                            "value_text": "' . $taskName . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "statusbefore",
+                            "value_text": "' . $taskStatusBefore . '"
+                        },
+                        {
+                            "key": "3",
+                            "value": "statusafter",
+                            "value_text": "' . $taskStatusAfter . '"
+                        },
+                        {
+                            "key": "4",
+                            "value": "triggerby",
+                            "value_text": "' . $taskTriggerBy . '"
+                        },
+                        {
+                            "key": "5",
+                            "value": "priority",
+                            "value_text": "' . $taskPriority . '"
+                        },
+                        {
+                            "key": "6",
+                            "value": "duedate",
+                            "value_text": "' . $taskDueDate . '"
+                        },
+                        {
+                            "key": "7",
+                            "value": "url",
+                            "value_text": "' . $taskUrl . '"
+                        }
+                    ]
+                }
+            }';
+    
+        }
 
     }
     
@@ -367,21 +603,28 @@ function notifToWhatsapp($targetPhone, $targetName) {
     ));
 
     $response = curl_exec($curl);
+    $responseObject = json_decode($response, true);
+
+    if (curl_errno($curl)) {
+        return json_encode(array("status" => "failed", "error" => curl_error($curl)));
+    } else if (isset($responseObject['status']) && $responseObject['status'] == 'error') {
+        return json_encode(array("status" => "failed", "error" => $responseObject['error']));
+    }
 
     curl_close($curl);
 
-    return $response;;
+    return json_encode(array("status" => "ok", "data" => $response));
 }
 
-function tryNotifToWhatsapp($targetPhone, $targetName) {
-    $response = notifToWhatsapp($targetPhone, $targetName);
+function tryNotifToWhatsapp($targetPhone, $targetName, $reminder = null) {
+    $response = notifToWhatsapp($targetPhone, $targetName, $reminder);
     $responseObject = json_decode($response, true);
 
     global $curlWaChance;
 
     if ($responseObject['status'] == 'error' && $curlWaChance > 0) {
         $curlWaChance --;
-        return tryNotifToWhatsapp($targetPhone, $targetName);
+        return tryNotifToWhatsapp($targetPhone, $targetName, $reminder);
     }
 
     return json_encode($responseObject);
