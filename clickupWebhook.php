@@ -1,6 +1,7 @@
 <?php
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
+date_default_timezone_set('Asia/Jakarta');
 
 // $conn = new mysqli("185.201.8.148", "user_bintang", "123123!", "admin_dev_saleschat");
 // if ($conn->connect_error) {
