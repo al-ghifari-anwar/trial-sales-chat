@@ -24,6 +24,31 @@ $templateCreated = "b654d032-02d6-41f7-b1d8-66c5d28211e8";
 $templateStatusUpdated = "089cc73a-2bcb-45e2-9f87-3ff65abcea4c";
 $listUsers = [
     [
+        "email" => "it@topmortar.com",
+        "username" => "Admin Top Mortar",
+        "phone" => "-",
+    ],
+    [
+        "email" => "hartawansudihardjo@gmail.com",
+        "username" => "hartawan sudiharjo",
+        "phone" => "6281808152028",
+    ],
+    [
+        "email" => "tinidiss88@gmail.com",
+        "username" => "tini",
+        "phone" => "6287774436555",
+    ],
+    [
+        "email" => "tasia.hrd59@gmail.com",
+        "username" => "tasia anastasia",
+        "phone" => "6281230305227",
+    ],
+    [
+        "email" => "hendrioktriz@gmail.com",
+        "username" => "Hendri Oktriz",
+        "phone" => "628988430185",
+    ],
+    [
         "email" => "keerouk.ink@gmail.com",
         "username" => "M Rafli Ramadani",
         "phone" => "62895636998639",
