@@ -16,8 +16,8 @@ header('Content-Type: application/json');
 $curlClickUpChance = 10;
 $clickUpToken = "pk_66658751_Z5F1B52LQLC4XMA0CKNZRQ3FZ6DO3NH4";
 $curlWaChance = 5;
-$templateReminderToday = "-";
-$templateReminderTomorrow = "-";
+$templateReminderToday = "58db1978-17d9-4ad8-9ec1-226b2d99e1b2";
+$templateReminderTomorrow = "56fd1f7d-0d23-4e64-a489-ca1f1af4d620";
 $templateCreated = "b654d032-02d6-41f7-b1d8-66c5d28211e8";
 $templateStatusUpdated = "089cc73a-2bcb-45e2-9f87-3ff65abcea4c";
 $listUsers = [
