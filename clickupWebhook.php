@@ -15,7 +15,8 @@ set_time_limit(30);
 header('Content-Type: application/json');
 
 $curlClickUpChance = 10;
-$clickUpToken = "pk_66658751_Z5F1B52LQLC4XMA0CKNZRQ3FZ6DO3NH4";
+// $clickUpToken = "pk_66658751_Z5F1B52LQLC4XMA0CKNZRQ3FZ6DO3NH4"; // My Workspace
+$clickUpToken = "pk_66658751_PQ0WLFO995BF10U4L598N5C96TQDGXMX"; // Pt Top Mortar's Workspace
 $curlWaChance = 5;
 $templateReminderToday = "58db1978-17d9-4ad8-9ec1-226b2d99e1b2";
 $templateReminderTomorrow = "56fd1f7d-0d23-4e64-a489-ca1f1af4d620";
