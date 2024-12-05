@@ -365,7 +365,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 if ($cwDateDone != null) {
                     $dateNow = date('Y-m-d H:i:s');
-                    $query = "UPDATE tb_clickup_webhook SET cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_error = null, cw_date_done = '$cwDateDone', cw_data = '$data', cw_task_detail = '$taskDetailEncoded', cw_due_date = '$cwDueDate' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
+                    $query = "UPDATE tb_clickup_webhook SET cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_error = null, cw_date_done = '$cwDateDone', cw_data = '$data', cw_task_detail = '$taskDetailEncoded', cw_due_date = '$cwDueDate' WHERE cw_task_id = '$taskId'";
                 } else {
                     $query = "UPDATE tb_clickup_webhook SET cw_message_to = '$emailArrayEncoded', cw_message_text = '$messageText', cw_error = null, cw_date_done = null, cw_data = '$data', cw_task_detail = '$taskDetailEncoded', cw_due_date = '$cwDueDate' WHERE cw_task_id = '$taskId' AND cw_event = '$event'";
                 }
