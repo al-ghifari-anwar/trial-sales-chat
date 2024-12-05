@@ -143,6 +143,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                     $taskName = $cwTaskDetail['name'];
                     $taskUrl = $cwTaskDetail['url'];
+                    $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = 1");
+                    $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+                    // $waToken = '123';
+                    $waToken = $rowQontak['token'];
+                    $integrationId = $rowQontak['integration_id'];
                     
                     foreach ($transArray as $key => $value) {
 
@@ -450,7 +455,7 @@ function tryToGetTaskDetail($taskId) {
 
 function notifToWhatsapp($targetPhone, $targetName, $reminder) {
 
-    global $waToken, $event, $templateReminderToday, $templateReminderTomorrow, $templateCreated, $templateStatusUpdated, $integrationId, $taskName, $taskStatusBefore, $taskStatusAfter, $taskTriggerBy, $taskPriority, $taskDueDate, $taskUrl;
+    global $waToken, $integrationId, $event, $templateReminderToday, $templateReminderTomorrow, $templateCreated, $templateStatusUpdated, $taskName, $taskStatusBefore, $taskStatusAfter, $taskTriggerBy, $taskPriority, $taskDueDate, $taskUrl;
 
     if ($reminder != null) {
 
