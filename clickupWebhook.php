@@ -20,6 +20,7 @@ $clickUpToken = "pk_66658751_PQ0WLFO995BF10U4L598N5C96TQDGXMX"; // Pt Top Mortar
 $curlWaChance = 5;
 $templateReminderToday = "58db1978-17d9-4ad8-9ec1-226b2d99e1b2";
 $templateReminderTomorrow = "56fd1f7d-0d23-4e64-a489-ca1f1af4d620";
+$templateReminderOverdue = "7d6f7eb4-9577-4da0-b980-7ebb3e0ab41b";
 $templateCreated = "b654d032-02d6-41f7-b1d8-66c5d28211e8";
 $templateStatusUpdated = "089cc73a-2bcb-45e2-9f87-3ff65abcea4c";
 $listUsers = [
@@ -115,6 +116,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         FROM tb_clickup_webhook 
                         WHERE cw_date_done IS NULL
                         AND DATE(cw_due_date) LIKE CONCAT(CURDATE() + INTERVAL 1 DAY, '%')
+                        GROUP BY cw_task_id
+                    )
+                ";
+        } else if ($reminder == 'overdue') {
+            $query = "SELECT * 
+                    FROM tb_clickup_webhook 
+                    WHERE cw_date_done IS NULL
+                    AND DATE(cw_due_date) < CURDATE()
+                    AND (cw_task_id, cw_event) IN (
+                        SELECT cw_task_id, MAX(cw_event) 
+                        FROM tb_clickup_webhook 
+                        WHERE cw_date_done IS NULL
+                        AND DATE(cw_due_date) < CURDATE()
                         GROUP BY cw_task_id
                     )
                 ";
@@ -485,7 +499,8 @@ function notifToWhatsapp($targetPhone, $targetName, $reminder) {
     if ($reminder != null) {
 
         if ($reminder == 'today') $templateReminder = $templateReminderToday;
-        else $templateReminder = $templateReminderTomorrow;
+        else if ($reminder == 'tomorrow') $templateReminder = $templateReminderTomorrow;
+        else $templateReminder = $templateReminderOverdue;
 
         $postFields = '{
             "to_number": "' . $targetPhone . '",
