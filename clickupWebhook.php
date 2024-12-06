@@ -167,11 +167,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 if (isset($reminder)) {
 
-                    $taskName = $cwTaskDetail['name'];
-                    $taskUrl = $cwTaskDetail['url'];
                     $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = 1");
                     $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
-                    // $waToken = '123';
                     $waToken = $rowQontak['token'];
                     $integrationId = $rowQontak['integration_id'];
                     
@@ -179,6 +176,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                         $cwId = $value['cw_id'];
                         $listEmail = $value['cw_message_to'];
+                        $taskName = $value['cw_task_detail']['name'];
+                        $taskUrl = $value['cw_task_detail']['url'];
                         $query = "UPDATE tb_clickup_webhook SET remindered = '$reminder' WHERE cw_id = '$cwId'";
 
                         if (mysqli_query($conn, $query)) {
