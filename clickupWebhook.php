@@ -494,7 +494,7 @@ function tryToGetTaskDetail($taskId) {
 
 function notifToWhatsapp($targetPhone, $targetName, $reminder) {
 
-    global $waToken, $integrationId, $event, $templateReminderToday, $templateReminderTomorrow, $templateCreated, $templateStatusUpdated, $taskName, $taskStatusBefore, $taskStatusAfter, $taskTriggerBy, $taskPriority, $taskDueDate, $taskUrl;
+    global $waToken, $integrationId, $event, $templateReminderToday, $templateReminderTomorrow, $templateReminderOverdue, $templateCreated, $templateStatusUpdated, $taskName, $taskStatusBefore, $taskStatusAfter, $taskTriggerBy, $taskPriority, $taskDueDate, $taskUrl;
 
     if ($reminder != null) {
 
