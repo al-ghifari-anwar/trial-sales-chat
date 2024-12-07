@@ -20,9 +20,35 @@ $clickUpToken = "pk_66658751_PQ0WLFO995BF10U4L598N5C96TQDGXMX"; // Pt Top Mortar
 $curlWaChance = 5;
 $templateReminderToday = "58db1978-17d9-4ad8-9ec1-226b2d99e1b2";
 $templateReminderTomorrow = "56fd1f7d-0d23-4e64-a489-ca1f1af4d620";
+$templateReminderOverdue = "37dba89e-2745-4ad1-8458-5ef3442fbf76";
 $templateCreated = "b654d032-02d6-41f7-b1d8-66c5d28211e8";
 $templateStatusUpdated = "089cc73a-2bcb-45e2-9f87-3ff65abcea4c";
 $listUsers = [
+    [
+        "email" => "it@topmortar.com",
+        "username" => "Admin Top Mortar",
+        "phone" => "-",
+    ],
+    [
+        "email" => "hartawansudihardjo@gmail.com",
+        "username" => "hartawan sudiharjo",
+        "phone" => "6281808152028",
+    ],
+    [
+        "email" => "tinidiss88@gmail.com",
+        "username" => "tini",
+        "phone" => "6287774436555",
+    ],
+    [
+        "email" => "tasia.hrd59@gmail.com",
+        "username" => "tasia anastasia",
+        "phone" => "6281230305227",
+    ],
+    [
+        "email" => "hendrioktriz@gmail.com",
+        "username" => "Hendri Oktriz",
+        "phone" => "628988430185",
+    ],
     [
         "email" => "keerouk.ink@gmail.com",
         "username" => "M Rafli Ramadani",
@@ -93,6 +119,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         GROUP BY cw_task_id
                     )
                 ";
+        } else if ($reminder == 'overdue') {
+            $query = "SELECT * 
+                    FROM tb_clickup_webhook 
+                    WHERE cw_date_done IS NULL
+                    AND DATE(cw_due_date) < CURDATE()
+                    AND (cw_task_id, cw_event) IN (
+                        SELECT cw_task_id, MAX(cw_event) 
+                        FROM tb_clickup_webhook 
+                        WHERE cw_date_done IS NULL
+                        AND DATE(cw_due_date) < CURDATE()
+                        GROUP BY cw_task_id
+                    )
+                ";
         } else {
             echo json_encode(array("status" => "failed", "error" => 'Not found'));
             return;
@@ -142,11 +181,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 if (isset($reminder)) {
 
-                    $taskName = $cwTaskDetail['name'];
-                    $taskUrl = $cwTaskDetail['url'];
                     $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = 1");
                     $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
-                    // $waToken = '123';
                     $waToken = $rowQontak['token'];
                     $integrationId = $rowQontak['integration_id'];
                     
@@ -154,6 +190,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                         $cwId = $value['cw_id'];
                         $listEmail = $value['cw_message_to'];
+                        $taskName = $value['cw_task_detail']['name'];
+                        $taskUrl = $value['cw_task_detail']['url'];
                         $query = "UPDATE tb_clickup_webhook SET remindered = '$reminder' WHERE cw_id = '$cwId'";
 
                         if (mysqli_query($conn, $query)) {
@@ -219,6 +257,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(array("status" => "ok", "results" => "This is a new data"));
                 return;
             }
+        } else if ($event = 'taskDeleted') {
+
+            $query = "DELETE FROM tb_clickup_webhook WHERE cw_task_id = '$taskId'";
+
+            if (mysqli_query($conn, $query)) {
+                echo json_encode(array("status" => "ok", "message" => "Deleted data successfully"));
+            } else {
+                echo json_encode(array("status" => "failed", "error" => mysqli_error($conn)));
+            }
+
+            return;
         }
 
         // Check available task
@@ -456,12 +505,13 @@ function tryToGetTaskDetail($taskId) {
 
 function notifToWhatsapp($targetPhone, $targetName, $reminder) {
 
-    global $waToken, $integrationId, $event, $templateReminderToday, $templateReminderTomorrow, $templateCreated, $templateStatusUpdated, $taskName, $taskStatusBefore, $taskStatusAfter, $taskTriggerBy, $taskPriority, $taskDueDate, $taskUrl;
+    global $waToken, $integrationId, $event, $templateReminderToday, $templateReminderTomorrow, $templateReminderOverdue, $templateCreated, $templateStatusUpdated, $taskName, $taskStatusBefore, $taskStatusAfter, $taskTriggerBy, $taskPriority, $taskDueDate, $taskUrl;
 
     if ($reminder != null) {
 
         if ($reminder == 'today') $templateReminder = $templateReminderToday;
-        else $templateReminder = $templateReminderTomorrow;
+        else if ($reminder == 'tomorrow') $templateReminder = $templateReminderTomorrow;
+        else $templateReminder = $templateReminderOverdue;
 
         $postFields = '{
             "to_number": "' . $targetPhone . '",
