@@ -257,6 +257,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(array("status" => "ok", "results" => "This is a new data"));
                 return;
             }
+        } else if ($event = 'taskDeleted') {
+
+            $query = "DELETE FROM tb_clickup_webhook WHERE cw_task_id = '$taskId'";
+
+            if (mysqli_query($conn, $query)) {
+                echo json_encode(array("status" => "ok", "message" => "Deleted data successfully"));
+            } else {
+                echo json_encode(array("status" => "failed", "error" => mysqli_error($conn)));
+            }
+
+            return;
         }
 
         // Check available task
