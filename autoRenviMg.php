@@ -4,7 +4,7 @@ include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $resultContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE store_status = 'passive'");
+    $resultContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE store_status = 'passive' AND reputation = 'good'");
 
     while ($rowContact = $resultContact->fetch_array(MYSQLI_ASSOC)) {
         $contactArr[] = $rowContact;
