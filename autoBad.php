@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         $days = $operan . $days;
 
-        if ($days >= 45) {
+        if ($days >= 15) {
             $setBad = mysqli_query($conn, "UPDATE tb_contact SET reputation = 'bad' WHERE id_contact = '$id_contact'");
 
             if ($setBad) {
