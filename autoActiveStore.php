@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_distributor = $active['id_distributor'];
         $updated_at = date("Y-m-d H:i:s");
 
-        $insertActive = mysqli_query($conn, "INSERT INTO tb_active_store(month_active,id_city,id_distributor,updated_at) VALUES('$month',$jml_active,$id_city,$id_distributor,'$updated_at')");
+        $insertActive = mysqli_query($conn, "INSERT INTO tb_active_store(month_active,jml_active,id_city,id_distributor,updated_at) VALUES('$month',$jml_active,$id_city,$id_distributor,'$updated_at')");
 
         if ($insertActive) {
             echo json_encode(array("status" => "ok", "results" => "Sukses"));
