@@ -9,9 +9,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $arrayCountActive[] = $rowCountActive;
     }
 
-    if ($arrayCountActive == null) {
-        echo json_encode(array("status" => "failed", "results" => []));
-    } else {
-        echo json_encode(array("status" => "ok", "results" => $arrayCountActive));
+    foreach ($arrayCountActive as $active) {
+        // $month = date('m');
+        $month = 12;
+        $jml_active = $active['jml_active'];
+        $id_city = $active['id_city'];
+        $id_distributor = $active['id_distributor'];
+        $updated_at = date("Y-m-d H:i:s");
+
+        $insertActive = mysqli_query($conn, "INSERT INTO tb_active_store(month_active,id_city,id_distributor,updated_at) VALUES('$month',$jml_active,$id_city,$id_distributor,'$updated_at')");
+
+        if ($insertActive) {
+            echo json_encode(array("status" => "ok", "results" => "Sukses"));
+        } else {
+            echo json_encode(array("status" => "failed", "results" => mysqli_error($conn)));
+        }
     }
 }
