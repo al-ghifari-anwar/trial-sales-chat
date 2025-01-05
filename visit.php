@@ -225,60 +225,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $res = json_decode($response, true);
 
                 if ($res['status'] == 'success') {
-                    // $nomor_hp_admin = "6289636224827";
-                    // $nama_admin = "April";
-                    // if ($id_distributor == 2) {
-                    //     $nomor_hp_admin = "6289520332335";
-                    //     $nama_admin = "Dea";
-                    // }
-                    // $message = "Toko " . $nama . "telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
-                    // $curl = curl_init();
-                    // curl_setopt_array($curl, array(
-                    //     CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                    //     CURLOPT_RETURNTRANSFER => true,
-                    //     CURLOPT_ENCODING => '',
-                    //     CURLOPT_MAXREDIRS => 10,
-                    //     CURLOPT_TIMEOUT => 0,
-                    //     CURLOPT_FOLLOWLOCATION => true,
-                    //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    //     CURLOPT_CUSTOMREQUEST => 'POST',
-                    //     CURLOPT_POSTFIELDS => '{
-                    // "to_number": "' . $nomor_hp_admin . '",
-                    // "to_name": "' . $nama_admin . '",
-                    // "message_template_id": "' . $template_id . '",
-                    // "channel_integration_id": "' . $integration_id . '",
-                    // "language": {
-                    //     "code": "id"
-                    // },
-                    // "parameters": {
-                    //     "body": [
-                    //     {
-                    //         "key": "1",
-                    //         "value": "nama",
-                    //         "value_text": "' . $nama_admin . '"
-                    //     },
-                    //     {
-                    //         "key": "2",
-                    //         "value": "message",
-                    //         "value_text": "' . $message . '"
-                    //     },
-                    //     {
-                    //         "key": "3",
-                    //         "value": "sales",
-                    //         "value_text": "' . $full_name . '"
-                    //     }
-                    //     ]
-                    // }
-                    // }',
-                    //     CURLOPT_HTTPHEADER => array(
-                    //         'Authorization: Bearer ' . $wa_token,
-                    //         'Content-Type: application/json'
-                    //     ),
-                    // ));
+                    $nomor_hp_admin = "6289636224827";
+                    $nama_admin = "April";
+                    if ($id_distributor == 6) {
+                        $nomor_hp_admin = "628";
+                        $nama_admin = "Dea";
+                    }
+                    $message = "Toko " . $nama . "telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => '{
+                    "to_number": "' . $nomor_hp_admin . '",
+                    "to_name": "' . $nama_admin . '",
+                    "message_template_id": "' . $template_id . '",
+                    "channel_integration_id": "' . $integration_id . '",
+                    "language": {
+                        "code": "id"
+                    },
+                    "parameters": {
+                        "body": [
+                        {
+                            "key": "1",
+                            "value": "nama",
+                            "value_text": "' . $nama_admin . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "message",
+                            "value_text": "' . $message . '"
+                        },
+                        {
+                            "key": "3",
+                            "value": "sales",
+                            "value_text": "' . $full_name . '"
+                        }
+                        ]
+                    }
+                    }',
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: Bearer ' . $wa_token,
+                            'Content-Type: application/json'
+                        ),
+                    ));
 
-                    // $response = curl_exec($curl);
+                    $response = curl_exec($curl);
 
-                    // curl_close($curl);
+                    curl_close($curl);
                 }
 
                 // echo $response;
@@ -344,10 +344,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     if ($res['status'] == 'success') {
                         $nomor_hp_admin = "6289636224827";
                         $nama_admin = "April";
-                        // if ($id_distributor == 2) {
-                        //     $nomor_hp_admin = "6289520332335";
-                        //     $nama_admin = "Dea";
-                        // }
+                        if ($id_distributor == 6) {
+                            $nomor_hp_admin = "628";
+                            $nama_admin = "Dea";
+                        }
                         $message = "Toko " . $nama . " menjanjikan pembayaran pada tanggal " . date("Y-m-d", strtotime($pay_date));
                         $curl = curl_init();
                         curl_setopt_array($curl, array(
@@ -458,12 +458,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $res = json_decode($response, true);
 
                     if ($res['status'] == 'success') {
-                        // $nomor_hp_admin = "6289636224827";
-                        // $nama_admin = "April";
-                        // if ($id_distributor == 2) {
-                        //     $nomor_hp_admin = "6289520332335";
-                        //     $nama_admin = "Dea";
-                        // }
+                        $nomor_hp_admin = "6289636224827";
+                        $nama_admin = "April";
+                        if ($id_distributor == 6) {
+                            $nomor_hp_admin = "628";
+                            $nama_admin = "Dea";
+                        }
                         $message = "Toko " . $nama . " hari ini belum melakukan pembayaran ";
                         $curl = curl_init();
                         curl_setopt_array($curl, array(
