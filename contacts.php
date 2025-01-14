@@ -72,6 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_distributor = $rowContact['id_distributor'];
         $payment_method = $_POST['payment_method'];
         $tagih_mingguan = $_POST['tagih_mingguan'];
+        $hari_bayar = "-";
+        if (isset($_POST['hari_bayar'])) {
+            $hari_bayar = $_POST['hari_bayar'];
+        }
         if ($id_city == 0) {
             $response = ["response" => 200, "status" => "failed", "message" => "ID CITY 0!"];
             echo json_encode($response);
