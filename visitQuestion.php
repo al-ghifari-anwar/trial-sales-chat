@@ -4,21 +4,41 @@ include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $getQuestion = mysqli_query($conn, "SELECT * FROM tb_visit_question");
+    if (isset($_GET['dst'])) {
+        $id_distributor = $_GET['dst'];
+        $getQuestion = mysqli_query($conn, "SELECT * FROM tb_visit_question WHERE = '$id_distributor'");
 
-    while ($rowQuestion = $getQuestion->fetch_array(MYSQLI_ASSOC)) {
-        $options = $rowQuestion['answer_option'];
-        if ($options != null) {
-            $options = explode(",", $options);
+        while ($rowQuestion = $getQuestion->fetch_array(MYSQLI_ASSOC)) {
+            $options = $rowQuestion['answer_option'];
+            if ($options != null) {
+                $options = explode(",", $options);
+            }
+            $rowQuestion['answer_option'] = $options;
+            $arrayQuestion[] = $rowQuestion;
         }
-        $rowQuestion['answer_option'] = $options;
-        $arrayQuestion[] = $rowQuestion;
-    }
 
-    if ($arrayQuestion == null) {
-        echo json_encode(array("status" => "empty", "results" => []));
+        if ($arrayQuestion == null) {
+            echo json_encode(array("status" => "empty", "results" => []));
+        } else {
+            echo json_encode(array("status" => "ok", "results" => $arrayQuestion));
+        }
     } else {
-        echo json_encode(array("status" => "ok", "results" => $arrayQuestion));
+        $getQuestion = mysqli_query($conn, "SELECT * FROM tb_visit_question");
+
+        while ($rowQuestion = $getQuestion->fetch_array(MYSQLI_ASSOC)) {
+            $options = $rowQuestion['answer_option'];
+            if ($options != null) {
+                $options = explode(",", $options);
+            }
+            $rowQuestion['answer_option'] = $options;
+            $arrayQuestion[] = $rowQuestion;
+        }
+
+        if ($arrayQuestion == null) {
+            echo json_encode(array("status" => "empty", "results" => []));
+        } else {
+            echo json_encode(array("status" => "ok", "results" => $arrayQuestion));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_visit = $_POST['id_visit'];
