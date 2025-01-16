@@ -6,7 +6,7 @@ date_default_timezone_set('Asia/Jakarta');
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['dst'])) {
         $id_distributor = $_GET['dst'];
-        $getQuestion = mysqli_query($conn, "SELECT * FROM tb_visit_question WHERE = '$id_distributor'");
+        $getQuestion = mysqli_query($conn, "SELECT * FROM tb_visit_question WHERE id_distributor = '$id_distributor'");
 
         while ($rowQuestion = $getQuestion->fetch_array(MYSQLI_ASSOC)) {
             $options = $rowQuestion['answer_option'];
