@@ -31,13 +31,18 @@ $listUsers = [
     ],
     [
         "email" => "hartawansudihardjo@gmail.com",
-        "username" => "hartawan sudiharjo",
+        "username" => "Hartawan Sudiharjo",
         "phone" => "6281808152028",
     ],
     [
         "email" => "tinidiss88@gmail.com",
-        "username" => "tini",
+        "username" => "Kartini",
         "phone" => "6287774436555",
+    ],
+    [
+        "email" => "ronaprayoga121@gmail.com",
+        "username" => "Rona Prayoga",
+        "phone" => "6287871261170",
     ],
     [
         "email" => "tasia.hrd59@gmail.com",
