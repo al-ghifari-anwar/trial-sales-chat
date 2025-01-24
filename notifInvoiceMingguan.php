@@ -4,7 +4,6 @@ include_once("config.php");
 
 // $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
 $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
-$template_id = 'ee3637b7-41bc-4032-96f8-96a748e448f4';
 $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -51,75 +50,77 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $wa_token = $rowQontak['token'];
                     // echo json_encode($sisaHutang);
                     if ($sisaHutang > 0) {
-                        $response = ["message" => "Sudah waktunya", "days" => $days, "date_inv" => $invArray['date_invoice'], "toko" => $nama, "id_inv" => $id_invoice];
+                        $response = ["message" => "Sudah waktunya", "days" => $days, "date_inv" => $invArray['date_invoice'], "toko" => $nama, "id_inv" => $id_invoice, "id_sj" => $id];
                         echo json_encode($response);
+
+
+                        // $template_id = 'ee3637b7-41bc-4032-96f8-96a748e448f4';
+                        $template_id = 'c80d503f-bc62-450e-87e2-b7e794855145';
+                        $full_name = 'Top Mortar Indonesia';
+                        $message = 'Dengan pesan ini kami sampaikan bahwa bapak/ibu mempunyai tagihan yang belum terbayarkan. Mohon segera melakukan pelunasan. Abaikan pesan ini jika bapak/ibu sudah melakukan pembayaran. Terimakasih atas kerja samanya.';
+
                         // if ($id_distributor == 2) {
-                        // $curl = curl_init();
+                        $curl = curl_init();
 
-                        // curl_setopt_array($curl, array(
-                        //     CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                        //     CURLOPT_RETURNTRANSFER => true,
-                        //     CURLOPT_ENCODING => '',
-                        //     CURLOPT_MAXREDIRS => 10,
-                        //     CURLOPT_TIMEOUT => 0,
-                        //     CURLOPT_FOLLOWLOCATION => true,
-                        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        //     CURLOPT_CUSTOMREQUEST => 'POST',
-                        //     CURLOPT_POSTFIELDS => '{
-                        //             "to_number": "' . $nomor_hp . '",
-                        //             "to_name": "' . $nama . '",
-                        //             "message_template_id": "' . $template_id . '",
-                        //             "channel_integration_id": "' . $integration_id . '",
-                        //             "language": {
-                        //                 "code": "id"
-                        //             },
-                        //             "parameters": {
-                        //                 "body": [
-                        //                 {
-                        //                     "key": "1",
-                        //                     "value": "nama",
-                        //                     "value_text": "' . $nama . '"
-                        //                 },
-                        //                 {
-                        //                     "key": "2",
-                        //                     "value": "no_invoice",
-                        //                     "value_text": "' . $no_invoice . '"
-                        //                 },
-                        //                 {
-                        //                     "key": "3",
-                        //                     "value": "sisa",
-                        //                     "value_text": "' . $sisaHutang . '"
-                        //                 },
-                        //                 {
-                        //                     "key": "4",
-                        //                     "value": "jatuh_tempo",
-                        //                     "value_text": "' . $jatuhTempo . '"
-                        //                 }
-                        //                 ]
-                        //             }
-                        //             }',
-                        //     CURLOPT_HTTPHEADER => array(
-                        //         'Authorization: Bearer ' . $wa_token,
-                        //         'Content-Type: application/json'
-                        //     ),
-                        // ));
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => '{
+                                    "to_number": "' . $nomor_hp . '",
+                                    "to_name": "' . $nama . '",
+                                    "message_template_id": "' . $template_id . '",
+                                    "channel_integration_id": "' . $integration_id . '",
+                                    "language": {
+                                        "code": "id"
+                                    },
+                                    "parameters": {
+                                        "body": [
+                                        {
+                                            "key": "1",
+                                            "value": "nama",
+                                            "value_text": "' . $nama . '"
+                                        },
+                                        {
+                                            "key": "2",
+                                            "value": "message",
+                                            "value_text": "' . $message . '"
+                                        },
+                                        {
+                                            "key": "3",
+                                            "value": "sales",
+                                            "value_text": "' . $full_name . '"
+                                        }
+                                        ]
+                                    }
+                                    }',
+                            CURLOPT_HTTPHEADER => array(
+                                'Authorization: Bearer ' . $wa_token,
+                                'Content-Type: application/json'
+                            ),
+                        ));
 
-                        // $response = curl_exec($curl);
+                        $response = curl_exec($curl);
 
 
-                        // curl_close($curl);
+                        curl_close($curl);
 
-                        // $res = json_decode($response, true);
+                        $res = json_decode($response, true);
 
-                        // $status = $res['status'];
+                        $status = $res['status'];
 
-                        // if ($status == "success") {
-                        //     $response = ["response" => 200, "status" => "ok", "message" => "Success notify customer"];
-                        //     echo json_encode($response);
-                        // } else {
-                        //     $response = ["response" => 200, "status" => "failed", "message" => "Failed notify customer. " . mysqli_error($conn), "detail" => mysqli_error($conn)];
-                        //     echo json_encode($response);
-                        // }
+                        if ($status == "success") {
+                            $response = ["response" => 200, "status" => "ok", "message" => "Success notify customer"];
+                            echo json_encode($response);
+                        } else {
+                            $response = ["response" => 200, "status" => "failed", "message" => "Failed notify customer. " . mysqli_error($conn), "detail" => mysqli_error($conn)];
+                            echo json_encode($response);
+                        }
                     }
                     // }
                 } else {
