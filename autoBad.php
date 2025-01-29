@@ -3,7 +3,7 @@ error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $getInvoice = mysqli_query($conn, "SELECT tb_contact.id_contact, id_invoice AS id_invoice, termin_payment, date_invoice AS date_invoice, tb_contact.nama FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE status_invoice = 'waiting'");
+    $getInvoice = mysqli_query($conn, "SELECT tb_contact.id_contact, id_invoice AS id_invoice, termin_payment, date_invoice AS date_invoice, tb_contact.nama FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE status_invoice = 'waiting' AND total_invoice > 5000");
 
     while ($rowInvoice = $getInvoice->fetch_array(MYSQLI_ASSOC)) {
         $invoiceArray[] = $rowInvoice;
