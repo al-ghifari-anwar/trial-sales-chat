@@ -80,6 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                     $deleteOldRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_renvis = 'jatem1' ");
 
+                    $deleteOldRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'tagih_mingguan' ");
+
                     if ($renvisArray == null) {
                         $insertRenvis = mysqli_query($conn, "INSERT INTO tb_renvis_jatem(id_contact,id_surat_jalan,type_renvis,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem2',$id_distributor,$id_invoice)");
 
@@ -114,6 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     // }
 
                     $deleteOldRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_renvis = 'jatem2' ");
+
+                    $deleteOldRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1 WHERE id_contact = '$id_contact' AND type_rencana = 'tagih_mingguan' ");
 
                     if ($renvisArray == null) {
                         $insertRenvis = mysqli_query($conn, "INSERT INTO tb_renvis_jatem(id_contact,id_surat_jalan,type_renvis,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'jatem3',$id_distributor,$id_invoice)");
