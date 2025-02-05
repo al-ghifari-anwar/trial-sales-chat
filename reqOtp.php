@@ -4,7 +4,7 @@ include_once("config.php");
 
 
 $wa_token = 'EGzGoRR6sw6B5FhpJsG_Y2HB8g9f1U6amBOC9VJHITY';
-$template_id = '9ac4e6a5-0a71-4d00-981b-6cf05e5637da';
+$template_id = 'c80d503f-bc62-450e-87e2-b7e794855145';
 $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -65,6 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         "key": "2",
                         "value": "message",
                         "value_text": "' . $message . '"
+                    },
+                    {
+                        "key": "3",
+                        "value": "sender",
+                        "value_text": "Admin Top Mortar"
                     }
                     ]
                 }
