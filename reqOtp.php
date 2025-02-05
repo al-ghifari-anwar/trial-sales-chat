@@ -2,6 +2,8 @@
 error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 
+date_default_timezone_set('Asia/Jakarta');
+
 
 $wa_token = 'EGzGoRR6sw6B5FhpJsG_Y2HB8g9f1U6amBOC9VJHITY';
 $template_id = 'c80d503f-bc62-450e-87e2-b7e794855145';
