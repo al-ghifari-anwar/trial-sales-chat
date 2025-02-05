@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_courier = $_GET['cr'];
 
         // $resultStore = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact IN (SELECT id_contact FROM tb_surat_jalan WHERE id_courier = '$id_courier' AND tb_surat_jalan.is_closing = 0)");
-        $resultStore = mysqli_query($conn, "SELECT * id_surat_jalan FROM tb_contact JOIN tb_surat_jalan ON tb_surat_jalan.id_contact = tb_contact.id_contact WHERE tb_surat_jalan.id_courier = '$id_courier' AND tb_surat_jalan.is_closing = 0");
+        $resultStore = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_surat_jalan ON tb_surat_jalan.id_contact = tb_contact.id_contact WHERE tb_surat_jalan.id_courier = '$id_courier' AND tb_surat_jalan.is_closing = 0");
 
         while ($row = $resultStore->fetch_array(MYSQLI_ASSOC)) {
             // $id_surat_jalan = $row['id_surat_jalan'];
