@@ -47,33 +47,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                         CURLOPT_CUSTOMREQUEST => 'POST',
                         CURLOPT_POSTFIELDS => '{
-                "to_number": "' . $phone_user . '",
-                "to_name": "' . $username . '",
-                "message_template_id": "' . $template_id . '",
-                "channel_integration_id": "' . $integration_id . '",
-                "language": {
-                    "code": "id"
-                },
-                "parameters": {
-                    "body": [
-                    {
-                        "key": "1",
-                        "value": "nama",
-                        "value_text": "' . $username . '"
-                    },
-                    {
-                        "key": "2",
-                        "value": "message",
-                        "value_text": "' . $message . '"
-                    },
-                    {
-                        "key": "3",
-                        "value": "sender",
-                        "value_text": "Admin Top Mortar"
-                    }
-                    ]
-                }
-                }',
+                            "to_number": "' . $phone_user . '",
+                            "to_name": "' . $username . '",
+                            "message_template_id": "' . $template_id . '",
+                            "channel_integration_id": "' . $integration_id . '",
+                            "language": {
+                                "code": "id"
+                            },
+                            "parameters": {
+                                "body": [
+                                    {
+                                        "key": "1",
+                                        "value": "nama",
+                                        "value_text": "' . $username . '"
+                                    },
+                                    {
+                                        "key": "2",
+                                        "value": "message",
+                                        "value_text": "' . $message . '"
+                                    },
+                                    {
+                                        "key": "3",
+                                        "value": "sender",
+                                        "value_text": "Admin Top Mortar"
+                                    }
+                                ]
+                            }
+                        }',
                         CURLOPT_HTTPHEADER => array(
                             'Authorization: Bearer ' . $wa_token,
                             'Content-Type: application/json'
