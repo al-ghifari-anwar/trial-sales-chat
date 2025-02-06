@@ -23,7 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_distributor = $_GET['dst'];
         $id_city = $_GET['c'];
 
-        $resultSuratJalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact JOIN tb_city ON tb_contact.id_city = tb_city.id_city JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier WHERE tb_city.id_distributor = '$id_distributor' AND tb_surat_jalan.is_closing = 0 AND tb_city.id_city = '$id_city' ORDER BY id_surat_jalan DESC");
+        $city = mysqli_query($conn, "SELECT * FROM tb_city WHERE id_city = '$id_city'");
+        $rowCity = $city->fetch_array(MYSQLI_ASSOC);
+
+        $nama_city = preg_replace('/[0-9]+/', '', $rowCity['nama_city']);
+
+        $resultSuratJalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact JOIN tb_city ON tb_contact.id_city = tb_city.id_city JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier WHERE tb_city.id_distributor = '$id_distributor' AND tb_surat_jalan.is_closing = 0 AND tb_city.nama_city = '$nama_city' ORDER BY id_surat_jalan DESC");
 
         while ($row = $resultSuratJalan->fetch_array(MYSQLI_ASSOC)) {
             $suratJalanArray[] = $row;
