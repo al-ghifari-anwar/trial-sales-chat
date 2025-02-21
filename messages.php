@@ -5,7 +5,7 @@ include_once("config.php");
 // $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
 // $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
 // $template_id = '85f17083-255d-4340-af32-5dd22f483960';
-$template_id = 'c80d503f-bc62-450e-87e2-b7e794855145';
+$template_id = '9241bf86-ae94-4aa8-8975-551409af90b9';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id'])) {
@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($rowUserData['level_user'] == 'admin' || $rowUserData['level_user'] == 'salesleader') {
                 $wa_token = "EGzGoRR6sw6B5FhpJsG_Y2HB8g9f1U6amBOC9VJHITY";
                 $integration_id = "38654c8b-76a1-45d9-a5ae-969e4bf3fb83";
-                $template_id = 'c80d503f-bc62-450e-87e2-b7e794855145';
+                $template_id = '9241bf86-ae94-4aa8-8975-551409af90b9';
                 // $template_id = '85f17083-255d-4340-af32-5dd22f483960';
             }
         }
