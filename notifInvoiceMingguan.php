@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
                         // $template_id = 'ee3637b7-41bc-4032-96f8-96a748e448f4';
-                        $template_id = 'c80d503f-bc62-450e-87e2-b7e794855145';
+                        $template_id = '9241bf86-ae94-4aa8-8975-551409af90b9';
                         $full_name = 'Top Mortar Indonesia';
                         $message = 'Dengan pesan ini kami sampaikan bahwa bapak/ibu mempunyai tagihan yang belum terbayarkan. Mohon segera melakukan pelunasan. Abaikan pesan ini jika bapak/ibu sudah melakukan pembayaran. Terimakasih atas kerja samanya.';
 
