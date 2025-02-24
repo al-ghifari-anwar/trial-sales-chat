@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $renvisArray = $cekRenvis->fetch_array(MYSQLI_ASSOC);
                     // }
 
-                    if ($renvisArray == null) {
+                    if ($cekRenvis == null) {
                         $cekRenvisJatem = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND is_visited = 0");
 
                         if ($cekRenvisJatem == null) {
