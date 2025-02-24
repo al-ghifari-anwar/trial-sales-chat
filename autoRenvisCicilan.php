@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     foreach ($invArray as $invArray) {
         $id_invoice = $invArray['id_invoice'];
+        $id_contact = $invArray['id_contact'];
+        $nama_contact = $invArray['nama'];
         // Calculate sisa hari jatuh tempo
         $jatuhTempo = date('d M Y', strtotime("+" . $invArray['termin_payment'] . " days", strtotime($invArray['date_invoice'])));
         $date1 = new DateTime(date("Y-m-d"));
@@ -25,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $tagih_mingguan = $invArray['tagih_mingguan'];
 
         if ($tagih_mingguan == 1) {
-
             if ($days < "30") {
                 $getTotalPayment = mysqli_query($conn, "SELECT SUM(amount_payment + potongan_payment + adjustment_payment) AS amount_total FROM tb_payment WHERE id_invoice = '$id_invoice'");
                 $rowPayment = $getTotalPayment->fetch_array(MYSQLI_ASSOC);
@@ -67,11 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     }
                 }
             } else {
-                $response = ["message" => "Belum waktunya", "days" => $days, "no_inv" => $invArray['no_invoice']];
+                $response = ["message" => "Belum waktunya", "days" => $days, "no_inv" => "INV:" . $invArray['no_invoice']];
                 echo json_encode($response);
             }
         } else {
-            $response = ["message" => "Bukan toko cicilan", "detail" => "id_contact-" . $id_contact];
+            $response = ["message" => "Bukan toko cicilan", "detail" => "id_contact-" . $id_contact . "|nama-" . $nama_contact];
             echo json_encode($response);
         }
     }
