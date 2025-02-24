@@ -48,6 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     if ($renvisArray == null) {
                         $cekRenvisJatem = mysqli_query($conn, "SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND is_visited = 0");
 
+                        $renvisJatemArray = $cekRenvisJatem->fetch_array(MYSQLI_ASSOC);
+
                         if ($cekRenvisJatem == null) {
                             $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'tagih_mingguan',$id_distributor,$id_invoice)");
 
