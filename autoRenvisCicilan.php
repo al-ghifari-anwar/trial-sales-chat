@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                         $renvisJatemArray = $cekRenvisJatem->fetch_array(MYSQLI_ASSOC);
 
-                        if ($cekRenvisJatem == null) {
+                        if ($renvisJatemArray == null) {
                             $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,$id_surat_jalan,'tagih_mingguan',$id_distributor,$id_invoice)");
 
                             if ($insertRenvis) {
