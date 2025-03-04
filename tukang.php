@@ -36,7 +36,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $is_self = $row['is_self'];
+            $id_contact_post = $row['id_contact_post'];
+            $id_user_post = $row['id_user_post'];
+
             $transArray[] = $row;
+
+            if ($is_self == 1) {
+                $transArray['posted_by'] = 'Self';
+                $transArray['posted_name'] = $row['nama'];
+            }
+
+            if ($id_contact_post != 0) {
+                $contact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact_post'");
+                $contactRow = $contact->fetch_array(MYSQLI_ASSOC);
+                $transArray['posted_by'] = 'Toko';
+                $transArray['posted_name'] = $contact['nama'];
+            }
+
+            if ($id_user_post != 0) {
+                $user = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user_post'");
+                $userRow = $user->fetch_array(MYSQLI_ASSOC);
+                $transArray['posted_by'] = $userRow['level_user'];
+                $transArray['posted_name'] = $userRow['full_name'];
+            }
         }
 
         mysqli_close($conn);
@@ -103,12 +126,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_skill = $_POST['id_skill'];
         $nama_lengkap = $_POST['nama_lengkap'];
 
+        $id_user_post = $_POST['id_user'];
+
         $checkNomor = mysqli_query($conn, "SELECT * FROM tb_tukang WHERE nomorhp = '$nomor_hp'");
         $rowNomor = $checkNomor->fetch_array(MYSQLI_ASSOC);
 
         if ($rowNomor == null) {
 
-            $result = mysqli_query($conn, "INSERT INTO tb_tukang(nama, nomorhp, tgl_lahir, id_city, maps_url, address,tukang_status, id_skill, nama_lengkap) VALUES('$nama', '$nomor_hp', '$tgl_lahir','$id_city', '$mapsUrl', '$address','$status','$id_skill', '$nama_lengkap')");
+            $result = mysqli_query($conn, "INSERT INTO tb_tukang(nama, nomorhp, tgl_lahir, id_city, maps_url, address,tukang_status, id_skill, nama_lengkap, id_user_post) VALUES('$nama', '$nomor_hp', '$tgl_lahir','$id_city', '$mapsUrl', '$address','$status','$id_skill', '$nama_lengkap', '$id_user_post')");
 
             if ($result) {
                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data tukang!"];
