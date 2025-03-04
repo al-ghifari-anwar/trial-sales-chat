@@ -40,31 +40,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_contact_post = $row['id_contact_post'];
             $id_user_post = $row['id_user_post'];
 
-            $transArray[] = $row;
-
             if ($is_self == 1) {
-                $transArray['posted_by'] = 'Self';
-                $transArray['posted_name'] = $row['nama'];
+                $row['posted_by'] = 'Self';
+                $row['posted_name'] = $row['nama'];
             }
 
             if ($id_contact_post != 0) {
                 $contact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact_post'");
                 $contactRow = $contact->fetch_array(MYSQLI_ASSOC);
-                $transArray['posted_by'] = 'Toko';
-                $transArray['posted_name'] = $contact['nama'];
+                $row['posted_by'] = 'Toko';
+                $row['posted_name'] = $contact['nama'];
             }
 
             if ($id_user_post != 0) {
                 $user = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user_post'");
                 $userRow = $user->fetch_array(MYSQLI_ASSOC);
-                $transArray['posted_by'] = $userRow['level_user'];
-                $transArray['posted_name'] = $userRow['full_name'];
+                $row['posted_by'] = $userRow['level_user'];
+                $row['posted_name'] = $userRow['full_name'];
             }
 
             if ($is_self == 0 && $id_contact_post == 0 && $id_user_post == 0) {
-                $transArray['posted_by'] = "null";
-                $transArray['posted_name'] = "null";
+                $row['posted_by'] = "null";
+                $row['posted_name'] = "null";
             }
+
+            $transArray[] = $row;
         }
 
         mysqli_close($conn);
