@@ -60,6 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $transArray['posted_by'] = $userRow['level_user'];
                 $transArray['posted_name'] = $userRow['full_name'];
             }
+
+            if ($is_self == 0 && $id_contact_post == 0 && $id_user_post == 0) {
+                $transArray['posted_by'] = "null";
+                $transArray['posted_name'] = "null";
+            }
         }
 
         mysqli_close($conn);
