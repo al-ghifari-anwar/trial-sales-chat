@@ -36,6 +36,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $is_self = $row['is_self'];
+            $id_contact_post = $row['id_contact_post'];
+            $id_user_post = $row['id_user_post'];
+
+            if ($is_self == 1) {
+                $row['posted_by'] = 'Self';
+                $row['posted_name'] = $row['nama'];
+            }
+
+            if ($id_contact_post != 0) {
+                $contact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact_post'");
+                $contactRow = $contact->fetch_array(MYSQLI_ASSOC);
+                $row['posted_by'] = 'Toko';
+                $row['posted_name'] = $contact['nama'];
+            }
+
+            if ($id_user_post != 0) {
+                $user = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user_post'");
+                $userRow = $user->fetch_array(MYSQLI_ASSOC);
+                $row['posted_by'] = $userRow['level_user'];
+                $row['posted_name'] = $userRow['full_name'];
+            }
+
+            if ($is_self == 0 && $id_contact_post == 0 && $id_user_post == 0) {
+                $row['posted_by'] = "null";
+                $row['posted_name'] = "null";
+            }
+
             $transArray[] = $row;
         }
 
@@ -49,49 +77,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['id'])) {
-        // $id = $_POST['id'];
-        // $getTukang = mysqli_query($conn, "SELECT * FROM tb_tukang WHERE id_tukang = '$id'");
-        // $rowTukang = $getTukang->fetch_array(MYSQLI_ASSOC);
+        $id = $_POST['id'];
+        $getTukang = mysqli_query($conn, "SELECT * FROM tb_tukang WHERE id_tukang = '$id'");
+        $rowTukang = $getTukang->fetch_array(MYSQLI_ASSOC);
 
-        // $nama = $_POST['nama'];
-        // $nomor_hp = $_POST['nomorhp'];
-        // $tgl_lahir = $_POST['tgl_lahir'];
-        // $id_city = $_POST['id_city'];
-        // $mapsUrl = $_POST['mapsUrl'];
-        // $address = $_POST['address'];
-        // $status = $_POST['status'];
-        // $id_skill = $_POST['id_skill'];
-        // $nama_lengkap = $_POST['nama_lengkap'];
-        // // NEW
-        // if (isset($_FILES['ktp']['name'])) {
-        //     $proof_closing = $_FILES['ktp']['name'];
-        //     $dateFile = date("Y-m-d-H-i-s");
 
-        //     if (move_uploaded_file($_FILES['ktp']['tmp_name'], 'img/' . $dateFile . $_FILES['ktp']['name'])) {
-        //         $sourceImage = 'img/' . $dateFile . $_FILES['ktp']['name'];
-        //         $imageDestination = 'img/min-' . $dateFile . $_FILES['ktp']['name'];
-        //         $createImage = imagecreatefromjpeg($sourceImage);
-        //         imagejpeg($createImage, $imageDestination, 60);
-        //     }
+        $id_user = $_POST['id_user'];
 
-        //     $imgNewName = 'min-' . $dateFile . $_FILES['ktp']['name'];
-        // } else {
-        //     $imgNewName = $rowTukang['ktp_tukang'];
-        // }
+        $result = mysqli_query($conn, "UPDATE tb_tukang SET id_user_post = '$id_user' WHERE id_tukang = '$id'");
 
-        // $result = mysqli_query($conn, "UPDATE tb_tukang SET nama = '$nama', tgl_lahir = '$tgl_lahir', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', tukang_status = '$status', nomorhp = '$nomor_hp', ktp_tukang = '$imgNewName', id_skill = $id_skill, nama_lengkap = '$nama_lengkap' WHERE id_tukang = '$id'");
-
-        // if ($result) {
-        //     $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data tukang!"];
-        //     echo json_encode($response);
-        // } else {
-        //     $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengubah data tukang!"];
-        //     echo json_encode($response);
-        // }
+        if ($result) {
+            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data tukang!"];
+            echo json_encode($response);
+        } else {
+            $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengubah data tukang!"];
+            echo json_encode($response);
+        }
 
         // mysqli_close($conn);
-        $response = ["response" => 200, "status" => "failed", "message" => "Data tukang tidak dapat dirubah"];
-        echo json_encode($response);
+        // $response = ["response" => 200, "status" => "failed", "message" => "Data tukang tidak dapat dirubah"];
+        // echo json_encode($response);
     } else {
         $nama = $_POST['nama'];
         $nomor_hp = $_POST['nomorhp'];
@@ -103,12 +108,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_skill = $_POST['id_skill'];
         $nama_lengkap = $_POST['nama_lengkap'];
 
+        $id_user_post = $_POST['id_user'];
+
         $checkNomor = mysqli_query($conn, "SELECT * FROM tb_tukang WHERE nomorhp = '$nomor_hp'");
         $rowNomor = $checkNomor->fetch_array(MYSQLI_ASSOC);
 
         if ($rowNomor == null) {
 
-            $result = mysqli_query($conn, "INSERT INTO tb_tukang(nama, nomorhp, tgl_lahir, id_city, maps_url, address,tukang_status, id_skill, nama_lengkap) VALUES('$nama', '$nomor_hp', '$tgl_lahir','$id_city', '$mapsUrl', '$address','$status','$id_skill', '$nama_lengkap')");
+            $result = mysqli_query($conn, "INSERT INTO tb_tukang(nama, nomorhp, tgl_lahir, id_city, maps_url, address,tukang_status, id_skill, nama_lengkap, id_user_post) VALUES('$nama', '$nomor_hp', '$tgl_lahir','$id_city', '$mapsUrl', '$address','$status','$id_skill', '$nama_lengkap', '$id_user_post')");
 
             if ($result) {
                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data tukang!"];

@@ -25,20 +25,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     } else {
         if (isset($_GET['c'])) {
+            $key = isset($_GET['key']) ? $_GET['key'] : '';
             $id_city = $_GET['c'];
             if (isset($_GET['status'])) {
                 $status = $_GET['status'];
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE tb_contact.id_city = '$id_city' AND store_status = '$status'");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE (nama LIKE '%$key%' OR nomorhp LIKE '%$key%') AND tb_contact.id_city = '$id_city' AND store_status = '$status'");
             } else {
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE tb_contact.id_city = '$id_city'");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE (nama LIKE '%$key%' OR nomorhp LIKE '%$key%') AND tb_contact.id_city = '$id_city'");
             }
         } else {
+            $key = isset($_GET['key']) ? $_GET['key'] : '';
             $id_distributor = $_GET['dst'];
             if (isset($_GET['status'])) {
                 $status = $_GET['status'];
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE store_status = '$status' AND id_distributor = '$id_distributor'");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE (nama LIKE '%$key%' OR nomorhp LIKE '%$key%') AND store_status = '$status' AND id_distributor = '$id_distributor'");
             } else {
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_distributor = '$id_distributor'");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE (nama LIKE '%$key%' OR nomorhp LIKE '%$key%') AND id_distributor = '$id_distributor'");
             }
         }
 
