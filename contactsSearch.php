@@ -11,21 +11,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $key = $_POST['key'];
 
         if (isset($_POST['id_city'])) {
+            $key = isset($_GET['key']) ? $_GET['key'] : '';
             $id_city = $_POST['id_city'];
 
             if (isset($_POST['status'])) {
                 $status = $_POST['status'];
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%' AND id_city = '$id_city' AND store_status = '$status'");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE (nama LIKE '%$key%' OR nomorhp LIKE '%$key%') AND id_city = '$id_city' AND store_status = '$status'");
             } else {
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nama LIKE '%$key%' AND id_city = '$id_city'");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE (nama LIKE '%$key%' OR nomorhp LIKE '%$key%') AND id_city = '$id_city'");
             }
         } else {
+            $key = isset($_GET['key']) ? $_GET['key'] : '';
             $id_distributor = $_POST['dst'];
             if (isset($_POST['status'])) {
                 $status = $_POST['status'];
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE nama LIKE '%$key%' AND store_status = '$status' AND id_distributor = '$id_distributor'");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE (nama LIKE '%$key%' OR nomorhp LIKE '%$key%') AND store_status = '$status' AND id_distributor = '$id_distributor'");
             } else {
-                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE nama LIKE '%$key%' AND id_distributor = '$id_distributor'");
+                $result = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE (nama LIKE '%$key%' OR nomorhp LIKE '%$key%') AND id_distributor = '$id_distributor'");
             }
         }
 
