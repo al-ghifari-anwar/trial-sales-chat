@@ -9,11 +9,8 @@ $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (isset($_POST['id_city'])) {
-        $key = isset($_GET['key']) ? $_GET['key'] : '';
+        $key = isset($_POST['key']) ? $_POST['key'] : '';
         $id_city = $_POST['id_city'];
-
-        echo $key;
-        die;
 
         if (isset($_POST['status'])) {
             $status = $_POST['status'];
@@ -22,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE (nama LIKE '%$key%' OR nomorhp LIKE '%$key%') AND id_city = '$id_city'");
         }
     } else {
-        $key = isset($_GET['key']) ? $_GET['key'] : '';
+        $key = isset($_POST['key']) ? $_POST['key'] : '';
         $id_distributor = $_POST['dst'];
         if (isset($_POST['status'])) {
             $status = $_POST['status'];
