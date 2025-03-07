@@ -12,6 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $key = isset($_GET['key']) ? $_GET['key'] : '';
         $id_city = $_POST['id_city'];
 
+        echo $key;
+        die;
+
         if (isset($_POST['status'])) {
             $status = $_POST['status'];
             $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE (nama LIKE '%$key%' OR nomorhp LIKE '%$key%') AND id_city = '$id_city' AND store_status = '$status'");
