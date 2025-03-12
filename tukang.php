@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $contact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact_post'");
                 $contactRow = $contact->fetch_array(MYSQLI_ASSOC);
                 $row['posted_by'] = 'Toko';
-                $row['posted_name'] = $contact['nama'];
+                $row['posted_name'] = $contactRow['nama'];
             }
 
             if ($id_user_post != 0) {
