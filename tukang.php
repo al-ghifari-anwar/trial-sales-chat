@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if ($rowNomor == null) {
 
-            $result = mysqli_query($conn, "INSERT INTO tb_tukang(nama, nomorhp, tgl_lahir, id_city, maps_url, address,tukang_status, id_skill, nama_lengkap, id_user_post) VALUES('$nama', '$nomor_hp', '$tgl_lahir','$id_city', '$mapsUrl', '$address','$status','$id_skill', '$nama_lengkap', '$id_user_post')");
+            $result = mysqli_query($conn, "INSERT INTO tb_tukang(nama, nomorhp, tgl_lahir, id_city, maps_url, address,tukang_status, id_skill, nama_lengkap, id_user_post) VALUES('$nama', '$nomor_hp', '$tgl_lahir','$id_city', '$mapsUrl', '$address','$status','$id_skill', '$nama_lengkap', $id_user_post)");
 
             if ($result) {
                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data tukang!"];
