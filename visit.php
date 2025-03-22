@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             if (isset($_GET['cat']) && $_GET['cat'] == 'sales') {
                 $id_user = $_GET['u'];
-                $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' ORDER BY date_visit DESC");
+                $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' ORDER BY date_visit DESC LIMIT 200");
 
                 while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
                     $id_visit = $rowVisit['id_visit'];
