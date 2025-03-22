@@ -103,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_POST['message_body'])) {
         $integration_id = $rowQontak['integration_id'];
         if ($rowUserData['id_distributor'] == 4) {
+            $wa_token = 'lzKKjup6a2_fKtoDZ0KJO4pFURhKte5eVKzeD9Ect0A';
             $integration_id = $rowUserData['integration_id'];
             $template_id = '117cfa6d-772d-480f-97e5-cbf9ad6acb74';
             if ($rowUserData['level_user'] == 'admin' || $rowUserData['level_user'] == 'salesleader') {
