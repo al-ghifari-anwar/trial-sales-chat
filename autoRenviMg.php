@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if ($lastVisitArray != null) {
 
-            if ($lastVisitArray['jml_visit'] >= 2) {
+            if ($lastVisitArray['jml_visit'] >= 1) {
                 if ($renvisArray == null) {
                     $insertRenvis = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,0,'mg',$id_distributor,0)");
 
