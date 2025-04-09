@@ -93,7 +93,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $response = ["response" => 200, "status" => "failed", "message" => "Invoice already exist!"];
                 echo json_encode($response);
             } else {
-                $resultInvoice = mysqli_query($conn, "INSERT INTO tb_invoice(id_surat_jalan,no_invoice,date_invoice,bill_to_name,bill_to_address,bill_to_phone,subtotal_invoice,total_invoice) VALUES($id_surat_jalan, '$no_invoice', '$date_invoice', '$bill_to_name', '$bill_to_address', '$bill_to_phone', $subtotal_invoice, $total_invoice)");
+                $date_jatem = date('d M Y', strtotime("+" . $invArray['termin_payment'] . " days", strtotime($date_invoice)));
+
+                $resultInvoice = mysqli_query($conn, "INSERT INTO tb_invoice(id_surat_jalan,no_invoice,date_invoice,bill_to_name,bill_to_address,bill_to_phone,subtotal_invoice,total_invoice,date_jatem) VALUES($id_surat_jalan, '$no_invoice', '$date_invoice', '$bill_to_name', '$bill_to_address', '$bill_to_phone', $subtotal_invoice, $total_invoice, $date_jatem)");
 
                 if ($resultInvoice) {
                     $response = ["response" => 200, "status" => "success", "message" => "Succes creating invoice!"];
