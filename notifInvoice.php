@@ -110,17 +110,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $status = $res['status'];
 
                 if ($status == "success") {
-                    $response = ["response" => 200, "status" => "ok", "message" => "Success notify customer"];
+                    $response = ["response" => 200, "status" => "ok", "message" => "Success notify customer", "inv" => $invArray['no_invoice']];
                     echo json_encode($response);
                 } else {
-                    $response = ["response" => 200, "status" => "failed", "message" => "Failed notify customer. " . mysqli_error($conn), "detail" => mysqli_error($conn)];
+                    $response = ["response" => 200, "status" => "failed", "message" => "Failed notify customer. ", "detail" => mysqli_error($conn), "inv" => $invArray['no_invoice']];
                     echo json_encode($response);
                 }
                 // }
             }
             // }
         } else {
-            $response = ["message" => "Belum waktunya", "days" => $days, "date_inv" => $invArray['date_invoice']];
+            $response = ["message" => "Belum waktunya", "days" => $days, "date_inv" => $invArray['date_invoice'], "inv" => $invArray['no_invoice']];
             echo json_encode($response);
         }
         // echo $jatuhTempo;
