@@ -78,7 +78,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $checkKontak = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
 
+    $getUserData = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
+    $rowUserData = $getUserData->fetch_array(MYSQLI_ASSOC);
+
     $row = $checkKontak->fetch_array(MYSQLI_ASSOC);
+
     if ($row == null) {
         $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner, tgl_lahir, id_city, maps_url,termin_payment, nomor_cat_1) VALUES('$nama', '$nomor_hp','$store_owner', '$tgl_lahir', $id_city, '$mapsUrl', $termin_payment, '$nomor_cat_1')");
         $id_contact = mysqli_insert_id($conn);
@@ -86,10 +90,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
         $row = $result->fetch_array(MYSQLI_ASSOC);
         $id_contact =  $row['id_contact'];
+
+        if ($rowUserData['id_distributor'] == 4) {
+            if ($row['nama'] != $nama) {
+                $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner, tgl_lahir, id_city, maps_url,termin_payment, nomor_cat_1) VALUES('$nama', '$nomor_hp','$store_owner', '$tgl_lahir', $id_city, '$mapsUrl', $termin_payment, '$nomor_cat_1')");
+                $id_contact = mysqli_insert_id($conn);
+            }
+        }
     }
 
-    $getUserData = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
-    $rowUserData = $getUserData->fetch_array(MYSQLI_ASSOC);
+
 
     $getContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
     $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
