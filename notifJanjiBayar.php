@@ -4,7 +4,7 @@ include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 
 $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
-$template_id = '9241bf86-ae94-4aa8-8975-551409af90b9';
+$template_id = '4a58a270-09a2-4c54-af90-385a61265e2c';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE is_pay = 'pay_later'");

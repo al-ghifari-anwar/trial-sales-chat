@@ -6,7 +6,7 @@ date_default_timezone_set('Asia/Jakarta');
 
 // $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
 $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
-$template_id = '9241bf86-ae94-4aa8-8975-551409af90b9';
+$template_id = '4a58a270-09a2-4c54-af90-385a61265e2c';
 // $template_id = '85f17083-255d-4340-af32-5dd22f483960';
 // $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
