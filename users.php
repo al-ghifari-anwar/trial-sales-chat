@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_distributor = $_POST['id_distributor'];
         $is_notify = $_POST['is_notify'];
         $is_absen = 0;
-        if ($level_user == 'penagihan' || $level_user = 'sales' || $level_user == 'courier') {
+        if ($level_user == 'penagihan' || $level_user == 'sales' || $level_user == 'courier') {
             $is_absen = 1;
         }
 
