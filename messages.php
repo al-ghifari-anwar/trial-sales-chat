@@ -95,6 +95,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($row['nama'] != $nama) {
                 $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner, tgl_lahir, id_city, maps_url,termin_payment, nomor_cat_1) VALUES('$nama', '$nomor_hp','$store_owner', '$tgl_lahir', $id_city, '$mapsUrl', $termin_payment, '$nomor_cat_1')");
                 $id_contact = mysqli_insert_id($conn);
+            } else {
+                $id_contact = $row['id_contact'];
             }
         }
     }
@@ -120,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($rowUserData['level_user'] == 'admin' || $rowUserData['level_user'] == 'salesleader') {
                 $wa_token = "EGzGoRR6sw6B5FhpJsG_Y2HB8g9f1U6amBOC9VJHITY";
                 $integration_id = "38654c8b-76a1-45d9-a5ae-969e4bf3fb83";
-                $template_id = '9241bf86-ae94-4aa8-8975-551409af90b9';
+                $template_id = '4a58a270-09a2-4c54-af90-385a61265e2c';
                 // $template_id = '85f17083-255d-4340-af32-5dd22f483960';
             }
         }
