@@ -90,22 +90,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
         $row = $result->fetch_array(MYSQLI_ASSOC);
         $id_contact =  $row['id_contact'];
-
-        if ($rowUserData['id_distributor'] == 4) {
-            if ($row['nama'] != $nama) {
-                $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner, tgl_lahir, id_city, maps_url,termin_payment, nomor_cat_1) VALUES('$nama', '$nomor_hp','$store_owner', '$tgl_lahir', $id_city, '$mapsUrl', $termin_payment, '$nomor_cat_1')");
-                $id_contact = mysqli_insert_id($conn);
-            } else {
-                $id_contact = $row['id_contact'];
-            }
-        }
     }
 
 
 
     $getContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
     $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
-    $id_contact = $rowContact['id_contact'];
+    // $id_contact = $rowContact['id_contact'];
 
     $id_distributor = $rowContact['id_distributor'];
 
