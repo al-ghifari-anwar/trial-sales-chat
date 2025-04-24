@@ -6,7 +6,8 @@ date_default_timezone_set('Asia/Jakarta');
 
 
 $wa_token = 'EGzGoRR6sw6B5FhpJsG_Y2HB8g9f1U6amBOC9VJHITY';
-$template_id = 'c80d503f-bc62-450e-87e2-b7e794855145';
+// $template_id = 'c80d503f-bc62-450e-87e2-b7e794855145';
+$template_id = '4a58a270-09a2-4c54-af90-385a61265e2c';
 $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
