@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $template_id = '117cfa6d-772d-480f-97e5-cbf9ad6acb74';
             if ($rowUserData['level_user'] == 'admin' || $rowUserData['level_user'] == 'salesleader') {
                 $wa_token = "EGzGoRR6sw6B5FhpJsG_Y2HB8g9f1U6amBOC9VJHITY";
-                $integration_id = "38654c8b-76a1-45d9-a5ae-969e4bf3fb83";
+                $integration_id = "e44eaa46-7a7c-45cb-9cea-1375c241fa66";
                 $template_id = '117cfa6d-772d-480f-97e5-cbf9ad6acb74';
                 // $template_id = '85f17083-255d-4340-af32-5dd22f483960';
             }
@@ -181,17 +181,68 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $status = $res['status'];
             } else {
-                if ($rowUserData['level_user'] == 'admin' || $rowUserData['level_user'] == 'salesleader') {
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => '{
+                // if ($rowUserData['level_user'] == 'admin' || $rowUserData['level_user'] == 'salesleader') {
+                //     curl_setopt_array($curl, array(
+                //         CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                //         CURLOPT_RETURNTRANSFER => true,
+                //         CURLOPT_ENCODING => '',
+                //         CURLOPT_MAXREDIRS => 10,
+                //         CURLOPT_TIMEOUT => 0,
+                //         CURLOPT_FOLLOWLOCATION => true,
+                //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                //         CURLOPT_CUSTOMREQUEST => 'POST',
+                //         CURLOPT_POSTFIELDS => '{
+                //         "to_number": "' . $nomor_hp . '",
+                //         "to_name": "' . $nama . '",
+                //         "message_template_id": "' . $template_id . '",
+                //         "channel_integration_id": "' . $integration_id . '",
+                //         "language": {
+                //             "code": "id"
+                //         },
+                //         "parameters": {
+                //             "body": [
+                //             {
+                //                 "key": "1",
+                //                 "value": "nama",
+                //                 "value_text": "' . $nama . '"
+                //             },
+                //             {
+                //                 "key": "2",
+                //                 "value": "message",
+                //                 "value_text": "' . trim(preg_replace('/\s+/', ' ', $message)) . '"
+                //             },
+                //             {
+                //                 "key": "3",
+                //                 "value": "sales",
+                //                 "value_text": "' . $full_name . '"
+                //             }
+                //             ]
+                //         }
+                //         }',
+                //         CURLOPT_HTTPHEADER => array(
+                //             'Authorization: Bearer ' . $wa_token,
+                //             'Content-Type: application/json'
+                //         ),
+                //     ));
+
+                //     $response = curl_exec($curl);
+
+                //     curl_close($curl);
+
+                //     $res = json_decode($response, true);
+
+                //     $status = $res['status'];
+                // } else {
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => '{
                         "to_number": "' . $nomor_hp . '",
                         "to_name": "' . $nama . '",
                         "message_template_id": "' . $template_id . '",
@@ -219,71 +270,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             ]
                         }
                         }',
-                        CURLOPT_HTTPHEADER => array(
-                            'Authorization: Bearer ' . $wa_token,
-                            'Content-Type: application/json'
-                        ),
-                    ));
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Bearer ' . $wa_token,
+                        'Content-Type: application/json'
+                    ),
+                ));
 
-                    $response = curl_exec($curl);
+                $response = curl_exec($curl);
 
-                    curl_close($curl);
+                curl_close($curl);
 
-                    $res = json_decode($response, true);
+                $res = json_decode($response, true);
 
-                    $status = $res['status'];
-                } else {
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => '{
-                        "to_number": "' . $nomor_hp . '",
-                        "to_name": "' . $nama . '",
-                        "message_template_id": "' . $template_id . '",
-                        "channel_integration_id": "' . $integration_id . '",
-                        "language": {
-                            "code": "id"
-                        },
-                        "parameters": {
-                            "body": [
-                            {
-                                "key": "1",
-                                "value": "nama",
-                                "value_text": "' . $nama . '"
-                            },
-                            {
-                                "key": "2",
-                                "value": "message",
-                                "value_text": "' . trim(preg_replace('/\s+/', ' ', $message)) . '"
-                            },
-                            {
-                                "key": "3",
-                                "value": "sales",
-                                "value_text": "' . $full_name . '"
-                            }
-                            ]
-                        }
-                        }',
-                        CURLOPT_HTTPHEADER => array(
-                            'Authorization: Bearer ' . $wa_token,
-                            'Content-Type: application/json'
-                        ),
-                    ));
-
-                    $response = curl_exec($curl);
-
-                    curl_close($curl);
-
-                    $res = json_decode($response, true);
-
-                    $status = $res['status'];
-                }
+                $status = $res['status'];
+                // }
             }
 
             if ($status == 'success') {
