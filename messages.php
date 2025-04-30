@@ -110,11 +110,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $nama = $rowContact['store_owner'] . ".";
             $wa_token = 'lzKKjup6a2_fKtoDZ0KJO4pFURhKte5eVKzeD9Ect0A';
             $integration_id = $rowUserData['integration_id'];
-            $template_id = '117cfa6d-772d-480f-97e5-cbf9ad6acb74';
+            $template_id = '0f10d2b5-f143-4c76-b413-3a9a236677c4';
             if ($rowUserData['level_user'] == 'admin' || $rowUserData['level_user'] == 'salesleader') {
-                $wa_token = "EGzGoRR6sw6B5FhpJsG_Y2HB8g9f1U6amBOC9VJHITY";
+                $wa_token = "lzKKjup6a2_fKtoDZ0KJO4pFURhKte5eVKzeD9Ect0A";
                 $integration_id = "e44eaa46-7a7c-45cb-9cea-1375c241fa66";
-                $template_id = '117cfa6d-772d-480f-97e5-cbf9ad6acb74';
+                $template_id = '0f10d2b5-f143-4c76-b413-3a9a236677c4';
                 // $template_id = '85f17083-255d-4340-af32-5dd22f483960';
             }
         }
