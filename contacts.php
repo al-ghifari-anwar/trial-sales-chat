@@ -263,6 +263,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $address = $_POST['address'];
         // $reputation = $_POST['reputation'];
 
+        $getCity = mysqli_query($conn, "SELECT * FROM tb_city WHERE id_city = '$id_city'");
+        $rowCity = $getCity->fetch_array(MYSQLI_ASSOC);
+
+        $id_distributor = $rowCity['id_distributor'];
+
         $resultCek = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
         $rowCek = $resultCek->fetch_array(MYSQLI_ASSOC);
 
@@ -271,6 +276,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_contact = mysqli_insert_id($conn);
 
             if ($result) {
+                $insertRenvi = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,0,'passive',$id_distributor,0)");
+
                 $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data kontak!"];
                 echo json_encode($response);
             } else {
