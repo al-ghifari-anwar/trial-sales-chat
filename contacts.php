@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id'");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $id_contact = $row['id_contact'];
             $transArray[] = $row;
         }
 
