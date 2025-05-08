@@ -63,102 +63,102 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // }
             $is_cod = $rowSuratJalan['is_cod'];
 
-            if ($is_cod != 1) {
-                $no = $rowSuratJalan['id_surat_jalan'];
+            // if ($is_cod != 1) {
+            $no = $rowSuratJalan['id_surat_jalan'];
 
-                $getSubTotals = mysqli_query($conn, "SELECT SUM(amount) AS subtotal FROM tb_detail_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan'");
+            $getSubTotals = mysqli_query($conn, "SELECT SUM(amount) AS subtotal FROM tb_detail_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan'");
 
-                $rowSubTotals = $getSubTotals->fetch_array(MYSQLI_ASSOC);
+            $rowSubTotals = $getSubTotals->fetch_array(MYSQLI_ASSOC);
 
-                $getNotFreeItem = mysqli_query($conn, "SELECT SUM(qty_produk) AS jmlItem FROM tb_detail_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan' AND is_bonus = 0 GROUP BY id_surat_jalan");
+            $getNotFreeItem = mysqli_query($conn, "SELECT SUM(qty_produk) AS jmlItem FROM tb_detail_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan' AND is_bonus = 0 GROUP BY id_surat_jalan");
 
-                $rowNotFreeItem = $getNotFreeItem->fetch_array(MYSQLI_ASSOC);
+            $rowNotFreeItem = $getNotFreeItem->fetch_array(MYSQLI_ASSOC);
 
-                if ($is_cod == 1) {
-                    $jmlItemDiskon = $rowNotFreeItem['jmlItem'];
-                    $potonganCod = 2000 * $jmlItemDiskon;
-                } else {
-                    $potonganCod = 0;
-                }
+            if ($is_cod == 1) {
+                $jmlItemDiskon = $rowNotFreeItem['jmlItem'];
+                $potonganCod = 2000 * $jmlItemDiskon;
+            } else {
+                $potonganCod = 0;
+            }
 
-                $id_surat_jalan = $rowSuratJalan['id_surat_jalan'];
-                $no_invoice = date("Y") . "/" . "TM" . "/" . "INV" . "/" . $no;
-                $date_invoice = date("Y-m-d H:i:s", strtotime($rowSuratJalan['date_closing']));
-                $bill_to_name = $rowSuratJalan['nama'];
-                $bill_to_address = $rowSuratJalan['address'];
-                $bill_to_phone = $rowSuratJalan['nomorhp'];
-                // UniqueNumber
-                $checkNumber = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE status_invoice = 'waiting' ORDER BY total_invoice DESC");
+            $id_surat_jalan = $rowSuratJalan['id_surat_jalan'];
+            $no_invoice = date("Y") . "/" . "TM" . "/" . "INV" . "/" . $no;
+            $date_invoice = date("Y-m-d H:i:s", strtotime($rowSuratJalan['date_closing']));
+            $bill_to_name = $rowSuratJalan['nama'];
+            $bill_to_address = $rowSuratJalan['address'];
+            $bill_to_phone = $rowSuratJalan['nomorhp'];
+            // UniqueNumber
+            $checkNumber = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE status_invoice = 'waiting' ORDER BY total_invoice DESC");
 
-                while ($rowNumber = $checkNumber->fetch_array(MYSQLI_ASSOC)) {
-                    $numberArray[] = $rowNumber;
-                }
+            while ($rowNumber = $checkNumber->fetch_array(MYSQLI_ASSOC)) {
+                $numberArray[] = $rowNumber;
+            }
 
-                $nominal = $rowSubTotals['subtotal'] - $potonganCod;
+            $nominal = $rowSubTotals['subtotal'] - $potonganCod;
 
-                $pengurangan = 1;
-                if ($numberArray != null) {
-                    foreach ($numberArray as $numberArray) {
-                        // echo "Nominal Skrg: " . ($nominal - $pengurangan) . "\n";
-                        // echo "Nominal DB: " . $numberArray['total_invoice'] . "\n";
-                        if ($numberArray['total_invoice'] == ($nominal - $pengurangan)) {
-                            $pengurangan = $pengurangan + 1;
-                        }
+            $pengurangan = 1;
+            if ($numberArray != null) {
+                foreach ($numberArray as $numberArray) {
+                    // echo "Nominal Skrg: " . ($nominal - $pengurangan) . "\n";
+                    // echo "Nominal DB: " . $numberArray['total_invoice'] . "\n";
+                    if ($numberArray['total_invoice'] == ($nominal - $pengurangan)) {
+                        $pengurangan = $pengurangan + 1;
                     }
                 }
+            }
 
-                $subtotal_invoice = $nominal - $pengurangan;
+            $subtotal_invoice = $nominal - $pengurangan;
 
-                if ($subtotal_invoice <= 0) {
-                    $subtotal_invoice = 0;
-                    $total_invoice = $subtotal_invoice;
-                } else {
-                    $total_invoice = $subtotal_invoice;
-                }
+            if ($subtotal_invoice <= 0) {
+                $subtotal_invoice = 0;
+                $total_invoice = $subtotal_invoice;
+            } else {
+                $total_invoice = $subtotal_invoice;
+            }
 
-                // echo $no;
+            // echo $no;
 
-                $checkInv = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE no_invoice = '$no_invoice'");
-                $rowCheckInv = $checkInv->fetch_array(MYSQLI_ASSOC);
+            $checkInv = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE no_invoice = '$no_invoice'");
+            $rowCheckInv = $checkInv->fetch_array(MYSQLI_ASSOC);
 
-                if ($rowCheckInv) {
-                    $response = ["response" => 200, "status" => "failed", "message" => "Invoice already exist!"];
+            if ($rowCheckInv) {
+                $response = ["response" => 200, "status" => "failed", "message" => "Invoice already exist!"];
+                echo json_encode($response);
+            } else {
+                $resultInvoice = mysqli_query($conn, "INSERT INTO tb_invoice(id_surat_jalan,no_invoice,date_invoice,bill_to_name,bill_to_address,bill_to_phone,subtotal_invoice,total_invoice) VALUES($id_surat_jalan, '$no_invoice', '$date_invoice', '$bill_to_name', '$bill_to_address', '$bill_to_phone', $subtotal_invoice, $total_invoice)");
+
+                if ($resultInvoice) {
+                    $id_invoice = mysqli_insert_id($conn);
+                    // Send Notif
+                    $curl = curl_init();
+
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://order.topmortarindonesia.com/notif/invoice',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => array('id_invoice' => $id_invoice),
+                    ));
+
+                    $response = curl_exec($curl);
+
+                    curl_close($curl);
+
+                    $response = ["response" => 200, "status" => "success", "message" => "Succes creating invoice!"];
                     echo json_encode($response);
                 } else {
-                    $resultInvoice = mysqli_query($conn, "INSERT INTO tb_invoice(id_surat_jalan,no_invoice,date_invoice,bill_to_name,bill_to_address,bill_to_phone,subtotal_invoice,total_invoice) VALUES($id_surat_jalan, '$no_invoice', '$date_invoice', '$bill_to_name', '$bill_to_address', '$bill_to_phone', $subtotal_invoice, $total_invoice)");
-
-                    if ($resultInvoice) {
-                        $id_invoice = mysqli_insert_id($conn);
-                        // Send Notif
-                        $curl = curl_init();
-
-                        curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://order.topmortarindonesia.com/notif/invoice',
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => '',
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => array('id_invoice' => $id_invoice),
-                        ));
-
-                        $response = curl_exec($curl);
-
-                        curl_close($curl);
-
-                        $response = ["response" => 200, "status" => "success", "message" => "Succes creating invoice!"];
-                        echo json_encode($response);
-                    } else {
-                        $response = ["response" => 200, "status" => "failed", "message" => "Failed creating invoice!", "detail" => mysqli_error($conn)];
-                        echo json_encode($response);
-                    }
+                    $response = ["response" => 200, "status" => "failed", "message" => "Failed creating invoice!", "detail" => mysqli_error($conn)];
+                    echo json_encode($response);
                 }
-            } else {
-                $response = ["response" => 200, "status" => "success", "message" => "Closing berhasil!"];
-                echo json_encode($response);
             }
+            // } else {
+            //     $response = ["response" => 200, "status" => "success", "message" => "Closing berhasil!"];
+            //     echo json_encode($response);
+            // }
         }
     } else {
         $response = ["response" => 200, "status" => "failed", "message" => "No cURL Postfield", "detail" => mysqli_error($conn)];
