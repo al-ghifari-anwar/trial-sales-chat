@@ -3,7 +3,7 @@ error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
-$template_id = '46231ab1-3a21-4501-af81-3c96a8e3ead1';
+$template_id = '9241bf86-ae94-4aa8-8975-551409af90b9';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher JOIN tb_contact ON tb_contact.id_contact = tb_voucher.id_contact WHERE is_claimed = 0 GROUP BY tb_voucher.id_contact");

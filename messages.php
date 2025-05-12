@@ -5,7 +5,7 @@ include_once("config.php");
 // $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
 // $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
 // $template_id = '85f17083-255d-4340-af32-5dd22f483960';
-$template_id = '4a58a270-09a2-4c54-af90-385a61265e2c';
+$template_id = '9241bf86-ae94-4aa8-8975-551409af90b9';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id'])) {

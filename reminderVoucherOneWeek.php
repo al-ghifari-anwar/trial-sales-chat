@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
             $integration_id = $rowQontak['integration_id'];
             $wa_token = $rowQontak['token'];
-            $template_id = "5d1ca5bf-2000-487b-b7e1-a8d07c936e62";
+            $template_id = "9241bf86-ae94-4aa8-8975-551409af90b9";
 
             // Send Message
             $curl = curl_init();

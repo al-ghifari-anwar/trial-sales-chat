@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
                         // $template_id = 'ee3637b7-41bc-4032-96f8-96a748e448f4';
-                        $template_id = '4a58a270-09a2-4c54-af90-385a61265e2c';
+                        $template_id = '9241bf86-ae94-4aa8-8975-551409af90b9';
                         $full_name = 'Top Mortar Indonesia';
                         $message = 'Dengan ini kami mengingatkan kembali bahwa tagihan Bapak/Ibu dengan nomor invoice ' . $no_invoice . ' sebesar ' . $sisaHutang . ' telah jatuh tempo pada ' . $jatuhTempo . ' Mohon kerjasamanya untuk melakukan pembayaran tepat waktu. (Jika Bapak/Ibu sudah melakukan pembayaran maka bisa abaikan pesan ini)';
 
