@@ -272,7 +272,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $resultCek = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
         $rowCek = $resultCek->fetch_array(MYSQLI_ASSOC);
 
-        if ($rowCek == null) {
+        if($id_distributor != 4){
+            if ($rowCek == null) {
+                $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner, tgl_lahir, id_city, maps_url,termin_payment, nomor_cat_1,address) VALUES('$nama', '$nomor_hp','$store_owner', '$tgl_lahir', $id_city, '$mapsUrl', $termin_payment, '$nomor_cat_1','$address')");
+                $id_contact = mysqli_insert_id($conn);
+
+                if ($result) {
+                    $insertRenvi = mysqli_query($conn, "INSERT INTO tb_rencana_visit(id_contact,id_surat_jalan,type_rencana,id_distributor,id_invoice) VALUES($id_contact,0,'passive',$id_distributor,0)");
+
+                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data kontak!"];
+                    echo json_encode($response);
+                } else {
+                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data kontak!", "detail" => mysqli_error($conn)];
+                    echo json_encode($response);
+                }
+                // mysqli_close($conn);
+            } else {
+                $response = ["response" => 200, "status" => "failed", "message" => "Nomor hp sudah terdaftar!"];
+                echo json_encode($response);
+            }
+        } else {
             $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner, tgl_lahir, id_city, maps_url,termin_payment, nomor_cat_1,address) VALUES('$nama', '$nomor_hp','$store_owner', '$tgl_lahir', $id_city, '$mapsUrl', $termin_payment, '$nomor_cat_1','$address')");
             $id_contact = mysqli_insert_id($conn);
 
@@ -285,10 +304,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data kontak!", "detail" => mysqli_error($conn)];
                 echo json_encode($response);
             }
-            // mysqli_close($conn);
-        } else {
-            $response = ["response" => 200, "status" => "failed", "message" => "Nomor hp sudah terdaftar!"];
-            echo json_encode($response);
         }
+        
     }
 }
