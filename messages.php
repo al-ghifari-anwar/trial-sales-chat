@@ -233,6 +233,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 //     $status = $res['status'];
                 // } else {
+                $curl = curl_init();
+
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
                     CURLOPT_RETURNTRANSFER => true,
