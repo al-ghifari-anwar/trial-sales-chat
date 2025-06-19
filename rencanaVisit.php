@@ -123,10 +123,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 if ($rowBadscore) {
                     if ($rowBadscore['is_approved'] != 1) {
-                        $transArray[] = $rowRenvis;
+                        $renvisArray[] = $rowRenvis;
                     }
                 } else {
-                    $transArray[] = $rowRenvis;
+                    $renvisArray[] = $rowRenvis;
                 }
             }
 
@@ -156,10 +156,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 if ($rowBadscore) {
                     if ($rowBadscore['is_approved'] != 1) {
-                        $transArray[] = $rowRenvis;
+                        $renvisArray[] = $rowRenvis;
                     }
                 } else {
-                    $transArray[] = $rowRenvis;
+                    $renvisArray[] = $rowRenvis;
                 }
             }
 
@@ -243,10 +243,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 if ($rowBadscore) {
                     if ($rowBadscore['is_approved'] != 1) {
-                        $transArray[] = $rowRenvis;
+                        $renvisArray[] = $rowRenvis;
                     }
                 } else {
-                    $transArray[] = $rowRenvis;
+                    $renvisArray[] = $rowRenvis;
                 }
             }
 
@@ -276,10 +276,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 if ($rowBadscore) {
                     if ($rowBadscore['is_approved'] != 1) {
-                        $transArray[] = $rowRenvis;
+                        $renvisArray[] = $rowRenvis;
                     }
                 } else {
-                    $transArray[] = $rowRenvis;
+                    $renvisArray[] = $rowRenvis;
                 }
             }
 
