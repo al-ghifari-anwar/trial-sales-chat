@@ -46,7 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-            $transArray[] = $row;
+            $id_contact = $row['id_contact'];
+            $getBadScore = mysqli_query($conn, "SELECT * FROM tb_bad_score WHERE id_contact = '$id_contact'");
+            $rowBadscore = $getBadScore->fetch_array(MYSQLI_ASSOC);
+
+            if ($rowBadscore['is_approved'] != 1) {
+                $transArray[] = $row;
+            }
         }
 
         mysqli_close($conn);
@@ -272,7 +278,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $resultCek = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
         $rowCek = $resultCek->fetch_array(MYSQLI_ASSOC);
 
-        if($id_distributor != 4){
+        if ($id_distributor != 4) {
             if ($rowCek == null) {
                 $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner, tgl_lahir, id_city, maps_url,termin_payment, nomor_cat_1,address) VALUES('$nama', '$nomor_hp','$store_owner', '$tgl_lahir', $id_city, '$mapsUrl', $termin_payment, '$nomor_cat_1','$address')");
                 $id_contact = mysqli_insert_id($conn);
@@ -305,6 +311,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode($response);
             }
         }
-        
     }
 }
