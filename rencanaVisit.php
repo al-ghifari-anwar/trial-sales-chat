@@ -27,9 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $getBadScore = mysqli_query($conn, "SELECT * FROM tb_bad_score WHERE id_contact = '$id_con'");
                 $rowBadscore = $getBadScore->fetch_array(MYSQLI_ASSOC);
 
-                if ($rowBadscore['is_approved'] != 1) {
-                    $renvisArray[] = $rowRenvis;
-                }
+                // if ($rowBadscore['is_approved'] != 1) {
+                $renvisArray[] = $rowRenvis;
+                // }
             }
 
             if ($renvisArray == null) {
@@ -58,9 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $getBadScore = mysqli_query($conn, "SELECT * FROM tb_bad_score WHERE id_contact = '$id_con'");
                 $rowBadscore = $getBadScore->fetch_array(MYSQLI_ASSOC);
 
-                if ($rowBadscore['is_approved'] != 1) {
-                    $renvisArray[] = $rowRenvis;
-                }
+                // if ($rowBadscore['is_approved'] != 1) {
+                $renvisArray[] = $rowRenvis;
+                // }
             }
 
             if ($renvisArray == null) {
@@ -121,8 +121,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $getBadScore = mysqli_query($conn, "SELECT * FROM tb_bad_score WHERE id_contact = '$id_con'");
                 $rowBadscore = $getBadScore->fetch_array(MYSQLI_ASSOC);
 
-                if ($rowBadscore['is_approved'] != 1) {
-                    $renvisArray[] = $rowRenvis;
+                if ($rowBadscore) {
+                    if ($rowBadscore['is_approved'] != 1) {
+                        $transArray[] = $row;
+                    }
+                } else {
+                    $transArray[] = $row;
                 }
             }
 
@@ -150,8 +154,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $getBadScore = mysqli_query($conn, "SELECT * FROM tb_bad_score WHERE id_contact = '$id_con'");
                 $rowBadscore = $getBadScore->fetch_array(MYSQLI_ASSOC);
 
-                if ($rowBadscore['is_approved'] != 1) {
-                    $renvisArray[] = $rowRenvis;
+                if ($rowBadscore) {
+                    if ($rowBadscore['is_approved'] != 1) {
+                        $transArray[] = $row;
+                    }
+                } else {
+                    $transArray[] = $row;
                 }
             }
 
@@ -229,7 +237,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $created_at = $rowRenvis['created_at'];
                 $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
-                $renvisArray[] = $rowRenvis;
+
+                $getBadScore = mysqli_query($conn, "SELECT * FROM tb_bad_score WHERE id_contact = '$id_con'");
+                $rowBadscore = $getBadScore->fetch_array(MYSQLI_ASSOC);
+
+                if ($rowBadscore) {
+                    if ($rowBadscore['is_approved'] != 1) {
+                        $transArray[] = $row;
+                    }
+                } else {
+                    $transArray[] = $row;
+                }
             }
 
             if ($renvisArray == null) {
@@ -252,7 +270,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $created_at = $rowRenvis['created_at'];
                 $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
                 $rowRenvis['is_new'] = $resCount['jmlRenvis'] == 1 ? "1" : "0";
-                $renvisArray[] = $rowRenvis;
+
+                $getBadScore = mysqli_query($conn, "SELECT * FROM tb_bad_score WHERE id_contact = '$id_con'");
+                $rowBadscore = $getBadScore->fetch_array(MYSQLI_ASSOC);
+
+                if ($rowBadscore) {
+                    if ($rowBadscore['is_approved'] != 1) {
+                        $transArray[] = $row;
+                    }
+                } else {
+                    $transArray[] = $row;
+                }
             }
 
             if ($renvisArray == null) {
