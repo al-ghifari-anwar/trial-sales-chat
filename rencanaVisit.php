@@ -23,7 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
                 $created_at = $rowRenvis['created_at'];
                 $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
-                $renvisArray[] = $rowRenvis;
+
+                $getBadScore = mysqli_query($conn, "SELECT * FROM tb_bad_score WHERE id_contact = '$id_con'");
+                $rowBadscore = $getBadScore->fetch_array(MYSQLI_ASSOC);
+
+                if ($rowBadscore['is_approved'] != 1) {
+                    $renvisArray[] = $rowRenvis;
+                }
             }
 
             if ($renvisArray == null) {
@@ -48,7 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $rowRenvis['last_visit'] = $resLastVisit == null ? '0000-00-00' : $resLastVisit['date_visit'];
                 $created_at = $rowRenvis['created_at'];
                 $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
-                $renvisArray[] = $rowRenvis;
+
+                $getBadScore = mysqli_query($conn, "SELECT * FROM tb_bad_score WHERE id_contact = '$id_con'");
+                $rowBadscore = $getBadScore->fetch_array(MYSQLI_ASSOC);
+
+                if ($rowBadscore['is_approved'] != 1) {
+                    $renvisArray[] = $rowRenvis;
+                }
             }
 
             if ($renvisArray == null) {
