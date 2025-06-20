@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         for ($i = 0; $i < $jmlVoucher; $i++) {
             $no_voucher = rand(10000, 99999);
 
-            $cekVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE no_voucher = '$no_voucher'");
+            $cekVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE no_voucher = '$no_voucher' AND id_contact = '$id_contact'");
             $rowVoucher = $cekVoucher->fetch_array(MYSQLI_ASSOC);
             $exp_date = date("Y-m-d", strtotime("+30 days"));
 
