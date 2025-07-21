@@ -180,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $res = json_decode($response, true);
 
-            $status = $res['status'];
+            $status = isset($res['status']) ? $res['status'] : 'empty';
             // } 
 
             if ($status == 'success') {
@@ -226,7 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     }
                 }
             } else {
-                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data toko!"];
+                $response = ["response" => 200, "status" => "ok", "message" => "Terjadi kesalahan : " . json_encode($res)];
                 echo json_encode($res);
             }
         } else {
