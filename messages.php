@@ -227,7 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 }
             } else {
                 $response = ["response" => 200, "status" => "ok", "message" => "Terjadi kesalahan : " . json_encode($res)];
-                echo json_encode($res);
+                echo json_encode($response);
             }
         } else {
             $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data pesan!"];
