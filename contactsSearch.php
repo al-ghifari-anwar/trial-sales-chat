@@ -30,7 +30,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-        $transArray[] = $row;
+        $id_contact = $row['id_contact'];
+        $getBadScore = mysqli_query($conn, "SELECT * FROM tb_bad_score WHERE id_contact = '$id_contact'");
+        $rowBadscore = $getBadScore->fetch_array(MYSQLI_ASSOC);
+
+        if ($rowBadscore) {
+            if ($rowBadscore['is_approved'] != 1) {
+                $transArray[] = $row;
+            }
+        } else {
+            $transArray[] = $row;
+        }
+        // $transArray[] = $row;
     }
 
     mysqli_close($conn);
