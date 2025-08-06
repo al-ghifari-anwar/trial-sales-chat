@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_user = $_GET['u'];
             $id_contact = $_GET['s'];
 
-            $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE id_user = '$id_user' AND tb_visit.id_contact = '$id_contact' ORDER BY date_visit DESC");
+            $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' AND tb_visit.id_contact = '$id_contact' ORDER BY date_visit DESC");
 
             echo mysqli_error($conn);
 
