@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $response = ["response" => 200, "status" => "ok", "message" => "Success notify customer"];
                     echo json_encode($response);
                 } else {
-                    $response = ["response" => 200, "status" => "failed", "message" => "Failed notify customer. " . mysqli_error($conn), "detail" => mysqli_error($conn)];
+                    $response = ["response" => 200, "status" => "failed", "message" => "Failed notify customer. " . mysqli_error($conn), "detail" => mysqli_error($conn), "qontak" => $res];
                     echo json_encode($response);
                 }
                 // }
