@@ -279,7 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $id_distributor = $rowCity['id_distributor'];
 
-        $resultCek = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
+        $resultCek = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp' AND id_distributor = '$id_distributor'");
         $rowCek = $resultCek->fetch_array(MYSQLI_ASSOC);
 
         $id_user = $_POST['id_user'];
