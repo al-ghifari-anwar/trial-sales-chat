@@ -9,9 +9,9 @@ $template_id = 'ee3637b7-41bc-4032-96f8-96a748e448f4';
 $integration_id = '31c076d5-ac80-4204-adc9-964c9b0c590b';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $id_invoice = $_GET['id_invoice'];
+    $id_surat_jalan = $_GET['id_surat_jalan'];
 
-    $resultInv = mysqli_query($conn, "SELECT * FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE status_invoice = 'waiting' AND id_invoice = '$id_invoice'");
+    $resultInv = mysqli_query($conn, "SELECT * FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE status_invoice = 'waiting' AND tb_invoice.id_surat_jalan = '$id_surat_jalan'");
 
     while ($rowInv = $resultInv->fetch_array(MYSQLI_ASSOC)) {
         $invArray[] = $rowInv;
