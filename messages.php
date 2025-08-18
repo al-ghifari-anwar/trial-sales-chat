@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $id_contact = null;
 
-    $checkKontak = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp' AND id_city = '$id_city'");
+    $checkKontak = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
 
     $getUserData = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
     $rowUserData = $getUserData->fetch_array(MYSQLI_ASSOC);
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner, tgl_lahir, id_city, maps_url,termin_payment, nomor_cat_1) VALUES('$nama', '$nomor_hp','$store_owner', '$tgl_lahir', $id_city, '$mapsUrl', $termin_payment, '$nomor_cat_1')");
         $id_contact = mysqli_insert_id($conn);
     } else {
-        $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp' AND id_city = '$id_city'");
+        $result = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
         $row = $result->fetch_array(MYSQLI_ASSOC);
         $id_contact =  $row['id_contact'];
     }
@@ -184,7 +184,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $status = isset($res['status']) ? $res['status'] : 'empty';
             } else {
-                $maxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
+                $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
+                $maxchat = $getMaxchat->fetch_array(MYSQLI_ASSOC);
                 $endpoint = "https://app.maxchat.id/api/messages/push";
 
                 $data = [
