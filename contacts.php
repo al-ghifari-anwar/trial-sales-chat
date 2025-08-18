@@ -279,12 +279,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $id_distributor = $rowCity['id_distributor'];
 
-        $resultCek = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp' AND id_distributor = '$id_distributor'");
+        $resultCek = mysqli_query($conn, "SELECT * FROM tb_contact WHERE nomorhp = '$nomor_hp'");
         $rowCek = $resultCek->fetch_array(MYSQLI_ASSOC);
 
         $id_user = $_POST['id_user'];
 
-        if ($id_distributor != 4) {
+        if ($id_distributor != 4 || $id_distributor != 8) {
             if ($rowCek == null) {
                 $result = mysqli_query($conn, "INSERT INTO tb_contact(nama, nomorhp, store_owner, tgl_lahir, id_city, maps_url,termin_payment, nomor_cat_1,address) VALUES('$nama', '$nomor_hp','$store_owner', '$tgl_lahir', $id_city, '$mapsUrl', $termin_payment, '$nomor_cat_1','$address')");
                 $id_contact = mysqli_insert_id($conn);
