@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $endpoint = "https://app.maxchat.id/api/messages/push";
 
                         $data = [
-                            'to' => $nomor_hp,
+                            'to' => $phone_user,
                             'msgType' => 'text',
                             'templateId' => 'b75d51f9-c925-4a62-8b93-dd072600b95b',
                             'values' => [
@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     [
                                         'index' => 1,
                                         'type' => 'text',
-                                        'text' => $nama
+                                        'text' => $username
                                     ],
                                     [
                                         'index' => 2,
@@ -218,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     curl_close($curl);
 
-                    $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!"];
+                    $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!" . $id_distributor];
                     echo json_encode($response);
                 } else {
                     $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
@@ -226,7 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $endpoint = "https://app.maxchat.id/api/messages/push";
 
                     $data = [
-                        'to' => $nomor_hp,
+                        'to' => $phone_user,
                         'msgType' => 'text',
                         'templateId' => 'b75d51f9-c925-4a62-8b93-dd072600b95b',
                         'values' => [
@@ -234,7 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 [
                                     'index' => 1,
                                     'type' => 'text',
-                                    'text' => $nama
+                                    'text' => $username
                                 ],
                                 [
                                     'index' => 2,
