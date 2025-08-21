@@ -27,6 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $checkOtp = mysqli_query($conn, "SELECT * FROM tb_otp WHERE id_user = '$id_user'");
         $rowOtp = $checkOtp->fetch_array(MYSQLI_ASSOC);
 
+        $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
+        $user = $getUser->fetch_array(MYSQLI_ASSOC);
+        $id_distributor = $user['id_distributor'];
+
         if ($rowOtp != null) {
             $expDate = date("Y-m-d H:i:s", strtotime($rowOtp['exp_date']));
             $currentDate = date("Y-m-d H:i:s");
@@ -37,10 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 if ($createOtp) {
                     $message = "Request for password reset comfirmed, please insert this OTP: " . $otp . ", This OTP will valid until 5 minutes";
-
-                    $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
-                    $user = $getUser->fetch_array(MYSQLI_ASSOC);
-                    $id_distributor = $user['id_distributor'];
 
                     if ($id_distributor != 8) {
                         $curl = curl_init();
@@ -172,52 +172,112 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($createOtp) {
                 $message = "Request for password reset comfirmed, please insert this OTP: " . $otp . " , This OTP will valid until 5 minutes.";
 
-                $curl = curl_init();
+                if ($id_distributor != 8) {
 
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => '{
-                "to_number": "' . $phone_user . '",
-                "to_name": "' . $username . '",
-                "message_template_id": "' . $template_id . '",
-                "channel_integration_id": "' . $integration_id . '",
-                "language": {
-                    "code": "id"
-                },
-                "parameters": {
-                    "body": [
-                    {
-                        "key": "1",
-                        "value": "nama",
-                        "value_text": "' . $username . '"
+                    $curl = curl_init();
+
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => '{
+                    "to_number": "' . $phone_user . '",
+                    "to_name": "' . $username . '",
+                    "message_template_id": "' . $template_id . '",
+                    "channel_integration_id": "' . $integration_id . '",
+                    "language": {
+                        "code": "id"
                     },
-                    {
-                        "key": "2",
-                        "value": "message",
-                        "value_text": "' . $message . '"
+                    "parameters": {
+                        "body": [
+                        {
+                            "key": "1",
+                            "value": "nama",
+                            "value_text": "' . $username . '"
+                        },
+                        {
+                            "key": "2",
+                            "value": "message",
+                            "value_text": "' . $message . '"
+                        }
+                        ]
                     }
-                    ]
+                    }',
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: Bearer ' . $wa_token,
+                            'Content-Type: application/json'
+                        ),
+                    ));
+
+                    $response = curl_exec($curl);
+
+                    curl_close($curl);
+
+                    $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!"];
+                    echo json_encode($response);
+                } else {
+                    $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
+                    $maxchat = $getMaxchat->fetch_array(MYSQLI_ASSOC);
+                    $endpoint = "https://app.maxchat.id/api/messages/push";
+
+                    $data = [
+                        'to' => $nomor_hp,
+                        'msgType' => 'text',
+                        'templateId' => 'b75d51f9-c925-4a62-8b93-dd072600b95b',
+                        'values' => [
+                            'body' => [
+                                [
+                                    'index' => 1,
+                                    'type' => 'text',
+                                    'text' => $nama
+                                ],
+                                [
+                                    'index' => 2,
+                                    'type' => 'text',
+                                    'text' => trim(preg_replace('/\s+/', ' ', $message))
+                                ]
+                            ],
+                        ]
+                    ];
+
+                    $headers = [
+                        'Authorization: Bearer ' . $maxchat['token_maxchat'],
+                        'Content-Type: application/json',
+                    ];
+
+                    $curl = curl_init();
+
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => $endpoint,
+                        CURLOPT_SSL_VERIFYHOST => false,
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => "",
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 30,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => "POST",
+                        CURLOPT_POSTFIELDS => json_encode($data),
+                        CURLOPT_HTTPHEADER => $headers,
+                    ));
+
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+
+                    $res = json_decode($response, true);
+
+                    curl_close($curl);
+
+                    $res['status'] = isset($res['content']) ? 'success' : 'empty';
+
+                    $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!"];
+                    echo json_encode($response);
                 }
-                }',
-                    CURLOPT_HTTPHEADER => array(
-                        'Authorization: Bearer ' . $wa_token,
-                        'Content-Type: application/json'
-                    ),
-                ));
-
-                $response = curl_exec($curl);
-
-                curl_close($curl);
-
-                $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!"];
-                echo json_encode($response);
             } else {
                 $response = ["response" => 200, "status" => "failed", "message" => "Failed to create OTP!", "error" => mysqli_error($conn)];
                 echo json_encode($response);
