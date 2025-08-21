@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
 
                     if ($res['status'] == 'success') {
-                        $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!"];
+                        $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!" . $id_distributor];
                         echo json_encode($response);
                     } else {
                         $response = ["response" => 200, "status" => "failed", "message" => "Failed creating new OTP code!", "detail" => $res];
@@ -275,7 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     $res['status'] = isset($res['content']) ? 'success' : 'empty';
 
-                    $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!"];
+                    $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code !"];
                     echo json_encode($response);
                 }
             } else {
