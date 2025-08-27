@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         {
                             "key": "2",
                             "value": "message",
-                            "value_text": "' . $message . '"
+                            "value_text": "' . trim(preg_replace('/\s+/', ' ', $message)) . '"
                         },
                         {
                             "key": "3",

@@ -46,57 +46,114 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             if ($rowInvoice['status_invoice'] == 'waiting') {
 
-                $curl = curl_init();
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => '{
-                            "to_number": "' . $nomor_hp . '",
-                            "to_name": "' . $nama . '",
-                            "message_template_id": "' . $template_id . '",
-                            "channel_integration_id": "' . $integration_id . '",
-                            "language": {
-                                "code": "id"
-                            },
-                            "parameters": {
-                                "body": [
-                                {
-                                    "key": "1",
-                                    "value": "nama",
-                                    "value_text": "' . $nama . '"
+                if ($id_distributor != 8) {
+
+                    $curl = curl_init();
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => '{
+                                "to_number": "' . $nomor_hp . '",
+                                "to_name": "' . $nama . '",
+                                "message_template_id": "' . $template_id . '",
+                                "channel_integration_id": "' . $integration_id . '",
+                                "language": {
+                                    "code": "id"
                                 },
-                                {
-                                    "key": "2",
-                                    "value": "message",
-                                    "value_text": "' . $message . '"
-                                },
-                                {
-                                    "key": "3",
-                                    "value": "sales",
-                                    "value_text": "' . $full_name . '"
+                                "parameters": {
+                                    "body": [
+                                    {
+                                        "key": "1",
+                                        "value": "nama",
+                                        "value_text": "' . $nama . '"
+                                    },
+                                    {
+                                        "key": "2",
+                                        "value": "message",
+                                        "value_text": "' . $message . '"
+                                    },
+                                    {
+                                        "key": "3",
+                                        "value": "sales",
+                                        "value_text": "' . $full_name . '"
+                                    }
+                                    ]
                                 }
+                                }',
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: Bearer ' . $wa_token,
+                            'Content-Type: application/json'
+                        ),
+                    ));
+
+                    $response = curl_exec($curl);
+
+                    curl_close($curl);
+
+                    $res = json_decode($response, true);
+
+                    $status = $res['status'];
+                } else {
+                    $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
+                    $maxchat = $getMaxchat->fetch_array(MYSQLI_ASSOC);
+                    $endpoint = "https://app.maxchat.id/api/messages/push";
+
+                    $data = [
+                        'to' => $nomor_hp,
+                        'msgType' => 'text',
+                        'templateId' => 'b75d51f9-c925-4a62-8b93-dd072600b95b',
+                        'values' => [
+                            'body' => [
+                                [
+                                    'index' => 1,
+                                    'type' => 'text',
+                                    'text' => $nama
+                                ],
+                                [
+                                    'index' => 2,
+                                    'type' => 'text',
+                                    'text' => trim(preg_replace('/\s+/', ' ', $message))
                                 ]
-                            }
-                            }',
-                    CURLOPT_HTTPHEADER => array(
-                        'Authorization: Bearer ' . $wa_token,
-                        'Content-Type: application/json'
-                    ),
-                ));
+                            ],
+                        ]
+                    ];
 
-                $response = curl_exec($curl);
+                    $headers = [
+                        'Authorization: Bearer ' . $maxchat['token_maxchat'],
+                        'Content-Type: application/json',
+                    ];
 
-                curl_close($curl);
+                    $curl = curl_init();
 
-                $res = json_decode($response, true);
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => $endpoint,
+                        CURLOPT_SSL_VERIFYHOST => false,
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => "",
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 30,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => "POST",
+                        CURLOPT_POSTFIELDS => json_encode($data),
+                        CURLOPT_HTTPHEADER => $headers,
+                    ));
 
-                $status = $res['status'];
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+
+                    $res = json_decode($response, true);
+
+                    curl_close($curl);
+
+                    $status = isset($res['content']) ? 'success' : 'empty';
+                }
 
                 if ($status == "success") {
                     // Send Message To Sales
