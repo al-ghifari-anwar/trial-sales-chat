@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             ini_set('display_errors', 1);
             error_reporting(E_ALL);
 
-            $resultMsg = mysqli_query($conn, "INSERT INTO tb_messages(id_tukang, message_body) VALUES($id_tukang, '$message')");
+            // $resultMsg = mysqli_query($conn, "INSERT INTO tb_messages(id_tukang, message_body) VALUES($id_tukang, '$message')");
 
             $curl = curl_init();
 
