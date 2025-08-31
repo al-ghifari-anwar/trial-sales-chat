@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     foreach ($arrayCountActive as $active) {
         // $month = date('m');
-        $month = 7;
+        $month = 8;
         $jml_active = $active['jml_active'];
         $id_city = $active['id_city'];
         $id_distributor = $active['id_distributor'];
