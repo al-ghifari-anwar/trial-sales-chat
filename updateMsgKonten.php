@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if ($logData['status'] == 'failed') {
             // Gagal
-            $saveLog = mysqli_query($conn, "UPDATE tb_msg_log SET is_sent = 0, updated_at = '$updated_at' WHERE id_msg_konten = '$id_msg_konten'");
+            $saveLog = mysqli_query($conn, "UPDATE tb_msg_konten SET is_sent = 0, updated_at = '$updated_at' WHERE id_msg_konten = '$id_msg_konten'");
 
             if ($saveLog) {
                 $response = ["response" => 200, "status" => "ok", "message" => "Pesan telah disimpan."];

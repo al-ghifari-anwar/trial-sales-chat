@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($logData['status'] == 'failed') {
                 // Gagal
-                $saveLog = mysqli_query($conn, "INSERT INTO tb_msg_log(id_contact,id_distributor,nomorhp_msg_konten,message_msg_konten,img_msg_konten,is_sent) VALUES($id_contact,$id_distributor,'$nomorhp','$message','$imgNewName',0)");
+                $saveLog = mysqli_query($conn, "INSERT INTO tb_msg_konten(id_contact,id_distributor,nomorhp_msg_konten,message_msg_konten,img_msg_konten,is_sent) VALUES($id_contact,$id_distributor,'$nomorhp','$message','$imgNewName',0)");
 
                 if ($saveLog) {
                     $response = ["response" => 200, "status" => "ok", "message" => "Pesan telah disimpan."];
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     echo json_encode($response);
                 }
             } else {
-                $saveLog = mysqli_query($conn, "INSERT INTO tb_msg_log(id_contact,id_distributor,nomorhp_msg_konten,message_msg_konten,img_msg_konten,is_sent) VALUES($id_contact,$id_distributor,'$nomorhp','$message','$imgNewName',1)");
+                $saveLog = mysqli_query($conn, "INSERT INTO tb_msg_konten(id_contact,id_distributor,nomorhp_msg_konten,message_msg_konten,img_msg_konten,is_sent) VALUES($id_contact,$id_distributor,'$nomorhp','$message','$imgNewName',1)");
 
                 if ($saveLog) {
                     $response = ["response" => 200, "status" => "ok", "message" => "Pesan berhasil terkirim."];
@@ -146,7 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         } else {
             // Gagal
-            $saveLog = mysqli_query($conn, "INSERT INTO tb_msg_log(id_contact,id_distributor,nomorhp_msg_konten,message_msg_konten,img_msg_konten,is_sent) VALUES($id_contact,$id_distributor,'$nomorhp','$message','$imgNewName',0)");
+            $saveLog = mysqli_query($conn, "INSERT INTO tb_msg_konten(id_contact,id_distributor,nomorhp_msg_konten,message_msg_konten,img_msg_konten,is_sent) VALUES($id_contact,$id_distributor,'$nomorhp','$message','$imgNewName',0)");
 
             if ($saveLog) {
                 $response = ["response" => 200, "status" => "ok", "message" => "Pesan telah disimpan"];
