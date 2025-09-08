@@ -149,10 +149,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $saveLog = mysqli_query($conn, "INSERT INTO tb_msg_konten(id_contact,id_distributor,id_msg,nomorhp_msg_konten,message_msg_konten,img_msg_konten,is_sent) VALUES($id_contact,$id_distributor,'-','$nomorhp','$message','$imgNewName',0)");
 
             if ($saveLog) {
-                $response = ["response" => 200, "status" => "ok", "message" => "Pesan telah disimpan"];
+                $response = ["response" => 200, "status" => "ok", "message" => "Pesan telah disimpan", "qontak" => $res];
                 echo json_encode($response);
             } else {
-                $response = ["response" => 400, "status" => "failed", "message" => "Pesan gagal tersimpan"];
+                $response = ["response" => 400, "status" => "failed", "message" => "Pesan gagal tersimpan", "qontak" => $res];
                 echo json_encode($response);
             }
         }
