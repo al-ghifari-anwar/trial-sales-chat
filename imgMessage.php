@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $fileName = $dateFile . $_FILES['img_message']['name'];
         if (move_uploaded_file($_FILES['img_message']['tmp_name'], 'img/img_konten_msg/' . $fileName)) {
-            $sourceImage = 'img/img_konten_msg' . $fileName;
+            $sourceImage = 'img/img_konten_msg/' . $fileName;
             $imageDestination = 'img/img_konten_msg/min-' . $fileName;
             $createImage = imagecreatefromjpeg($sourceImage);
             imagejpeg($createImage, $imageDestination, 60);
@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     "params": [
                                         {
                                             "key":"url",
-                                            "value":"https://saleswa.topmortarindonesia.com/img/img_konten_msg/' . $imgNewName . '"
+                                            "value":"https://devsaleswa.topmortarindonesia.com/img/img_konten_msg/' . $imgNewName . '"
                                         },
                                         {
                                             "key":"filename",
