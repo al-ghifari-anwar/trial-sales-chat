@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $imgNewName = 'min-' . $fileName;
 
-        $message = 'Halo ' . $contact['nama'] . ' ' . $message;
+        $message = '' . $contact['nama'] . ' ' . $message;
 
         // Send message
         $curl = curl_init();
