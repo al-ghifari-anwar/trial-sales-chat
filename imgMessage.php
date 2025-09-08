@@ -73,11 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     ]
                                 },
                                 "body": [
-                                {
-                                    "key": "1",
-                                    "value": "message",
-                                    "value_text": "' . trim(preg_replace('/\s+/', ' ', $message)) . '"
-                                },
+                                    {
+                                        "key": "1",
+                                        "value": "message",
+                                        "value_text": "' . trim(preg_replace('/\s+/', ' ', $message)) . '"
+                                    }
                                 ]
                             }
                             }',
