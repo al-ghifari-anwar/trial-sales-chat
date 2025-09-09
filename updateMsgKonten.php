@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $getMsgKonten = mysqli_query($conn, "SELECT * FROM tb_msg_konten");
 
-    while ($rowMsgKonten = $getMsgKonten->fetch_array($getMsgKonten)) {
+    while ($rowMsgKonten = $getMsgKonten->fetch_array(MYSQLI_ASSOC)) {
         $updated_at = date("Y-m-d H:i:s");
         $id_msg_konten = $rowMsgKonten['id_msg_konten'];
         $id_msg = $rowMsgKonten['id_msg'];
