@@ -65,11 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     ]
                                 },
                                 "body": [
-                                {
-                                    "key": "1",
-                                    "value": "message",
-                                    "value_text": "' . trim(preg_replace('/\s+/', ' ', $message)) . '"
-                                },
+                                    {
+                                        "key": "1",
+                                        "value": "message",
+                                        "value_text": "' . trim(preg_replace('/\s+/', ' ', $message)) . '"
+                                    }
                                 ]
                             }
                             }',
