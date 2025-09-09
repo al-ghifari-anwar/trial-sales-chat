@@ -27,14 +27,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $dateFile = date("Y-m-d-H-i-s");
 
         $fileName = $dateFile . $_FILES['img_message']['name'];
-        if (move_uploaded_file($_FILES['img_message']['tmp_name'], 'img/img_konten_msg/' . $fileName)) {
-            $sourceImage = 'img/img_konten_msg/' . $fileName;
-            $imageDestination = 'img/img_konten_msg/min-' . $fileName;
-            $createImage = imagecreatefromjpeg($sourceImage);
-            imagejpeg($createImage, $imageDestination, 60);
-        }
+        move_uploaded_file($_FILES['img_message']['tmp_name'], 'img/img_konten_msg/' . $fileName);
+        // if (move_uploaded_file($_FILES['img_message']['tmp_name'], 'img/img_konten_msg/' . $fileName)) {
+        //     $sourceImage = 'img/img_konten_msg/' . $fileName;
+        //     $imageDestination = 'img/img_konten_msg/min-' . $fileName;
+        //     $createImage = imagecreatefromjpeg($sourceImage);
+        //     imagejpeg($createImage, $imageDestination, 60);
+        // }
 
-        $imgNewName = 'min-' . $fileName;
+        $imgNewName = $fileName;
 
         $message = '' . $contact['nama'] . ' ' . $message;
 
