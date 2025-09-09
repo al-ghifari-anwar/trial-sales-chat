@@ -138,10 +138,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         } else {
             // Gagal
-            $saveLog = mysqli_query($conn, "UPDATE tb_msg_konten SET id_msg = '$id_msg', is_sent = 0, updated_at = '$updated_at' WHERE id_msg_konten='$id_msg_konten'");
+            $saveLog = mysqli_query($conn, "UPDATE tb_msg_konten SET id_msg = '-', is_sent = 0, updated_at = '$updated_at' WHERE id_msg_konten='$id_msg_konten'");
 
             if ($saveLog) {
-                $response = ["response" => 200, "status" => "ok", "message" => "Pesan telah disimpan"];
+                $response = ["response" => 200, "status" => "ok", "message" => "Pesan telah disimpan", "qontak" => $res];
                 echo json_encode($response);
             } else {
                 $response = ["response" => 400, "status" => "failed", "message" => "Pesan gagal tersimpan"];
