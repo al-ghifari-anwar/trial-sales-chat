@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($kontenmsg == null) {
             echo json_encode(array("status" => "empty", "results" => []));
         } else {
-            echo json_encode(array("status" => "ok", "results" => $kontenmsgs));
+            echo json_encode(array("status" => "ok", "results" => $kontenmsg));
         }
     } else {
         $kontenmsgs = array();
