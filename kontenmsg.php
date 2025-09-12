@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($kontenmsg == null) {
             echo json_encode(array("status" => "empty", "results" => []));
         } else {
+            $kontenmsg['link_thumbnail'] = 'https://dev-order.topmortarindonesia.com/assets/img/kontenmsg_img/' . $kontenmsg['thumbnail_kontenmsg'];
             echo json_encode(array("status" => "ok", "results" => $kontenmsg));
         }
     } else {
