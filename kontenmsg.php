@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $getKontenMsg = mysqli_query($conn, "SELECT * FROM tb_kontenmsg ORDER BY created_at DESC");
 
         while ($rowKontenMsg = $getKontenMsg->fetch_array(MYSQLI_ASSOC)) {
-            $rowKontenMsg['link_thumbnail'] = 'https://dev-order.topmortarindonesia.com/assets/img/kontenmsg_img/' . $getKontenMsg['thumbnail_kontenmsg'];
+            $rowKontenMsg['link_thumbnail'] = 'https://dev-order.topmortarindonesia.com/assets/img/kontenmsg_img/' . $rowKontenMsg['thumbnail_kontenmsg'];
 
             $kontenmsgs[] = $rowKontenMsg;
         }
