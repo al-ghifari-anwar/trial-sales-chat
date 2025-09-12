@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_kontenmsg = $_GET['id_kontenmsg'];
         $kontenmsg = mysqli_query($conn, "SELECT * FROM tb_kontenmsg WHERE id_kontenmsg = '$id_kontenmsg'")->fetch_array(MYSQLI_ASSOC);
 
-        if ($kontenmsg != null) {
+        if ($kontenmsg == null) {
             echo json_encode(array("status" => "empty", "results" => []));
         } else {
             echo json_encode(array("status" => "ok", "results" => $kontenmsgs));
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $kontenmsgs[] = $rowKontenMsg;
         }
 
-        if ($kontenmsgs != null) {
+        if ($kontenmsgs == null) {
             echo json_encode(array("status" => "empty", "results" => []));
         } else {
             echo json_encode(array("status" => "ok", "results" => $kontenmsgs));
