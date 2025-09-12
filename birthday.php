@@ -156,7 +156,7 @@ foreach ($transArray as $arr) {
                                         "params": [
                                             {
                                                 "key":"url",
-                                                "value":"https://saleswa.topmortarindonesia.com/vid/ultahnew.mp4"
+                                                "value":"https://saleswa.topmortarindonesia.com/vids/ultahnew.mp4"
                                             },
                                             {
                                                 "key":"filename",
