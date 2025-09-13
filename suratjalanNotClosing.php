@@ -32,6 +32,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $resultSuratJalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact JOIN tb_city ON tb_contact.id_city = tb_city.id_city JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier WHERE tb_city.id_distributor = '$id_distributor' AND tb_surat_jalan.is_closing = 0 AND tb_city.nama_city LIKE '%$nama_city%' AND tb_city.id_distributor = '$id_distributor' ORDER BY id_surat_jalan DESC");
 
         while ($row = $resultSuratJalan->fetch_array(MYSQLI_ASSOC)) {
+            $id_surat_jalan = $row['id_surat_jalan'];
+
+            $detailArray = array();
+
+            $detailSj = mysqli_query($conn, "SELECT * FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk WHERE id_surat_jalan = '$id_surat_jalan'");
+            while ($rowSj = $resultDetail->fetch_array(MYSQLI_ASSOC)) {
+                $detailArray[] = $rowSj;
+            }
+
+            $row['detail'] = $detailArray;
+
             $suratJalanArray[] = $row;
         }
 
@@ -47,6 +58,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $resultSuratJalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact JOIN tb_city ON tb_contact.id_city = tb_city.id_city JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier WHERE tb_city.id_distributor = '$id_distributor' AND tb_surat_jalan.is_closing = 0 ORDER BY id_surat_jalan DESC");
 
         while ($row = $resultSuratJalan->fetch_array(MYSQLI_ASSOC)) {
+            $id_surat_jalan = $row['id_surat_jalan'];
+
+            $detailArray = array();
+
+            $detailSj = mysqli_query($conn, "SELECT * FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk WHERE id_surat_jalan = '$id_surat_jalan'");
+            while ($rowSj = $resultDetail->fetch_array(MYSQLI_ASSOC)) {
+                $detailArray[] = $rowSj;
+            }
+
+            $row['detail'] = $detailArray;
+
             $suratJalanArray[] = $row;
         }
 
@@ -59,6 +81,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $resultSuratJalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier WHERE tb_surat_jalan.is_closing = 0 ORDER BY id_surat_jalan DESC");
 
         while ($row = $resultSuratJalan->fetch_array(MYSQLI_ASSOC)) {
+            $id_surat_jalan = $row['id_surat_jalan'];
+
+            $detailArray = array();
+
+            $detailSj = mysqli_query($conn, "SELECT * FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk WHERE id_surat_jalan = '$id_surat_jalan'");
+            while ($rowSj = $resultDetail->fetch_array(MYSQLI_ASSOC)) {
+                $detailArray[] = $rowSj;
+            }
+
+            $row['detail'] = $detailArray;
+
             $suratJalanArray[] = $row;
         }
 
