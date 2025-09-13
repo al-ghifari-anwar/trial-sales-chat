@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $detailArray = array();
 
             $detailSj = mysqli_query($conn, "SELECT * FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk WHERE id_surat_jalan = '$id_surat_jalan'");
-            while ($rowSj = $resultDetail->fetch_array(MYSQLI_ASSOC)) {
+            while ($rowSj = $detailSj->fetch_array(MYSQLI_ASSOC)) {
                 $detailArray[] = $rowSj;
             }
 
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $detailArray = array();
 
             $detailSj = mysqli_query($conn, "SELECT * FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk WHERE id_surat_jalan = '$id_surat_jalan'");
-            while ($rowSj = $resultDetail->fetch_array(MYSQLI_ASSOC)) {
+            while ($rowSj = $detailSj->fetch_array(MYSQLI_ASSOC)) {
                 $detailArray[] = $rowSj;
             }
 
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $detailArray = array();
 
             $detailSj = mysqli_query($conn, "SELECT * FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk WHERE id_surat_jalan = '$id_surat_jalan'");
-            while ($rowSj = $resultDetail->fetch_array(MYSQLI_ASSOC)) {
+            while ($rowSj = $detailSj->fetch_array(MYSQLI_ASSOC)) {
                 $detailArray[] = $rowSj;
             }
 
