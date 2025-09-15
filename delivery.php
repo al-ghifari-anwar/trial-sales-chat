@@ -116,8 +116,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $startDateTime = $_POST['startDateTime'];
         $startLat = $_POST['startLat'];
         $startLng = $_POST['startLng'];
+        $id_surat_jalan = $_POST['id_surat_jalan'];
 
-        $result = mysqli_query($conn, "INSERT INTO tb_delivery(endDateTime, endLat, endLng, lat, lng, id_courier, id_contact, startDateTime, startLat, startLng) VALUES('$endDateTime', '$endLat', '$endLng', '$lat', '$lng', $id_courier, $id_contact, '$startDateTime', '$startLat', '$startLng')");
+        $result = mysqli_query($conn, "INSERT INTO tb_delivery(endDateTime, endLat, endLng, lat, lng, id_courier, id_contact, startDateTime, startLat, startLng, id_surat_jalan) VALUES('$endDateTime', '$endLat', '$endLng', '$lat', '$lng', $id_courier, $id_contact, '$startDateTime', '$startLat', '$startLng', '$id_surat_jalan')");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data delivery!"];
