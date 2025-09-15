@@ -10,6 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE id_delivery = '$id'");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $id_surat_jalan = $row['id_surat_jalan'];
+            $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
+
+            $row['sj'] = $resultSuratJalan;
             $transArray[] = $row;
         }
 
@@ -27,6 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE tb_delivery.id_courier = '$id_courier' AND DATE(endDatetime) = '$dateNow'");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $id_surat_jalan = $row['id_surat_jalan'];
+            $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
+
+            $row['sj'] = $resultSuratJalan;
             $transArray[] = $row;
         }
 
@@ -44,6 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE tb_user.id_city = '$id_city' AND DATE(endDatetime) = '$dateNow'");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $id_surat_jalan = $row['id_surat_jalan'];
+            $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
+
+            $row['sj'] = $resultSuratJalan;
             $transArray[] = $row;
         }
 
@@ -61,6 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE tb_user.id_distributor = '$id_distributor' AND DATE(endDatetime) = '$dateNow'");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $id_surat_jalan = $row['id_surat_jalan'];
+            $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
+
+            $row['sj'] = $resultSuratJalan;
             $transArray[] = $row;
         }
 
@@ -76,6 +92,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $id_surat_jalan = $row['id_surat_jalan'];
+            $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
+
+            $row['sj'] = $resultSuratJalan;
             $transArray[] = $row;
         }
 
