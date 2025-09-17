@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     "params": [
                                         {
                                             "key":"url",
-                                            "value":"https://devsaleswa.topmortarindonesia.com/img/img_konten_msg/' . $imgNewName . '"
+                                            "value":"https://saleswa.topmortarindonesia.com/img/img_konten_msg/' . $imgNewName . '"
                                         },
                                         {
                                             "key":"filename",

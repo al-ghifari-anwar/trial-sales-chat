@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($kontenmsg == null) {
             echo json_encode(array("status" => "empty", "results" => []));
         } else {
-            $kontenmsg['link_thumbnail'] = 'https://dev-order.topmortarindonesia.com/assets/img/kontenmsg_img/' . $kontenmsg['thumbnail_kontenmsg'];
+            $kontenmsg['link_thumbnail'] = 'https://order.topmortarindonesia.com/assets/img/kontenmsg_img/' . $kontenmsg['thumbnail_kontenmsg'];
             echo json_encode(array("status" => "ok", "results" => $kontenmsg));
         }
     } else {
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $getKontenMsg = mysqli_query($conn, "SELECT * FROM tb_kontenmsg ORDER BY created_at DESC");
 
         while ($rowKontenMsg = $getKontenMsg->fetch_array(MYSQLI_ASSOC)) {
-            $rowKontenMsg['link_thumbnail'] = 'https://dev-order.topmortarindonesia.com/assets/img/kontenmsg_img/' . $rowKontenMsg['thumbnail_kontenmsg'];
+            $rowKontenMsg['link_thumbnail'] = 'https://order.topmortarindonesia.com/assets/img/kontenmsg_img/' . $rowKontenMsg['thumbnail_kontenmsg'];
 
             $kontenmsgs[] = $rowKontenMsg;
         }
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $id_contact = $_POST['id_contact'];
 
     $kontenmsg = mysqli_query($conn, "SELECT * FROM tb_kontenmsg WHERE id_kontenmsg = '$id_kontenmsg'")->fetch_array(MYSQLI_ASSOC);
-    $kontenmsg['link_thumbnail'] = 'https://dev-order.topmortarindonesia.com/assets/img/kontenmsg_img/' . $kontenmsg['thumbnail_kontenmsg'];
+    $kontenmsg['link_thumbnail'] = 'https://order.topmortarindonesia.com/assets/img/kontenmsg_img/' . $kontenmsg['thumbnail_kontenmsg'];
 
     $contact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'")->fetch_array(MYSQLI_ASSOC);
 
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     "params": [
                                         {
                                             "key":"url",
-                                            "value":"https://dev-order.topmortarindonesia.com/assets/img/kontenmsg_img/' . $kontenmsg['thumbnail_kontenmsg'] . '"
+                                            "value":"https://order.topmortarindonesia.com/assets/img/kontenmsg_img/' . $kontenmsg['thumbnail_kontenmsg'] . '"
                                         },
                                         {
                                             "key":"filename",
