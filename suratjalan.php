@@ -48,12 +48,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $resultDetail = mysqli_query($conn, "SELECT * FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk WHERE id_surat_jalan = '$id_surat_jalan'");
 
+        $can_closing = 'yes';
+
         while ($row = $resultDetail->fetch_array(MYSQLI_ASSOC)) {
+            $dateCutoff = "2025-07-20 00:00:00";
+
+            $suratjalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
+
+            $id_city = $suratjalan['id_city'];
+
+            $city = mysqli_query($conn, "SELECT * FROM tb_city WHERE id_city = '$id_city'")->fetch_array(MYSQLI_ASSOC);
+
+            $id_gudang_stok = $city['id_gudang_stok'];
+
+            $id_produk = $row['id_produk'];
+
+            $produk = mysqli_query($conn, "SELECT * FROM tb_produk WHERE id_produk = '$id_produk'")->fetch_array(MYSQLI_ASSOC);
+
+            $id_master_produk = $produk['id_master_produk'];
+
+            // $masterProduk = mysqli_query($conn, "SELECT * FROM tb_master_produk WHERE id_master_produk = '$id_master_produk'")->fetch_array(MYSQLI_ASSOC);
+
+            $getStokIn = mysqli_query($conn, "SELECT SUM(jml_stok) AS jml_stokIn FROM tb_stok WHERE id_gudang_stok = '$id_gudang_stok' AND id_master_produk = '$id_master_produk' AND status_stok = 'in' AND tb_stok.created_at > '$dateCutoff' ")->fetch_array(MYSQLI_ASSOC);
+
+            $stokIn = $getStokIn['jml_stokIn'];
+
+            $getStokOut = mysqli_query($conn, "SELECT SUM(qty_produk) AS jml_stokOut FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_detail_surat_jalan.id_surat_jalan JOIN tb_master_produk ON tb_master_produk.id_master_produk = tb_produk.id_master_produk WHERE tb_produk.id_city IN (SELECT id_city FROM tb_city WHERE id_gudang_stok = '$id_gudang_stok') AND tb_master_produk.id_master_produk = '$id_master_produk' AND tb_surat_jalan.dalivery_date > '$dateCutoff' ")->fetch_array(MYSQLI_ASSOC);
+
+            $stokOut = $getStokOut['jml_stokOut'];
+
+            $currentStok = $stokIn - $stokOut;
+
+            if ($currentStok <= 0) {
+                $can_closing = 'no';
+            }
+
+            $row['stok_bebas'] = $currentStok . "";
+
             $detailArray[] = $row;
         }
 
         while ($row = $resultSuratJalan->fetch_object()) {
             $row->details = $detailArray;
+            $row->can_closing = $can_closing;
             $suratJalanArray[] = $row;
         }
 
