@@ -48,6 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $resultDetail = mysqli_query($conn, "SELECT * FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk WHERE id_surat_jalan = '$id_surat_jalan'");
 
+        $can_closing = 'yes';
+
         while ($row = $resultDetail->fetch_array(MYSQLI_ASSOC)) {
             $dateCutoff = "2025-07-20 00:00:00";
 
@@ -77,13 +79,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $currentStok = $stokIn - $stokOut;
 
-            $row['stok_bebas'] = $currentStok;
+            if ($currentStok <= 0) {
+                $can_closing = 'no';
+            }
+
+            $row['stok_bebas'] = $currentStok . "";
 
             $detailArray[] = $row;
         }
 
         while ($row = $resultSuratJalan->fetch_object()) {
             $row->details = $detailArray;
+            $row->can_closing = $can_closing;
             $suratJalanArray[] = $row;
         }
 
