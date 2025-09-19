@@ -134,23 +134,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 if ($resultInvoice) {
                     $id_invoice = mysqli_insert_id($conn);
                     // Send Notif
-                    $curl = curl_init();
+                    // $curl = curl_init();
 
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'https://order.topmortarindonesia.com/notif/invoice',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => array('id_invoice' => $id_invoice),
-                    ));
+                    // curl_setopt_array($curl, array(
+                    //     CURLOPT_URL => 'https://order.topmortarindonesia.com/notif/invoice',
+                    //     CURLOPT_RETURNTRANSFER => true,
+                    //     CURLOPT_ENCODING => '',
+                    //     CURLOPT_MAXREDIRS => 10,
+                    //     CURLOPT_TIMEOUT => 0,
+                    //     CURLOPT_FOLLOWLOCATION => true,
+                    //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    //     CURLOPT_CUSTOMREQUEST => 'POST',
+                    //     CURLOPT_POSTFIELDS => array('id_invoice' => $id_invoice),
+                    // ));
 
-                    $response = curl_exec($curl);
+                    // $response = curl_exec($curl);
 
-                    curl_close($curl);
+                    // curl_close($curl);
 
                     $response = ["response" => 200, "status" => "success", "message" => "Succes creating invoice!"];
                     echo json_encode($response);
