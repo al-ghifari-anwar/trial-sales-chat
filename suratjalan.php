@@ -83,6 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $can_closing = 'no';
             }
 
+            if ($currentStok < $row['qty_produk']) {
+                $can_closing = 'no';
+            }
+
             $row['stok_bebas'] = $currentStok . "";
 
             $detailArray[] = $row;
