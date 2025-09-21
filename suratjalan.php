@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $stokIn = $getStokIn['jml_stokIn'];
 
-            $getStokOut = mysqli_query($conn, "SELECT SUM(qty_produk) AS jml_stokOut FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_detail_surat_jalan.id_surat_jalan JOIN tb_master_produk ON tb_master_produk.id_master_produk = tb_produk.id_master_produk WHERE tb_produk.id_city IN (SELECT id_city FROM tb_city WHERE id_gudang_stok = '$id_gudang_stok') AND tb_master_produk.id_master_produk = '$id_master_produk' AND tb_surat_jalan.dalivery_date > '$dateCutoff' ")->fetch_array(MYSQLI_ASSOC);
+            $getStokOut = mysqli_query($conn, "SELECT SUM(qty_produk) AS jml_stokOut FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_detail_surat_jalan.id_surat_jalan JOIN tb_master_produk ON tb_master_produk.id_master_produk = tb_produk.id_master_produk WHERE tb_produk.id_city IN (SELECT id_city FROM tb_city WHERE id_gudang_stok = '$id_gudang_stok') AND tb_master_produk.id_master_produk = '$id_master_produk' AND tb_surat_jalan.dalivery_date > '$dateCutoff' AND tb_detail_surat_jalan.id_surat_jalan != '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
 
             $stokOut = $getStokOut['jml_stokOut'];
 
