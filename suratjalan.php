@@ -179,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $date = date("Y-m-d H:i:s");
 
                 if ($changeStoreStatus) {
-                    $removeRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$date' WHERE id_contact = '$id_contact' AND type_rencana = 'passive'");
+                    $removeRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, DATE(visit_date) = '$date' WHERE id_contact = '$id_contact' AND type_rencana = 'passive'");
 
                     $response = ["response" => 200, "status" => "success", "message" => "Succes to closing!"];
                     echo json_encode($response);
