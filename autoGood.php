@@ -33,6 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if (isset($resScoring['payment'])) {
             if ($resScoring['payment'] >= '85') {
+                $setReputation = mysqli_query($conn, "UPDATE tb_contact SET reputation = 'good' WHERE id_contact = '$id_contact'");
+
                 $response = ["response" => 200, "status" => "ok", "message" => "Store is good", "id_contact" => $id_contact, "toko" => $nama, "payment" => $resScoring['payment']];
                 echo json_encode($response);
             } else {
