@@ -31,12 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $resScoring = json_decode($response, true);
 
-        if (isset($resScoring['total'])) {
-            if ($resScoring['total'] >= '85') {
-                $response = ["response" => 200, "status" => "ok", "message" => "Store is good", "id_contact" => $id_contact, "toko" => $nama, "total" => $resScoring['total']];
+        if (isset($resScoring['payment'])) {
+            if ($resScoring['payment'] >= '85') {
+                $response = ["response" => 200, "status" => "ok", "message" => "Store is good", "id_contact" => $id_contact, "toko" => $nama, "payment" => $resScoring['payment']];
                 echo json_encode($response);
             } else {
-                $response = ["response" => 400, "status" => "failed", "message" => "Store is bad", "id_contact" => $id_contact, "toko" => $nama, "total" => $resScoring['total']];
+                $response = ["response" => 400, "status" => "failed", "message" => "Store is bad", "id_contact" => $id_contact, "toko" => $nama, "payment" => $resScoring['payment']];
                 echo json_encode($response);
             }
         }
