@@ -87,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $tagih_mingguan = $_POST['tagih_mingguan'];
         $hari_bayar = "-";
         $cluster = isset($_POST['cluster']) ? $_POST['cluster'] : $rowContact['cluster'];
+        $kredit_limit = isset($_POST['kredit_limit']) ? $_POST['kredit_limit'] : $rowContact['kredit_limit'];
         if (isset($_POST['hari_bayar'])) {
             $hari_bayar = $_POST['hari_bayar'];
         }
@@ -251,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $updatedAt = date('Y-m-d H:i:s');
 
-        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', nomorhp = '$nomor_hp', termin_payment = $termin_payment, ktp_owner = '$imgNewName', id_promo = '$id_promo', reputation = '$reputation', payment_method = '$payment_method', store_status = '$status', tagih_mingguan = $tagih_mingguan, nomorhp_2 = '$nomor_hp2', nomor_cat_1 = '$nomor_cat_1', nomor_cat_2 = '$nomor_cat_2', updated_at = '$updatedAt', hari_bayar = '$hari_bayar', cluster = '$cluster' WHERE id_contact = '$id'");
+        $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', nomorhp = '$nomor_hp', termin_payment = $termin_payment, ktp_owner = '$imgNewName', id_promo = '$id_promo', reputation = '$reputation', payment_method = '$payment_method', store_status = '$status', tagih_mingguan = $tagih_mingguan, nomorhp_2 = '$nomor_hp2', nomor_cat_1 = '$nomor_cat_1', nomor_cat_2 = '$nomor_cat_2', updated_at = '$updatedAt', hari_bayar = '$hari_bayar', cluster = '$cluster', kredit_limit = '$kredit_limit' WHERE id_contact = '$id'");
 
         if ($result) {
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
