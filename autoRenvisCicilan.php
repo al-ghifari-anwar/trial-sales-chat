@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $tagih_mingguan = $invArray['tagih_mingguan'];
 
         if ($tagih_mingguan == 1) {
-            if ($days > "-28" && $days < "30") {
+            if ($days != "-28" && $days < "30") {
                 if ($days % 7 == 0) {
                     $getTotalPayment = mysqli_query($conn, "SELECT SUM(amount_payment + potongan_payment + adjustment_payment) AS amount_total FROM tb_payment WHERE id_invoice = '$id_invoice'");
                     $rowPayment = $getTotalPayment->fetch_array(MYSQLI_ASSOC);
