@@ -22,11 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $nama = $salesArray['full_name'];
         $id_distributor = $salesArray['id_distributor'];
 
-        $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
-        $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+        // $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+        // $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
 
-        $integration_id = $rowQontak['integration_id'];
-        $wa_token = $rowQontak['token'];
+        // $integration_id = $rowQontak['integration_id'];
+        // $wa_token = $rowQontak['token'];
 
         // if ($nomor_hp == "6287774436555" || $nomor_hp == "6281808152028") {
         //     $message = "Data toko passive: https://order.topmortarindonesia.com/notif-passive?ct=0";
@@ -39,59 +39,54 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($nomor_hp != "6287774436555" || $nomor_hp != "6281808152028" || $nomor_hp != "6281235834111" || $nomor_hp != "6281952581199" || $nomor_hp != "6285335631783" || $nomor_hp != "6281808152028" || $nomor_hp != "6287757904850") {
 
             if ($id_distributor != 8) {
+                if (date('D') != 'Sun') {
+                    $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                    $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                    $wa_token = $rowHaloai['token_haloai'];
+                    $business_id = $rowHaloai['business_id_haloai'];
+                    $channel_id = $rowHaloai['channel_id_haloai'];
+                    $template = 'info_meeting_baru';
 
-                $curl = curl_init();
+                    $haloaiPayload = [
+                        'activate_ai_after_send' => false,
+                        'channel_id' => $channel_id,
+                        'fallback_template_message' => $template,
+                        'fallback_template_variables' => [
+                            $nama,
+                            trim(preg_replace('/\s+/', ' ', $message)),
+                            'Automated Message',
+                        ],
+                        'phone_number' => $nomor_hp,
+                        'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                    ];
 
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => '{
-                        "to_number": "' . $nomor_hp . '",
-                        "to_name": "' . $nama . '",
-                        "message_template_id": "' . $template_id . '",
-                        "channel_integration_id": "' . $integration_id . '",
-                        "language": {
-                            "code": "id"
-                        },
-                        "parameters": {
-                            "body": [
-                            {
-                                "key": "1",
-                                "value": "nama",
-                                "value_text": "' . $nama . '"
-                            },
-                            {
-                                "key": "2",
-                                "value": "message",
-                                "value_text": "' . $message . '"
-                            },
-                            {
-                                "key": "3",
-                                "value": "sales",
-                                "value_text": "Automated Message"
-                            }
-                            ]
-                        }
-                        }',
-                    CURLOPT_HTTPHEADER => array(
-                        'Authorization: Bearer ' . $wa_token,
-                        'Content-Type: application/json'
-                    ),
-                ));
+                    $curl = curl_init();
 
-                $response = curl_exec($curl);
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: Bearer ' . $wa_token,
+                            'X-HaloAI-Business-Id: ' . $business_id,
+                            'Content-Type: application/json'
+                        ),
+                    ));
 
-                curl_close($curl);
+                    $response = curl_exec($curl);
 
-                $res = json_decode($response, true);
-                $status = $res['status'];
-                $id = $data['data']['id'];
+                    curl_close($curl);
+
+                    $res = json_decode($response, true);
+                    $status = $res['status'];
+                    $id = $data['data']['id'];
+                }
             } else {
                 $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
                 $maxchat = $getMaxchat->fetch_array(MYSQLI_ASSOC);

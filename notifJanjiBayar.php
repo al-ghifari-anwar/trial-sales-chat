@@ -24,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $id_distributor = $rowContact['id_distributor'];
 
-            $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
-            $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+            // $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+            // $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+            // $integration_id = $rowQontak['integration_id'];
+            // $wa_token = $rowQontak['token'];
             $full_name = "PT Top Mortar Indonesia";
-            $integration_id = $rowQontak['integration_id'];
-            $wa_token = $rowQontak['token'];
 
             $getInvoice = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE id_invoice = '$id_invoice'");
             $rowInvoice = $getInvoice->fetch_array(MYSQLI_ASSOC);
@@ -48,9 +48,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 if ($id_distributor != 8) {
 
+                    $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                    $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                    $wa_token = $rowHaloai['token_haloai'];
+                    $business_id = $rowHaloai['business_id_haloai'];
+                    $channel_id = $rowHaloai['channel_id_haloai'];
+                    $template = 'info_meeting_baru';
+
+                    $haloaiPayload = [
+                        'activate_ai_after_send' => false,
+                        'channel_id' => $channel_id,
+                        'fallback_template_message' => $template,
+                        'fallback_template_variables' => [
+                            $nama,
+                            trim(preg_replace('/\s+/', ' ', $message)),
+                            $full_name,
+                        ],
+                        'phone_number' => $nomor_hp,
+                        'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                    ];
+
                     $curl = curl_init();
+
                     curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                        CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
@@ -58,36 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         CURLOPT_FOLLOWLOCATION => true,
                         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                         CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => '{
-                                "to_number": "' . $nomor_hp . '",
-                                "to_name": "' . $nama . '",
-                                "message_template_id": "' . $template_id . '",
-                                "channel_integration_id": "' . $integration_id . '",
-                                "language": {
-                                    "code": "id"
-                                },
-                                "parameters": {
-                                    "body": [
-                                    {
-                                        "key": "1",
-                                        "value": "nama",
-                                        "value_text": "' . $nama . '"
-                                    },
-                                    {
-                                        "key": "2",
-                                        "value": "message",
-                                        "value_text": "' . $message . '"
-                                    },
-                                    {
-                                        "key": "3",
-                                        "value": "sales",
-                                        "value_text": "' . $full_name . '"
-                                    }
-                                    ]
-                                }
-                                }',
+                        CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
                         CURLOPT_HTTPHEADER => array(
                             'Authorization: Bearer ' . $wa_token,
+                            'X-HaloAI-Business-Id: ' . $business_id,
                             'Content-Type: application/json'
                         ),
                     ));
