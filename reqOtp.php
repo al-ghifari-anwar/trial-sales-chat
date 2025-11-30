@@ -43,10 +43,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $message = "Request for password reset comfirmed, please insert this OTP: " . $otp . ", This OTP will valid until 5 minutes";
 
                     if ($id_distributor != 8) {
+                        $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                        $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                        $wa_token = $rowHaloai['token_haloai'];
+                        $business_id = $rowHaloai['business_id_haloai'];
+                        $channel_id = $rowHaloai['channel_id_haloai'];
+                        $template = 'info_meeting_baru';
+
+                        $haloaiPayload = [
+                            'activate_ai_after_send' => false,
+                            'channel_id' => $channel_id,
+                            'fallback_template_message' => $template,
+                            'fallback_template_variables' => [
+                                $username,
+                                trim(preg_replace('/\s+/', ' ', $message)),
+                                'Automated Message'
+                            ],
+                            'phone_number' => $nomor_hp,
+                            'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                        ];
+
                         $curl = curl_init();
 
                         curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                            CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
                             CURLOPT_RETURNTRANSFER => true,
                             CURLOPT_ENCODING => '',
                             CURLOPT_MAXREDIRS => 10,
@@ -54,36 +74,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             CURLOPT_FOLLOWLOCATION => true,
                             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                             CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => '{
-                                "to_number": "' . $phone_user . '",
-                                "to_name": "' . $username . '",
-                                "message_template_id": "' . $template_id . '",
-                                "channel_integration_id": "' . $integration_id . '",
-                                "language": {
-                                    "code": "id"
-                                },
-                                "parameters": {
-                                    "body": [
-                                        {
-                                            "key": "1",
-                                            "value": "nama",
-                                            "value_text": "' . $username . '"
-                                        },
-                                        {
-                                            "key": "2",
-                                            "value": "message",
-                                            "value_text": "' . $message . '"
-                                        },
-                                        {
-                                            "key": "3",
-                                            "value": "sender",
-                                            "value_text": "Admin Top Mortar"
-                                        }
-                                    ]
-                                }
-                            }',
+                            CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
                             CURLOPT_HTTPHEADER => array(
                                 'Authorization: Bearer ' . $wa_token,
+                                'X-HaloAI-Business-Id: ' . $business_id,
                                 'Content-Type: application/json'
                             ),
                         ));
@@ -170,14 +164,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $createOtp = mysqli_query($conn, "INSERT INTO tb_otp(id_user,otp,exp_date) VALUES($id_user, $otp, '$expDate')");
 
             if ($createOtp) {
-                $message = "Request for password reset comfirmed, please insert this OTP: " . $otp . " , This OTP will valid until 5 minutes.";
+                $message = "Request for password reset comfirmed, please insert this OTP: *" . $otp . "* , This OTP will valid until 5 minutes.";
 
                 if ($id_distributor != 8) {
+
+                    $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                    $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                    $wa_token = $rowHaloai['token_haloai'];
+                    $business_id = $rowHaloai['business_id_haloai'];
+                    $channel_id = $rowHaloai['channel_id_haloai'];
+                    $template = 'info_meeting_baru';
+
+                    $haloaiPayload = [
+                        'activate_ai_after_send' => false,
+                        'channel_id' => $channel_id,
+                        'fallback_template_message' => $template,
+                        'fallback_template_variables' => [
+                            $username,
+                            trim(preg_replace('/\s+/', ' ', $message)),
+                            'Automated Message'
+                        ],
+                        'phone_number' => $nomor_hp,
+                        'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                    ];
 
                     $curl = curl_init();
 
                     curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                        CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
@@ -185,31 +199,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         CURLOPT_FOLLOWLOCATION => true,
                         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                         CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => '{
-                    "to_number": "' . $phone_user . '",
-                    "to_name": "' . $username . '",
-                    "message_template_id": "' . $template_id . '",
-                    "channel_integration_id": "' . $integration_id . '",
-                    "language": {
-                        "code": "id"
-                    },
-                    "parameters": {
-                        "body": [
-                        {
-                            "key": "1",
-                            "value": "nama",
-                            "value_text": "' . $username . '"
-                        },
-                        {
-                            "key": "2",
-                            "value": "message",
-                            "value_text": "' . $message . '"
-                        }
-                        ]
-                    }
-                    }',
+                        CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
                         CURLOPT_HTTPHEADER => array(
                             'Authorization: Bearer ' . $wa_token,
+                            'X-HaloAI-Business-Id: ' . $business_id,
                             'Content-Type: application/json'
                         ),
                     ));
@@ -217,6 +210,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $response = curl_exec($curl);
 
                     curl_close($curl);
+
+                    $res = json_decode($response, true);
 
                     $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!" . $id_distributor];
                     echo json_encode($response);
