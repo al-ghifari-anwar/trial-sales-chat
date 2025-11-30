@@ -161,6 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
                     CURLOPT_HTTPHEADER => array(
                         'Authorization: Bearer ' . $wa_token,
+                        'X-HaloAI-Business-Id: ' . $business_id,
                         'Content-Type: application/json'
                     ),
                 ));
