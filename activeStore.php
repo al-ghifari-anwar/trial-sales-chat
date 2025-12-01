@@ -23,7 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else {
         $id_dist = $_GET['dst'];
 
-        $resultActive = mysqli_query($conn, "SELECT SUM(jml_active) as jml_active, month_active FROM tb_active_store WHERE id_distributor = '$id_dist' GROUP BY month_active");
+        $year = date('Y');
+
+        $resultActive = mysqli_query($conn, "SELECT SUM(jml_active) as jml_active, month_active FROM tb_active_store WHERE id_distributor = '$id_dist' GROUP BY month_active WHERE YEAR(created_at) = '$year'");
 
         while ($rowActive = $resultActive->fetch_array(MYSQLI_ASSOC)) {
             // $month = $rowActive['month_active'];
