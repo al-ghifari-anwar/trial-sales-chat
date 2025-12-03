@@ -30,8 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $resultArray = [
             'user' => $user['full_name'],
-            'target_visit' => 200 + '',
-            'total_visit' => $total + '',
+            'target_visit' => 200 . "",
+            'total_visit' => $total . "",
         ];
 
         $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data user!", "results" => $resultArray];
