@@ -25,7 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $dateGroup = date('Y-m-d', strtotime($rowDateGroupVisit['date_visit']));
 
             $getTotal = mysqli_query($conn, " SELECT COUNT(*) AS total_visit FROM tb_visit JOIN tb_contact ON tb_visit.id_contact = tb_contact.id_contact WHERE tb_visit.id_user = '$id_user' AND DATE(tb_visit.date_visit) = '$dateGroup' AND tb_visit.is_deleted = 0 AND is_approved = 1 ");
-            $total += $getTotal['total_visit'];
+            $rowTotal = $getTotal->fetch_array(MYSQLI_ASSOC);
+
+            $total += $rowTotal['total_visit'];
         }
 
         $resultArray = [
