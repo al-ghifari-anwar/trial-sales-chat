@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             'total_visit' => $total . "",
         ];
 
-        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data user!", "results" => $resultArray];
+        $response = ["response" => 200, "status" => "ok", "message" => "Success!", "results" => $resultArray];
         echo json_encode($response);
     }
 } else {
