@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if ($user == null) {
         $response = ["response" => 200, "status" => "failed", "message" => "User tidak ditemukan!"];
-        return json_encode($response);
+        echo json_encode($response);
     } else {
         $getDateGroupVisit = mysqli_query($conn, " SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' AND DATE(tb_visit.date_visit) >= '$dateFrom' AND DATE(tb_visit.date_visit) <= '$dateTo' GROUP BY DATE(tb_visit.date_visit) ");
 
@@ -35,9 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         ];
 
         $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data user!", "results" => $resultArray];
-        return json_encode($response);
+        echo json_encode($response);
     }
 } else {
     $response = ["response" => 200, "status" => "failed", "message" => "Not found!"];
-    return json_encode($response);
+    echo json_encode($response);
 }
