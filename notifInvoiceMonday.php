@@ -55,14 +55,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $business_id = $rowHaloai['business_id_haloai'];
                 $channel_id = $rowHaloai['channel_id_haloai'];
                 $template = 'tagihan_min_3';
-                $messageText = "Salam toko *$nama* Dengan ini kami memberitahukan bahwa tagihan Bapak/Ibu dengan nomor invoice *$no_invoice* Sebesar *$sisaHutang* akan jatuh pada *$jatuhTempo* (3 hari sebelum jatuh tempo) Mohon kerjasamanya untuk melakukan pembayaran tepat waktu. (_*Jika Bapak/Ibu sudah melakukan pembayaran maka bisa abaikan pesan ini*_) Kami tunggu orderan anda selanjutnya, Terima Kasih. Salam Hangat, PT Top Mortar Indonesia";
+                $messageText = "Salam toko *$nama*, *Ini adalah pesan otomatis dari system*. Dengan ini kami memberitahukan bahwa tagihan Bapak/Ibu dengan nomor invoice *$no_invoice* Sebesar *$sisaHutang* akan jatuh pada *$jatuhTempo* (3 hari sebelum jatuh tempo) Mohon kerjasamanya untuk melakukan pembayaran tepat waktu. (_*Jika Bapak/Ibu sudah melakukan pembayaran maka bisa abaikan pesan ini*_) Kami tunggu orderan anda selanjutnya, Terima Kasih. Salam Hangat, PT Top Mortar Indonesia";
 
                 $haloaiPayload = [
                     'activate_ai_after_send' => false,
                     'channel_id' => $channel_id,
                     'fallback_template_message' => $template,
                     'fallback_template_variables' => [
-                        $nama,
+                        $nama . ", *Ini adalah pesan otomatis dari system*. ",
                         $no_invoice,
                         $sisaHutang,
                         $jatuhTempo,
