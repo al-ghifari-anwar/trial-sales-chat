@@ -113,6 +113,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $nomor_cat_1 = isset($_POST['nomor_cat_1']) ? $_POST['nomor_cat_1'] : '';
         $nomor_cat_2 = isset($_POST['nomor_cat_2']) ? $_POST['nomor_cat_2'] : '';
 
+        // 
+        $hobi_contact = isset($_POST['hobi_contact']) ? $_POST['hobi_contact'] : '';
+        $is_send_content = isset($_POST['is_send_content']) ? $_POST['is_send_content'] : 0;
+
         if (isset($_FILES['ktp']['name'])) {
             $proof_closing = $_FILES['ktp']['name'];
             $dateFile = date("Y-m-d-H-i-s");
