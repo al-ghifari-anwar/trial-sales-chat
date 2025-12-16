@@ -280,7 +280,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $mapsUrl = $_POST['mapsUrl'];
         $termin_payment = $_POST['termin_payment'];
         $nomor_cat_1 = isset($_POST['nomor_cat_1']) ? $_POST['nomor_cat_1'] : '';
-        $address = $_POST['address'];
+        $address = isset($_POST['address']) ? $_POST['address'] : '';
         // $reputation = $_POST['reputation'];
 
         $getCity = mysqli_query($conn, "SELECT * FROM tb_city WHERE id_city = '$id_city'");
