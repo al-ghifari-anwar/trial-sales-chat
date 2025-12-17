@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_TIMEOUT => 5,
                     CURLOPT_FOLLOWLOCATION => true,
                     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                     CURLOPT_CUSTOMREQUEST => 'POST',
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 $res = json_decode($response, true);
 
-                $status = $res['status'];
+                $status = isset($res['status']) ? $res['status'] : 'empty';
 
                 if ($status == "success") {
                     $response = ["response" => 200, "status" => "ok", "message" => "Success notify customer", "inv" => $invArray['no_invoice']];
