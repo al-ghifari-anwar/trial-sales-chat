@@ -8,7 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['city'])) {
         $id_city = $_GET['city'];
 
-        $resultActive = mysqli_query($conn, "SELECT * FROM tb_active_store WHERE id_city = '$id_city'");
+        // $resultActive = mysqli_query($conn, "SELECT * FROM tb_active_store WHERE id_city = '$id_city'");
+        $resultActive = mysqli_query($conn, "SELECT YEAR(created_at) AS year_num, MONTH(created_at) AS month_active, SUM(jml_active) AS jml_active FROM tb_active_store tas WHERE tas.id_distributor = $id_dist GROUP BY year_num, month_active ORDER BY tas.id_active_store DESC LIMIT 11 ");
 
 
         while ($rowActive = $resultActive->fetch_array(MYSQLI_ASSOC)) {
@@ -25,7 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $year = date('Y');
 
-        $resultActive = mysqli_query($conn, "SELECT SUM(jml_active) as jml_active, month_active FROM tb_active_store WHERE id_distributor = '$id_dist' AND YEAR(created_at) = '$year' GROUP BY month_active ");
+        // $resultActive = mysqli_query($conn, "SELECT SUM(jml_active) as jml_active, month_active FROM tb_active_store WHERE id_distributor = '$id_dist' AND YEAR(created_at) = '$year' GROUP BY month_active ");
+        $resultActive = mysqli_query($conn, "SELECT YEAR(created_at) AS year_num, MONTH(created_at) AS month_active, SUM(jml_active) AS jml_active FROM tb_active_store tas WHERE tas.id_distributor = $id_dist GROUP BY year_num, month_active ORDER BY tas.id_active_store DESC LIMIT 11 ");
 
         while ($rowActive = $resultActive->fetch_array(MYSQLI_ASSOC)) {
             // $month = $rowActive['month_active'];
