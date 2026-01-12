@@ -15,7 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $id_visit = mysqli_insert_id($conn);
 
         if ($insertVisit) {
-            $id_bid = $rowBid['id_bid'];
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim absen!"];
             echo json_encode($response);
         } else {
@@ -33,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $id_visit = mysqli_insert_id($conn);
 
         if ($insertVisit) {
-            $id_bid = $rowBid['id_bid'];
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim absen!"];
             echo json_encode($response);
         } else {
