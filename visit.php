@@ -684,8 +684,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'passive'");
             } else if ($type_renvi == 'passive') {
                 // Send notif passive ke toko
+                $resultContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
+                $rowContact = $resultContact->fetch_array(MYSQLI_ASSOC);
+
+                $nama = $rowContact['nama'];
+                $nomor_hp = $rowContact['nomorhp'];
+
                 $id_distributor = $rowUser['id_distributor'];
+
                 $message = "Halo, " . $nama . ". terimakasih terimakasih atas waktu kunjungannya ";
+
+                $full_name = 'PT Top Mortar Indonesia';
 
                 $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
                 $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
