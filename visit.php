@@ -684,6 +684,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'passive'");
             } else if ($type_renvi == 'passive') {
                 // Send notif passive ke toko
+                $id_distributor = $rowUser['id_distributor'];
                 $message = "Halo, " . $nama . ". terimakasih terimakasih atas waktu kunjungannya ";
 
                 $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
