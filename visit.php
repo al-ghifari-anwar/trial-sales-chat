@@ -729,6 +729,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 curl_close($curl);
 
+                echo json_encode($rowHaloai);
                 echo $response;
 
                 $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi'");
