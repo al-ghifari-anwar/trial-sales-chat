@@ -683,6 +683,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 // Update pasif also
                 $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'passive'");
             } else if ($type_renvi == 'passive') {
+                // Send notif passive ke toko
+                $message = "Halo, " . $nama . ". terimakasih terimakasih atas waktu kunjungannya ";
+
+                $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                $wa_token = $rowHaloai['token_haloai'];
+                $business_id = $rowHaloai['business_id_haloai'];
+                $channel_id = $rowHaloai['channel_id_haloai'];
+                $template = 'info_meeting_baru';
+
+                $haloaiPayload = [
+                    'activate_ai_after_send' => false,
+                    'channel_id' => $channel_id,
+                    'fallback_template_message' => $template,
+                    'fallback_template_variables' => [
+                        $nama,
+                        trim(preg_replace('/\s+/', ' ', $message)),
+                        $full_name,
+                    ],
+                    'phone_number' => $nomor_hp,
+                    'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                ];
+
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Bearer ' . $wa_token,
+                        'X-HaloAI-Business-Id: ' . $business_id,
+                        'Content-Type: application/json'
+                    ),
+                ));
+
+                $response = curl_exec($curl);
+
+                curl_close($curl);
+
                 $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi'");
             } else if ($type_renvi == 'tagih_mingguan' || $type_renvi == 'weekly') {
                 $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'tagih_mingguan'");
