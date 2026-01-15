@@ -170,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $pay_value = $_POST['pay_value'];
                 $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'] . " - Nominal Pembayaran: Rp. " .  number_format($pay_value, 0, ',', '.');
 
-                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_value) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay',$pay_value)");
+                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_value,is_approved) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay',$pay_value,1)");
                 $id_visit = mysqli_insert_id($conn);
 
                 $message = "Terimakasih telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
