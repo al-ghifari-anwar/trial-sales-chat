@@ -338,7 +338,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $id_visit = mysqli_insert_id($conn);
 
                 if ($insertVisit) {
-                    $message = "Hari ini kami belum menerima pembayaran mohon dibantu pembayaran nya. Terimakasih";
+                    $message = "Hari ini kami belum menerima pembayaran dan janji bayar pada tanggal " . date('d M Y', strtotime($pay_date)) . ". Terimakasih";
 
                     if ($id_distributor != 8) {
 
