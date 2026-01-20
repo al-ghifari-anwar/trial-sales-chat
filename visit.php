@@ -131,6 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_user = $_POST['id_user'] ? $_POST['id_user'] : 0;
         $type_renvi = $_POST['type_renvi'];
         $is_pay = isset($_POST['is_pay']) ? $_POST['is_pay'] : '0';
+        $dateNow = date('Y-m-d');
 
 
         $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
@@ -139,43 +140,569 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $insertVisit = false;
         $id_visit = 0;
 
-        if ($is_pay != "0") {
-            $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
-            // $template_id = '9241bf86-ae94-4aa8-8975-551409af90b9';
-            $template_id = '9241bf86-ae94-4aa8-8975-551409af90b9';
+        $checkVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_contact' AND source_visit = '$source' AND id_user = '$id_user' AND DATE(date_visit) = '$dateNow'");
+        $rowVisit = $checkVisit->fetch_array(MYSQLI_ASSOC);
 
-            $id_invoice = $_POST['id_invoice'];
+        if ($rowVisit) {
+            $response = ["response" => 200, "status" => "ok", "message" => "Visit sudah tersimpan! "];
+            echo json_encode($response);
+        } else {
+            if ($is_pay != "0") {
+                $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
+                // $template_id = '9241bf86-ae94-4aa8-8975-551409af90b9';
+                $template_id = '9241bf86-ae94-4aa8-8975-551409af90b9';
 
-            $getInv = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE id_invoice = '$id_invoice'");
-            $rowInv = $getInv->fetch_array(MYSQLI_ASSOC);
+                $id_invoice = $_POST['id_invoice'];
 
-            $no_inv = $rowInv['no_invoice'];
+                $getInv = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE id_invoice = '$id_invoice'");
+                $rowInv = $getInv->fetch_array(MYSQLI_ASSOC);
 
-            $resultContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
-            $rowContact = $resultContact->fetch_array(MYSQLI_ASSOC);
+                $no_inv = $rowInv['no_invoice'];
 
-            $nama = $rowContact['nama'];
-            $nomor_hp = $rowContact['nomorhp'];
-            $id_distributor = $rowContact['id_distributor'];
+                $resultContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
+                $rowContact = $resultContact->fetch_array(MYSQLI_ASSOC);
 
-            // $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
-            // $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
-            $full_name = "PT Top Mortar Indonesia";
-            // $integration_id = $rowQontak['integration_id'];
-            // $wa_token = $rowQontak['token'];
+                $nama = $rowContact['nama'];
+                $nomor_hp = $rowContact['nomorhp'];
+                $id_distributor = $rowContact['id_distributor'];
 
-            $insertVisit = false;
+                // $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
+                // $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
+                $full_name = "PT Top Mortar Indonesia";
+                // $integration_id = $rowQontak['integration_id'];
+                // $wa_token = $rowQontak['token'];
 
-            if ($is_pay == "pay") {
-                $pay_value = $_POST['pay_value'];
-                $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'] . " - Nominal Pembayaran: Rp. " .  number_format($pay_value, 0, ',', '.');
+                $insertVisit = false;
 
-                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_value,is_approved) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay',$pay_value,1)");
+                if ($is_pay == "pay") {
+                    $pay_value = $_POST['pay_value'];
+                    $laporan_visit = "[" . $source . "] " .  $_POST['laporan_visit'] . " - Nominal Pembayaran: Rp. " .  number_format($pay_value, 0, ',', '.');
+
+                    $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_value,is_approved) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay',$pay_value,1)");
+                    $id_visit = mysqli_insert_id($conn);
+
+                    $message = "Terimakasih telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
+
+                    if ($id_distributor != 8) {
+
+                        $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                        $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                        $wa_token = $rowHaloai['token_haloai'];
+                        $business_id = $rowHaloai['business_id_haloai'];
+                        $channel_id = $rowHaloai['channel_id_haloai'];
+                        $template = 'info_meeting_baru';
+
+                        $haloaiPayload = [
+                            'activate_ai_after_send' => false,
+                            'channel_id' => $channel_id,
+                            'fallback_template_message' => $template,
+                            'fallback_template_variables' => [
+                                $nama,
+                                trim(preg_replace('/\s+/', ' ', $message)),
+                                $full_name,
+                            ],
+                            'phone_number' => $nomor_hp,
+                            'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                        ];
+
+                        $curl = curl_init();
+
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                            CURLOPT_HTTPHEADER => array(
+                                'Authorization: Bearer ' . $wa_token,
+                                'X-HaloAI-Business-Id: ' . $business_id,
+                                'Content-Type: application/json'
+                            ),
+                        ));
+
+                        $response = curl_exec($curl);
+
+                        curl_close($curl);
+
+                        $res = json_decode($response, true);
+
+                        if ($res['status'] == 'success') {
+                            $nomor_hp_admin = "6289636224827";
+                            $nama_admin = "April";
+                            if ($id_distributor == 6) {
+                                $nomor_hp_admin = "628";
+                                $nama_admin = "Dea";
+                            }
+                            $message = "Toko " . $nama . "telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
+
+                            $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                            $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                            $wa_token = $rowHaloai['token_haloai'];
+                            $business_id = $rowHaloai['business_id_haloai'];
+                            $channel_id = $rowHaloai['channel_id_haloai'];
+                            $template = 'info_meeting_baru';
+
+                            $haloaiPayload = [
+                                'activate_ai_after_send' => false,
+                                'channel_id' => $channel_id,
+                                'fallback_template_message' => $template,
+                                'fallback_template_variables' => [
+                                    $nama_admin,
+                                    trim(preg_replace('/\s+/', ' ', $message)),
+                                    $full_name,
+                                ],
+                                'phone_number' => $nomor_hp_admin,
+                                'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                            ];
+
+                            $curl = curl_init();
+
+                            curl_setopt_array($curl, array(
+                                CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                                CURLOPT_RETURNTRANSFER => true,
+                                CURLOPT_ENCODING => '',
+                                CURLOPT_MAXREDIRS => 10,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_FOLLOWLOCATION => true,
+                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                CURLOPT_CUSTOMREQUEST => 'POST',
+                                CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                                CURLOPT_HTTPHEADER => array(
+                                    'Authorization: Bearer ' . $wa_token,
+                                    'X-HaloAI-Business-Id: ' . $business_id,
+                                    'Content-Type: application/json'
+                                ),
+                            ));
+
+                            $response = curl_exec($curl);
+
+                            curl_close($curl);
+                        }
+                    } else {
+                        $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
+                        $maxchat = $getMaxchat->fetch_array(MYSQLI_ASSOC);
+                        $endpoint = "https://app.maxchat.id/api/messages/push";
+
+                        $data = [
+                            'to' => $nomor_hp,
+                            'msgType' => 'text',
+                            'templateId' => 'b75d51f9-c925-4a62-8b93-dd072600b95b',
+                            'values' => [
+                                'body' => [
+                                    [
+                                        'index' => 1,
+                                        'type' => 'text',
+                                        'text' => $nama
+                                    ],
+                                    [
+                                        'index' => 2,
+                                        'type' => 'text',
+                                        'text' => trim(preg_replace('/\s+/', ' ', $message))
+                                    ]
+                                ],
+                            ]
+                        ];
+
+                        $headers = [
+                            'Authorization: Bearer ' . $maxchat['token_maxchat'],
+                            'Content-Type: application/json',
+                        ];
+
+                        $curl = curl_init();
+
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => $endpoint,
+                            CURLOPT_SSL_VERIFYHOST => false,
+                            CURLOPT_SSL_VERIFYPEER => false,
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => "",
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 30,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => "POST",
+                            CURLOPT_POSTFIELDS => json_encode($data),
+                            CURLOPT_HTTPHEADER => $headers,
+                        ));
+
+                        $response = curl_exec($curl);
+                        $err = curl_error($curl);
+
+                        $res = json_decode($response, true);
+
+                        curl_close($curl);
+
+                        $status = isset($res['content']) ? 'success' : 'empty';
+                    }
+
+                    // echo $response;
+                } else if ($is_pay == "pay_later") {
+                    $pay_date = $_POST['pay_date'];
+
+                    $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date,id_invoice) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date',$id_invoice)");
+                    $id_visit = mysqli_insert_id($conn);
+
+                    if ($insertVisit) {
+                        $message = "Hari ini kami belum menerima pembayaran dan janji bayar pada tanggal " . date('d M Y', strtotime($pay_date)) . ". Terimakasih";
+
+                        if ($id_distributor != 8) {
+
+                            $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                            $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                            $wa_token = $rowHaloai['token_haloai'];
+                            $business_id = $rowHaloai['business_id_haloai'];
+                            $channel_id = $rowHaloai['channel_id_haloai'];
+                            $template = 'info_meeting_baru';
+
+                            $haloaiPayload = [
+                                'activate_ai_after_send' => false,
+                                'channel_id' => $channel_id,
+                                'fallback_template_message' => $template,
+                                'fallback_template_variables' => [
+                                    $nama,
+                                    trim(preg_replace('/\s+/', ' ', $message)),
+                                    $full_name,
+                                ],
+                                'phone_number' => $nomor_hp,
+                                'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                            ];
+
+                            $curl = curl_init();
+
+                            curl_setopt_array($curl, array(
+                                CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                                CURLOPT_RETURNTRANSFER => true,
+                                CURLOPT_ENCODING => '',
+                                CURLOPT_MAXREDIRS => 10,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_FOLLOWLOCATION => true,
+                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                CURLOPT_CUSTOMREQUEST => 'POST',
+                                CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                                CURLOPT_HTTPHEADER => array(
+                                    'Authorization: Bearer ' . $wa_token,
+                                    'X-HaloAI-Business-Id: ' . $business_id,
+                                    'Content-Type: application/json'
+                                ),
+                            ));
+
+                            $response = curl_exec($curl);
+
+                            curl_close($curl);
+
+                            $res = json_decode($response, true);
+
+                            if ($res['status'] == 'success') {
+                                $nomor_hp_admin = "6289636224827";
+                                $nama_admin = "April";
+                                if ($id_distributor == 6) {
+                                    $nomor_hp_admin = "628";
+                                    $nama_admin = "Dea";
+                                }
+                                $message = "Toko " . $nama . " menjanjikan pembayaran pada tanggal " . date("Y-m-d", strtotime($pay_date));
+
+                                $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                                $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                                $wa_token = $rowHaloai['token_haloai'];
+                                $business_id = $rowHaloai['business_id_haloai'];
+                                $channel_id = $rowHaloai['channel_id_haloai'];
+                                $template = 'info_meeting_baru';
+
+                                $haloaiPayload = [
+                                    'activate_ai_after_send' => false,
+                                    'channel_id' => $channel_id,
+                                    'fallback_template_message' => $template,
+                                    'fallback_template_variables' => [
+                                        $nama_admin,
+                                        trim(preg_replace('/\s+/', ' ', $message)),
+                                        $full_name,
+                                    ],
+                                    'phone_number' => $nomor_hp_admin,
+                                    'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                                ];
+
+                                $curl = curl_init();
+
+                                curl_setopt_array($curl, array(
+                                    CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                                    CURLOPT_RETURNTRANSFER => true,
+                                    CURLOPT_ENCODING => '',
+                                    CURLOPT_MAXREDIRS => 10,
+                                    CURLOPT_TIMEOUT => 0,
+                                    CURLOPT_FOLLOWLOCATION => true,
+                                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                    CURLOPT_CUSTOMREQUEST => 'POST',
+                                    CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                                    CURLOPT_HTTPHEADER => array(
+                                        'Authorization: Bearer ' . $wa_token,
+                                        'X-HaloAI-Business-Id: ' . $business_id,
+                                        'Content-Type: application/json'
+                                    ),
+                                ));
+
+                                $response = curl_exec($curl);
+
+                                curl_close($curl);
+                            }
+                        } else {
+                            $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
+                            $maxchat = $getMaxchat->fetch_array(MYSQLI_ASSOC);
+                            $endpoint = "https://app.maxchat.id/api/messages/push";
+
+                            $data = [
+                                'to' => $nomor_hp,
+                                'msgType' => 'text',
+                                'templateId' => 'b75d51f9-c925-4a62-8b93-dd072600b95b',
+                                'values' => [
+                                    'body' => [
+                                        [
+                                            'index' => 1,
+                                            'type' => 'text',
+                                            'text' => $nama
+                                        ],
+                                        [
+                                            'index' => 2,
+                                            'type' => 'text',
+                                            'text' => trim(preg_replace('/\s+/', ' ', $message))
+                                        ]
+                                    ],
+                                ]
+                            ];
+
+                            $headers = [
+                                'Authorization: Bearer ' . $maxchat['token_maxchat'],
+                                'Content-Type: application/json',
+                            ];
+
+                            $curl = curl_init();
+
+                            curl_setopt_array($curl, array(
+                                CURLOPT_URL => $endpoint,
+                                CURLOPT_SSL_VERIFYHOST => false,
+                                CURLOPT_SSL_VERIFYPEER => false,
+                                CURLOPT_RETURNTRANSFER => true,
+                                CURLOPT_ENCODING => "",
+                                CURLOPT_MAXREDIRS => 10,
+                                CURLOPT_TIMEOUT => 30,
+                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                CURLOPT_CUSTOMREQUEST => "POST",
+                                CURLOPT_POSTFIELDS => json_encode($data),
+                                CURLOPT_HTTPHEADER => $headers,
+                            ));
+
+                            $response = curl_exec($curl);
+                            $err = curl_error($curl);
+
+                            $res = json_decode($response, true);
+
+                            curl_close($curl);
+
+                            $status = isset($res['content']) ? 'success' : 'empty';
+                        }
+                    }
+                } else if ($is_pay == "not_pay") {
+                    // $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date,id_invoice) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date',$id_invoice)");
+
+                    $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user, '$is_pay')");
+                    $id_visit = mysqli_insert_id($conn);
+
+                    if ($insertVisit) {
+                        $message = "Hari ini kami belum menerima pembayaran mohon dibantu pembayaran nya. Terimakasih";
+
+                        if ($id_distributor != 8) {
+
+                            $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                            $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                            $wa_token = $rowHaloai['token_haloai'];
+                            $business_id = $rowHaloai['business_id_haloai'];
+                            $channel_id = $rowHaloai['channel_id_haloai'];
+                            $template = 'info_meeting_baru';
+
+                            $haloaiPayload = [
+                                'activate_ai_after_send' => false,
+                                'channel_id' => $channel_id,
+                                'fallback_template_message' => $template,
+                                'fallback_template_variables' => [
+                                    $nama,
+                                    trim(preg_replace('/\s+/', ' ', $message)),
+                                    $full_name,
+                                ],
+                                'phone_number' => $nomor_hp,
+                                'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                            ];
+
+                            $curl = curl_init();
+
+                            curl_setopt_array($curl, array(
+                                CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                                CURLOPT_RETURNTRANSFER => true,
+                                CURLOPT_ENCODING => '',
+                                CURLOPT_MAXREDIRS => 10,
+                                CURLOPT_TIMEOUT => 0,
+                                CURLOPT_FOLLOWLOCATION => true,
+                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                CURLOPT_CUSTOMREQUEST => 'POST',
+                                CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                                CURLOPT_HTTPHEADER => array(
+                                    'Authorization: Bearer ' . $wa_token,
+                                    'X-HaloAI-Business-Id: ' . $business_id,
+                                    'Content-Type: application/json'
+                                ),
+                            ));
+
+                            $response = curl_exec($curl);
+
+                            curl_close($curl);
+
+                            $res = json_decode($response, true);
+
+                            if ($res['status'] == 'success') {
+                                $nomor_hp_admin = "6289636224827";
+                                $nama_admin = "April";
+                                if ($id_distributor == 6) {
+                                    $nomor_hp_admin = "628";
+                                    $nama_admin = "Dea";
+                                }
+                                $message = "Toko " . $nama . " hari ini belum melakukan pembayaran ";
+
+                                $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                                $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                                $wa_token = $rowHaloai['token_haloai'];
+                                $business_id = $rowHaloai['business_id_haloai'];
+                                $channel_id = $rowHaloai['channel_id_haloai'];
+                                $template = 'info_meeting_baru';
+
+                                $haloaiPayload = [
+                                    'activate_ai_after_send' => false,
+                                    'channel_id' => $channel_id,
+                                    'fallback_template_message' => $template,
+                                    'fallback_template_variables' => [
+                                        $nama_admin,
+                                        trim(preg_replace('/\s+/', ' ', $message)),
+                                        $full_name,
+                                    ],
+                                    'phone_number' => $nomor_hp_admin,
+                                    'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                                ];
+
+                                $curl = curl_init();
+
+                                curl_setopt_array($curl, array(
+                                    CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                                    CURLOPT_RETURNTRANSFER => true,
+                                    CURLOPT_ENCODING => '',
+                                    CURLOPT_MAXREDIRS => 10,
+                                    CURLOPT_TIMEOUT => 0,
+                                    CURLOPT_FOLLOWLOCATION => true,
+                                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                    CURLOPT_CUSTOMREQUEST => 'POST',
+                                    CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                                    CURLOPT_HTTPHEADER => array(
+                                        'Authorization: Bearer ' . $wa_token,
+                                        'X-HaloAI-Business-Id: ' . $business_id,
+                                        'Content-Type: application/json'
+                                    ),
+                                ));
+
+                                $response = curl_exec($curl);
+
+                                curl_close($curl);
+                            }
+                        } else {
+                            $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
+                            $maxchat = $getMaxchat->fetch_array(MYSQLI_ASSOC);
+                            $endpoint = "https://app.maxchat.id/api/messages/push";
+
+                            $data = [
+                                'to' => $nomor_hp,
+                                'msgType' => 'text',
+                                'templateId' => 'b75d51f9-c925-4a62-8b93-dd072600b95b',
+                                'values' => [
+                                    'body' => [
+                                        [
+                                            'index' => 1,
+                                            'type' => 'text',
+                                            'text' => $nama
+                                        ],
+                                        [
+                                            'index' => 2,
+                                            'type' => 'text',
+                                            'text' => trim(preg_replace('/\s+/', ' ', $message))
+                                        ]
+                                    ],
+                                ]
+                            ];
+
+                            $headers = [
+                                'Authorization: Bearer ' . $maxchat['token_maxchat'],
+                                'Content-Type: application/json',
+                            ];
+
+                            $curl = curl_init();
+
+                            curl_setopt_array($curl, array(
+                                CURLOPT_URL => $endpoint,
+                                CURLOPT_SSL_VERIFYHOST => false,
+                                CURLOPT_SSL_VERIFYPEER => false,
+                                CURLOPT_RETURNTRANSFER => true,
+                                CURLOPT_ENCODING => "",
+                                CURLOPT_MAXREDIRS => 10,
+                                CURLOPT_TIMEOUT => 30,
+                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                CURLOPT_CUSTOMREQUEST => "POST",
+                                CURLOPT_POSTFIELDS => json_encode($data),
+                                CURLOPT_HTTPHEADER => $headers,
+                            ));
+
+                            $response = curl_exec($curl);
+                            $err = curl_error($curl);
+
+                            $res = json_decode($response, true);
+
+                            curl_close($curl);
+
+                            $status = isset($res['content']) ? 'success' : 'empty';
+                        }
+                    }
+                }
+            } else {
+                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user)");
                 $id_visit = mysqli_insert_id($conn);
+            }
 
-                $message = "Terimakasih telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
+            // if ($insertVisit) {
+            $visitDate = date("Y-m-d H:i:s");
+            if ($type_renvi == 'jatem3') {
+                $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'jatem'");
 
-                if ($id_distributor != 8) {
+                $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_renvis = 'jatem3'");
+            } else if ($type_renvi == 'mg') {
+                $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'mg'");
+            } else {
+                if ($type_renvi == 'jatem2') {
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_renvis = 'jatem2'");
+                } else if ($type_renvi == 'jatem1') {
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_renvis = 'jatem1'");
+                } else if ($type_renvi == 'voucher') {
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi'");
+                    // Update pasif also
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'passive'");
+                } else if ($type_renvi == 'passive') {
+                    // Send notif passive ke toko
+                    $resultContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
+                    $rowContact = $resultContact->fetch_array(MYSQLI_ASSOC);
+
+                    $nama = $rowContact['nama'];
+                    $nomor_hp = $rowContact['nomorhp'];
+
+                    $id_distributor = $rowUser['id_distributor'];
+
+                    $message = "Halo, " . $nama . ". terimakasih terimakasih atas waktu kunjungannya ";
+
+                    $full_name = 'PT Top Mortar Indonesia';
 
                     $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
                     $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
@@ -220,547 +747,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                     curl_close($curl);
 
-                    $res = json_decode($response, true);
+                    echo json_encode($rowHaloai);
+                    echo $response;
 
-                    if ($res['status'] == 'success') {
-                        $nomor_hp_admin = "6289636224827";
-                        $nama_admin = "April";
-                        if ($id_distributor == 6) {
-                            $nomor_hp_admin = "628";
-                            $nama_admin = "Dea";
-                        }
-                        $message = "Toko " . $nama . "telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
-
-                        $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
-                        $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
-                        $wa_token = $rowHaloai['token_haloai'];
-                        $business_id = $rowHaloai['business_id_haloai'];
-                        $channel_id = $rowHaloai['channel_id_haloai'];
-                        $template = 'info_meeting_baru';
-
-                        $haloaiPayload = [
-                            'activate_ai_after_send' => false,
-                            'channel_id' => $channel_id,
-                            'fallback_template_message' => $template,
-                            'fallback_template_variables' => [
-                                $nama_admin,
-                                trim(preg_replace('/\s+/', ' ', $message)),
-                                $full_name,
-                            ],
-                            'phone_number' => $nomor_hp_admin,
-                            'text' => trim(preg_replace('/\s+/', ' ', $message)),
-                        ];
-
-                        $curl = curl_init();
-
-                        curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => '',
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
-                            CURLOPT_HTTPHEADER => array(
-                                'Authorization: Bearer ' . $wa_token,
-                                'X-HaloAI-Business-Id: ' . $business_id,
-                                'Content-Type: application/json'
-                            ),
-                        ));
-
-                        $response = curl_exec($curl);
-
-                        curl_close($curl);
-                    }
-                } else {
-                    $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
-                    $maxchat = $getMaxchat->fetch_array(MYSQLI_ASSOC);
-                    $endpoint = "https://app.maxchat.id/api/messages/push";
-
-                    $data = [
-                        'to' => $nomor_hp,
-                        'msgType' => 'text',
-                        'templateId' => 'b75d51f9-c925-4a62-8b93-dd072600b95b',
-                        'values' => [
-                            'body' => [
-                                [
-                                    'index' => 1,
-                                    'type' => 'text',
-                                    'text' => $nama
-                                ],
-                                [
-                                    'index' => 2,
-                                    'type' => 'text',
-                                    'text' => trim(preg_replace('/\s+/', ' ', $message))
-                                ]
-                            ],
-                        ]
-                    ];
-
-                    $headers = [
-                        'Authorization: Bearer ' . $maxchat['token_maxchat'],
-                        'Content-Type: application/json',
-                    ];
-
-                    $curl = curl_init();
-
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => $endpoint,
-                        CURLOPT_SSL_VERIFYHOST => false,
-                        CURLOPT_SSL_VERIFYPEER => false,
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => "",
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 30,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => "POST",
-                        CURLOPT_POSTFIELDS => json_encode($data),
-                        CURLOPT_HTTPHEADER => $headers,
-                    ));
-
-                    $response = curl_exec($curl);
-                    $err = curl_error($curl);
-
-                    $res = json_decode($response, true);
-
-                    curl_close($curl);
-
-                    $status = isset($res['content']) ? 'success' : 'empty';
-                }
-
-                // echo $response;
-            } else if ($is_pay == "pay_later") {
-                $pay_date = $_POST['pay_date'];
-
-                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date,id_invoice) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date',$id_invoice)");
-                $id_visit = mysqli_insert_id($conn);
-
-                if ($insertVisit) {
-                    $message = "Hari ini kami belum menerima pembayaran dan janji bayar pada tanggal " . date('d M Y', strtotime($pay_date)) . ". Terimakasih";
-
-                    if ($id_distributor != 8) {
-
-                        $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
-                        $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
-                        $wa_token = $rowHaloai['token_haloai'];
-                        $business_id = $rowHaloai['business_id_haloai'];
-                        $channel_id = $rowHaloai['channel_id_haloai'];
-                        $template = 'info_meeting_baru';
-
-                        $haloaiPayload = [
-                            'activate_ai_after_send' => false,
-                            'channel_id' => $channel_id,
-                            'fallback_template_message' => $template,
-                            'fallback_template_variables' => [
-                                $nama,
-                                trim(preg_replace('/\s+/', ' ', $message)),
-                                $full_name,
-                            ],
-                            'phone_number' => $nomor_hp,
-                            'text' => trim(preg_replace('/\s+/', ' ', $message)),
-                        ];
-
-                        $curl = curl_init();
-
-                        curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => '',
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
-                            CURLOPT_HTTPHEADER => array(
-                                'Authorization: Bearer ' . $wa_token,
-                                'X-HaloAI-Business-Id: ' . $business_id,
-                                'Content-Type: application/json'
-                            ),
-                        ));
-
-                        $response = curl_exec($curl);
-
-                        curl_close($curl);
-
-                        $res = json_decode($response, true);
-
-                        if ($res['status'] == 'success') {
-                            $nomor_hp_admin = "6289636224827";
-                            $nama_admin = "April";
-                            if ($id_distributor == 6) {
-                                $nomor_hp_admin = "628";
-                                $nama_admin = "Dea";
-                            }
-                            $message = "Toko " . $nama . " menjanjikan pembayaran pada tanggal " . date("Y-m-d", strtotime($pay_date));
-
-                            $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
-                            $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
-                            $wa_token = $rowHaloai['token_haloai'];
-                            $business_id = $rowHaloai['business_id_haloai'];
-                            $channel_id = $rowHaloai['channel_id_haloai'];
-                            $template = 'info_meeting_baru';
-
-                            $haloaiPayload = [
-                                'activate_ai_after_send' => false,
-                                'channel_id' => $channel_id,
-                                'fallback_template_message' => $template,
-                                'fallback_template_variables' => [
-                                    $nama_admin,
-                                    trim(preg_replace('/\s+/', ' ', $message)),
-                                    $full_name,
-                                ],
-                                'phone_number' => $nomor_hp_admin,
-                                'text' => trim(preg_replace('/\s+/', ' ', $message)),
-                            ];
-
-                            $curl = curl_init();
-
-                            curl_setopt_array($curl, array(
-                                CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
-                                CURLOPT_RETURNTRANSFER => true,
-                                CURLOPT_ENCODING => '',
-                                CURLOPT_MAXREDIRS => 10,
-                                CURLOPT_TIMEOUT => 0,
-                                CURLOPT_FOLLOWLOCATION => true,
-                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                                CURLOPT_CUSTOMREQUEST => 'POST',
-                                CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
-                                CURLOPT_HTTPHEADER => array(
-                                    'Authorization: Bearer ' . $wa_token,
-                                    'X-HaloAI-Business-Id: ' . $business_id,
-                                    'Content-Type: application/json'
-                                ),
-                            ));
-
-                            $response = curl_exec($curl);
-
-                            curl_close($curl);
-                        }
-                    } else {
-                        $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
-                        $maxchat = $getMaxchat->fetch_array(MYSQLI_ASSOC);
-                        $endpoint = "https://app.maxchat.id/api/messages/push";
-
-                        $data = [
-                            'to' => $nomor_hp,
-                            'msgType' => 'text',
-                            'templateId' => 'b75d51f9-c925-4a62-8b93-dd072600b95b',
-                            'values' => [
-                                'body' => [
-                                    [
-                                        'index' => 1,
-                                        'type' => 'text',
-                                        'text' => $nama
-                                    ],
-                                    [
-                                        'index' => 2,
-                                        'type' => 'text',
-                                        'text' => trim(preg_replace('/\s+/', ' ', $message))
-                                    ]
-                                ],
-                            ]
-                        ];
-
-                        $headers = [
-                            'Authorization: Bearer ' . $maxchat['token_maxchat'],
-                            'Content-Type: application/json',
-                        ];
-
-                        $curl = curl_init();
-
-                        curl_setopt_array($curl, array(
-                            CURLOPT_URL => $endpoint,
-                            CURLOPT_SSL_VERIFYHOST => false,
-                            CURLOPT_SSL_VERIFYPEER => false,
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => "",
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 30,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => "POST",
-                            CURLOPT_POSTFIELDS => json_encode($data),
-                            CURLOPT_HTTPHEADER => $headers,
-                        ));
-
-                        $response = curl_exec($curl);
-                        $err = curl_error($curl);
-
-                        $res = json_decode($response, true);
-
-                        curl_close($curl);
-
-                        $status = isset($res['content']) ? 'success' : 'empty';
-                    }
-                }
-            } else if ($is_pay == "not_pay") {
-                // $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date,id_invoice) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date',$id_invoice)");
-
-                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user, '$is_pay')");
-                $id_visit = mysqli_insert_id($conn);
-
-                if ($insertVisit) {
-                    $message = "Hari ini kami belum menerima pembayaran mohon dibantu pembayaran nya. Terimakasih";
-
-                    if ($id_distributor != 8) {
-
-                        $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
-                        $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
-                        $wa_token = $rowHaloai['token_haloai'];
-                        $business_id = $rowHaloai['business_id_haloai'];
-                        $channel_id = $rowHaloai['channel_id_haloai'];
-                        $template = 'info_meeting_baru';
-
-                        $haloaiPayload = [
-                            'activate_ai_after_send' => false,
-                            'channel_id' => $channel_id,
-                            'fallback_template_message' => $template,
-                            'fallback_template_variables' => [
-                                $nama,
-                                trim(preg_replace('/\s+/', ' ', $message)),
-                                $full_name,
-                            ],
-                            'phone_number' => $nomor_hp,
-                            'text' => trim(preg_replace('/\s+/', ' ', $message)),
-                        ];
-
-                        $curl = curl_init();
-
-                        curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => '',
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
-                            CURLOPT_HTTPHEADER => array(
-                                'Authorization: Bearer ' . $wa_token,
-                                'X-HaloAI-Business-Id: ' . $business_id,
-                                'Content-Type: application/json'
-                            ),
-                        ));
-
-                        $response = curl_exec($curl);
-
-                        curl_close($curl);
-
-                        $res = json_decode($response, true);
-
-                        if ($res['status'] == 'success') {
-                            $nomor_hp_admin = "6289636224827";
-                            $nama_admin = "April";
-                            if ($id_distributor == 6) {
-                                $nomor_hp_admin = "628";
-                                $nama_admin = "Dea";
-                            }
-                            $message = "Toko " . $nama . " hari ini belum melakukan pembayaran ";
-
-                            $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
-                            $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
-                            $wa_token = $rowHaloai['token_haloai'];
-                            $business_id = $rowHaloai['business_id_haloai'];
-                            $channel_id = $rowHaloai['channel_id_haloai'];
-                            $template = 'info_meeting_baru';
-
-                            $haloaiPayload = [
-                                'activate_ai_after_send' => false,
-                                'channel_id' => $channel_id,
-                                'fallback_template_message' => $template,
-                                'fallback_template_variables' => [
-                                    $nama_admin,
-                                    trim(preg_replace('/\s+/', ' ', $message)),
-                                    $full_name,
-                                ],
-                                'phone_number' => $nomor_hp_admin,
-                                'text' => trim(preg_replace('/\s+/', ' ', $message)),
-                            ];
-
-                            $curl = curl_init();
-
-                            curl_setopt_array($curl, array(
-                                CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
-                                CURLOPT_RETURNTRANSFER => true,
-                                CURLOPT_ENCODING => '',
-                                CURLOPT_MAXREDIRS => 10,
-                                CURLOPT_TIMEOUT => 0,
-                                CURLOPT_FOLLOWLOCATION => true,
-                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                                CURLOPT_CUSTOMREQUEST => 'POST',
-                                CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
-                                CURLOPT_HTTPHEADER => array(
-                                    'Authorization: Bearer ' . $wa_token,
-                                    'X-HaloAI-Business-Id: ' . $business_id,
-                                    'Content-Type: application/json'
-                                ),
-                            ));
-
-                            $response = curl_exec($curl);
-
-                            curl_close($curl);
-                        }
-                    } else {
-                        $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
-                        $maxchat = $getMaxchat->fetch_array(MYSQLI_ASSOC);
-                        $endpoint = "https://app.maxchat.id/api/messages/push";
-
-                        $data = [
-                            'to' => $nomor_hp,
-                            'msgType' => 'text',
-                            'templateId' => 'b75d51f9-c925-4a62-8b93-dd072600b95b',
-                            'values' => [
-                                'body' => [
-                                    [
-                                        'index' => 1,
-                                        'type' => 'text',
-                                        'text' => $nama
-                                    ],
-                                    [
-                                        'index' => 2,
-                                        'type' => 'text',
-                                        'text' => trim(preg_replace('/\s+/', ' ', $message))
-                                    ]
-                                ],
-                            ]
-                        ];
-
-                        $headers = [
-                            'Authorization: Bearer ' . $maxchat['token_maxchat'],
-                            'Content-Type: application/json',
-                        ];
-
-                        $curl = curl_init();
-
-                        curl_setopt_array($curl, array(
-                            CURLOPT_URL => $endpoint,
-                            CURLOPT_SSL_VERIFYHOST => false,
-                            CURLOPT_SSL_VERIFYPEER => false,
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => "",
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 30,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => "POST",
-                            CURLOPT_POSTFIELDS => json_encode($data),
-                            CURLOPT_HTTPHEADER => $headers,
-                        ));
-
-                        $response = curl_exec($curl);
-                        $err = curl_error($curl);
-
-                        $res = json_decode($response, true);
-
-                        curl_close($curl);
-
-                        $status = isset($res['content']) ? 'success' : 'empty';
-                    }
-                }
-            }
-        } else {
-            $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user)");
-            $id_visit = mysqli_insert_id($conn);
-        }
-
-        // if ($insertVisit) {
-        $visitDate = date("Y-m-d H:i:s");
-        if ($type_renvi == 'jatem3') {
-            $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'jatem'");
-
-            $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_renvis = 'jatem3'");
-        } else if ($type_renvi == 'mg') {
-            $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'mg'");
-        } else {
-            if ($type_renvi == 'jatem2') {
-                $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_renvis = 'jatem2'");
-            } else if ($type_renvi == 'jatem1') {
-                $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_renvis = 'jatem1'");
-            } else if ($type_renvi == 'voucher') {
-                $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi'");
-                // Update pasif also
-                $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'passive'");
-            } else if ($type_renvi == 'passive') {
-                // Send notif passive ke toko
-                $resultContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
-                $rowContact = $resultContact->fetch_array(MYSQLI_ASSOC);
-
-                $nama = $rowContact['nama'];
-                $nomor_hp = $rowContact['nomorhp'];
-
-                $id_distributor = $rowUser['id_distributor'];
-
-                $message = "Halo, " . $nama . ". terimakasih terimakasih atas waktu kunjungannya ";
-
-                $full_name = 'PT Top Mortar Indonesia';
-
-                $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
-                $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
-                $wa_token = $rowHaloai['token_haloai'];
-                $business_id = $rowHaloai['business_id_haloai'];
-                $channel_id = $rowHaloai['channel_id_haloai'];
-                $template = 'info_meeting_baru';
-
-                $haloaiPayload = [
-                    'activate_ai_after_send' => false,
-                    'channel_id' => $channel_id,
-                    'fallback_template_message' => $template,
-                    'fallback_template_variables' => [
-                        $nama,
-                        trim(preg_replace('/\s+/', ' ', $message)),
-                        $full_name,
-                    ],
-                    'phone_number' => $nomor_hp,
-                    'text' => trim(preg_replace('/\s+/', ' ', $message)),
-                ];
-
-                $curl = curl_init();
-
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
-                    CURLOPT_HTTPHEADER => array(
-                        'Authorization: Bearer ' . $wa_token,
-                        'X-HaloAI-Business-Id: ' . $business_id,
-                        'Content-Type: application/json'
-                    ),
-                ));
-
-                $response = curl_exec($curl);
-
-                curl_close($curl);
-
-                echo json_encode($rowHaloai);
-                echo $response;
-
-                $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi'");
-            } else if ($type_renvi == 'tagih_mingguan' || $type_renvi == 'weekly') {
-                $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'tagih_mingguan'");
-            } else {
-                if ($source == 'renvisales') {
                     $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi'");
+                } else if ($type_renvi == 'tagih_mingguan' || $type_renvi == 'weekly') {
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'tagih_mingguan'");
                 } else {
-                    $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
+                    if ($source == 'renvisales') {
+                        $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi'");
+                    } else {
+                        $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
+                    }
                 }
             }
-        }
 
-        $id_bid = $rowBid['id_bid'];
-        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan!", "id_visit" => (string)$id_visit];
-        echo json_encode($response);
-        // } else {
-        //     $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan laporan! " . mysqli_error($conn), "detail" => mysqli_error($conn)];
-        //     echo json_encode($response);
-        // }
+            $id_bid = $rowBid['id_bid'];
+            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan!", "id_visit" => (string)$id_visit];
+            echo json_encode($response);
+            // } else {
+            //     $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan laporan! " . mysqli_error($conn), "detail" => mysqli_error($conn)];
+            //     echo json_encode($response);
+            // }
+        }
     } else if (isset($_POST['id_gudang'])) {
         $id_gudang = $_POST['id_gudang'] ? $_POST['id_gudang'] : 0;
         $distance_visit = $_POST['distance_visit'] ? str_replace(',', '.', $_POST['distance_visit']) : 0;
