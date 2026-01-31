@@ -233,10 +233,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         if ($res['status'] == 'success') {
                             $nomor_hp_admin = "6289636224827";
                             $nama_admin = "April";
-                            // if ($id_distributor == 6) {
-                            //     $nomor_hp_admin = "628";
-                            //     $nama_admin = "Dea";
-                            // }
+                            if ($id_distributor == 6) {
+                                $nomor_hp_admin = "6285646844240";
+                                $nama_admin = "Aris";
+                            }
                             $message = "Toko " . $nama . "telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
 
                             $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
