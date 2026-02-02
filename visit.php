@@ -700,7 +700,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                     $id_distributor = $rowUser['id_distributor'];
 
-                    $message = "Halo, " . $nama . ". terimakasih terimakasih atas waktu kunjungannya ";
+                    $message = "Terimakasih terimakasih atas waktu kunjungannya ";
 
                     $full_name = 'PT Top Mortar Indonesia';
 
