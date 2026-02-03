@@ -62,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' ORDER BY date_visit DESC LIMIT 200");
 
                 while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
+                    $id_contact = $rowVisit['id_contact'];
                     $id_visit = $rowVisit['id_visit'];
                     $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' LIMIT 1");
                     $rowAnswer = $getAnswer->fetch_array(MYSQLI_ASSOC);
@@ -103,6 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' ORDER BY date_visit DESC");
 
                 while ($rowVisit = $getVisit->fetch_array(MYSQLI_ASSOC)) {
+                    $id_contact = $rowVisit['id_contact'];
                     $id_visit = $rowVisit['id_visit'];
                     $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' LIMIT 1");
                     $rowAnswer = $getAnswer->fetch_array(MYSQLI_ASSOC);
