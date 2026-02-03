@@ -67,14 +67,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' LIMIT 1");
                     $rowAnswer = $getAnswer->fetch_array(MYSQLI_ASSOC);
                     $rowVisit['has_checklist'] = $rowAnswer != null ? "1" : "0";
-                    $visitArray[] = $rowVisit;
-
                     $getGudang = mysqli_query($conn, "SELECT * FROM tb_gudang WHERE id_gudang = '$id_contact'");
                     $rowGudang = $getGudang->fetch_array(MYSQLI_ASSOC);
 
                     if (str_contains($rowVisit['source_visit'], 'bc')) {
                         $rowVisit['nama'] = $rowGudang['nama_gudang'];
                     }
+                    $visitArray[] = $rowVisit;
                 }
 
                 if ($visitArray == null) {
@@ -109,16 +108,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $getAnswer = mysqli_query($conn, "SELECT * FROM tb_visit_answer WHERE id_visit = '$id_visit' LIMIT 1");
                     $rowAnswer = $getAnswer->fetch_array(MYSQLI_ASSOC);
                     $rowVisit['has_checklist'] = $rowAnswer != null ? "1" : "0";
-                    $visitArray[] = $rowVisit;
-
                     $getGudang = mysqli_query($conn, "SELECT * FROM tb_gudang WHERE id_gudang = '$id_contact'");
                     $rowGudang = $getGudang->fetch_array(MYSQLI_ASSOC);
 
                     if (str_contains($rowVisit['source_visit'], 'bc')) {
                         $rowVisit['nama'] = $rowGudang['nama_gudang'];
                     }
-
-                    $rowVisit['nagud'] = $rowGudang['nama_gudang'];
+                    $visitArray[] = $rowVisit;
                 }
 
                 if ($visitArray == null) {
