@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_user = $_GET['u'];
             $id_contact = $_GET['s'];
 
-            $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' AND tb_visit.id_contact = '$id_contact' AND tb_visit.laporan_visit NOT LIKE '%bc%' ORDER BY date_visit DESC");
+            $getVisit = mysqli_query($conn, "SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' AND tb_visit.id_contact = '$id_contact' AND tb_visit.source_visit NOT LIKE '%bc%' ORDER BY date_visit DESC");
 
             echo mysqli_error($conn);
 
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $getGudang = mysqli_query($conn, "SELECT * FROM tb_gudang WHERE id_gudang = '$id_contact'");
                     $rowGudang = $getGudang->fetch_array(MYSQLI_ASSOC);
 
-                    if (str_contains($rowVisit['laporan_visit'], 'bc')) {
+                    if (str_contains($rowVisit['source_visit'], 'bc')) {
                         $rowVisit['nama'] = $rowGudang['nama_gudang'];
                     }
                 }
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $getGudang = mysqli_query($conn, "SELECT * FROM tb_gudang WHERE id_gudang = '$id_contact'");
                     $rowGudang = $getGudang->fetch_array(MYSQLI_ASSOC);
 
-                    if (str_contains($rowVisit['laporan_visit'], 'bc')) {
+                    if (str_contains($rowVisit['source_visit'], 'bc')) {
                         $rowVisit['nama'] = $rowGudang['nama_gudang'];
                     }
                 }
