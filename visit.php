@@ -117,6 +117,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     if (str_contains($rowVisit['source_visit'], 'bc')) {
                         $rowVisit['nama'] = $rowGudang['nama_gudang'];
                     }
+
+                    $rowVisit['nagud'] = $rowGudang['nama_gudang'];
                 }
 
                 if ($visitArray == null) {
