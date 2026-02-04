@@ -421,8 +421,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 $nomor_hp_admin = "6289636224827";
                                 $nama_admin = "April";
                                 if ($id_distributor == 6) {
-                                    $nomor_hp_admin = "628";
-                                    $nama_admin = "Dea";
+                                    $nomor_hp_admin = "6285646844240";
+                                    $nama_admin = "Aris";
                                 }
                                 $message = "Toko " . $nama . " menjanjikan pembayaran pada tanggal " . date("Y-m-d", strtotime($pay_date));
 
@@ -585,8 +585,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 $nomor_hp_admin = "6289636224827";
                                 $nama_admin = "April";
                                 if ($id_distributor == 6) {
-                                    $nomor_hp_admin = "628";
-                                    $nama_admin = "Dea";
+                                    $nomor_hp_admin = "6285646844240";
+                                    $nama_admin = "Aris";
                                 }
                                 $message = "Toko " . $nama . " hari ini belum melakukan pembayaran ";
 
