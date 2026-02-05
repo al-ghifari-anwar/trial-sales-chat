@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+// error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 
 // $wa_token = 'xz5922BoBI6I9ECLKVZjPMm-7-0sqx0cjIqVVeuWURI';
