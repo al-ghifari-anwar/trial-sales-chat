@@ -16,11 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $id_distributor = $contact['id_distributor'];
 
-    $qontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'")->fetch_array(MYSQLI_ASSOC);
+    // $qontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'")->fetch_array(MYSQLI_ASSOC);
 
-    $wa_token = $qontak['token'];
-    $integration_id = $qontak['integration_id'];
-    $template_id = '7bf2d2a0-bdd5-4c70-ba9f-a9665f66a841';
+    // $wa_token = $qontak['token'];
+    // $integration_id = $qontak['integration_id'];
+    // $template_id = '7bf2d2a0-bdd5-4c70-ba9f-a9665f66a841';
 
     if (isset($_FILES['img_message'])) {
         $img_message = $_FILES['img_message']['name'];
@@ -35,15 +35,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         //     imagejpeg($createImage, $imageDestination, 60);
         // }
 
+        $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+        $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+        $wa_token = $rowHaloai['token_haloai'];
+        $business_id = $rowHaloai['business_id_haloai'];
+        $channel_id = $rowHaloai['channel_id_haloai'];
+        $template = 'notif_materi_img';
+
         $imgNewName = $fileName;
 
-        $message = '' . $contact['nama'] . ' ' . $message;
+        $message = ' ' . $message;
+
+        $img_msg = "https://order.topmortarindonesia.com/assets/img/kontenmsg_img/" . $imgNewName;
+
+        $haloaiPayload = [
+            'activate_ai_after_send' => false,
+            'channel_id' => $channel_id,
+            "fallback_template_header" => [
+                'filename' => $imgNewName,
+                'type' => 'image',
+                'url' => $img_msg,
+            ],
+            'fallback_template_message' => $template,
+            'fallback_template_variables' => [
+                trim(preg_replace('/\s+/', ' ', $message)),
+            ],
+            "media" => [
+                'filename' => $imgNewName,
+                'type' => 'image',
+                'url' => $img_msg,
+            ],
+            'phone_number' => $contact['nomorhp'],
+            'text' => trim(preg_replace('/\s+/', ' ', $message)),
+        ];
 
         // Send message
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+            CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -51,111 +81,73 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '{
-                            "to_number": "' . $nomorhp . '",
-                            "to_name": "' . $contact['nama'] . '",
-                            "message_template_id": "' . $template_id . '",
-                            "channel_integration_id": "' . $integration_id . '",
-                            "language": {
-                                "code": "id"
-                            },
-                            "parameters": {
-                                "header":{
-                                    "format":"IMAGE",
-                                    "params": [
-                                        {
-                                            "key":"url",
-                                            "value":"https://saleswa.topmortarindonesia.com/img/img_konten_msg/' . $imgNewName . '"
-                                        },
-                                        {
-                                            "key":"filename",
-                                            "value":"konten.png"
-                                        }
-                                    ]
-                                },
-                                "body": [
-                                    {
-                                        "key": "1",
-                                        "value": "message",
-                                        "value_text": "' . trim(preg_replace('/\s+/', ' ', $message)) . '"
-                                    }
-                                ]
-                            }
-                            }',
+            CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
             CURLOPT_HTTPHEADER => array(
                 'Authorization: Bearer ' . $wa_token,
+                'X-HaloAI-Business-Id: ' . $business_id,
                 'Content-Type: application/json'
             ),
         ));
+        // $curl = curl_init();
 
-        $response = curl_exec($curl);
+        // curl_setopt_array($curl, array(
+        //     CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+        //     CURLOPT_RETURNTRANSFER => true,
+        //     CURLOPT_ENCODING => '',
+        //     CURLOPT_MAXREDIRS => 10,
+        //     CURLOPT_TIMEOUT => 0,
+        //     CURLOPT_FOLLOWLOCATION => true,
+        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        //     CURLOPT_CUSTOMREQUEST => 'POST',
+        //     CURLOPT_POSTFIELDS => '{
+        //                     "to_number": "' . $nomorhp . '",
+        //                     "to_name": "' . $contact['nama'] . '",
+        //                     "message_template_id": "' . $template_id . '",
+        //                     "channel_integration_id": "' . $integration_id . '",
+        //                     "language": {
+        //                         "code": "id"
+        //                     },
+        //                     "parameters": {
+        //                         "header":{
+        //                             "format":"IMAGE",
+        //                             "params": [
+        //                                 {
+        //                                     "key":"url",
+        //                                     "value":"https://saleswa.topmortarindonesia.com/img/img_konten_msg/' . $imgNewName . '"
+        //                                 },
+        //                                 {
+        //                                     "key":"filename",
+        //                                     "value":"konten.png"
+        //                                 }
+        //                             ]
+        //                         },
+        //                         "body": [
+        //                             {
+        //                                 "key": "1",
+        //                                 "value": "message",
+        //                                 "value_text": "' . trim(preg_replace('/\s+/', ' ', $message)) . '"
+        //                             }
+        //                         ]
+        //                     }
+        //                     }',
+        //     CURLOPT_HTTPHEADER => array(
+        //         'Authorization: Bearer ' . $wa_token,
+        //         'Content-Type: application/json'
+        //     ),
+        // ));
 
-        curl_close($curl);
+        // $response = curl_exec($curl);
+
+        // curl_close($curl);
 
         $res = json_decode($response, true);
 
         if ($res['status'] == 'success') {
-            $resData = $res['data'];
-            $id_msg = $resData['id'];
-
-            // Cek Log 5f70dd63-7959-4a1c-8e52-e65a1eb40487
-            $curl = curl_init();
-
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/' . $id_msg . '/whatsapp/log',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'GET',
-                CURLOPT_HTTPHEADER => array(
-                    'Authorization: Bearer ' . $wa_token,
-                    'Cookie: incap_ses_1756_2992082=Ox9FXS1ko3Vikf0LFJFeGKGyt2gAAAAAQXScjKXeLICe/UQF78vzGQ==; incap_ses_219_2992082=4GjPNG8+XzA1Rt4quwsKA4G1u2gAAAAAWfhLh+XsD0Bo64qAFthTLg==; nlbi_2992082=EiQRTKjoCUbRUjeX3B9AyAAAAAAMWeh7AVkdVtlwZ+4p2rGi; visid_incap_2992082=loW+JnDtRgOZqqa55tsRH55YmWgAAAAAQUIPAAAAAADOFD/DW2Yv8YwghY/luI5g'
-                ),
-            ));
-
-            $responseLog = curl_exec($curl);
-
-            curl_close($curl);
-
-            $resLog = json_decode($responseLog, true);
-            $logData = $resLog['data'][0];
-
-            if ($logData['status'] == 'failed') {
-                // Gagal
-                $saveLog = mysqli_query($conn, "INSERT INTO tb_msg_konten(id_contact,id_distributor,id_msg,nomorhp_msg_konten,message_msg_konten,img_msg_konten,is_sent) VALUES($id_contact,$id_distributor,'$id_msg','$nomorhp','$message','$imgNewName',0)");
-
-                if ($saveLog) {
-                    $response = ["response" => 200, "status" => "ok", "message" => "Pesan telah disimpan."];
-                    echo json_encode($response);
-                } else {
-                    $response = ["response" => 400, "status" => "failed", "message" => "Pesan gagal tersimpan."];
-                    echo json_encode($response);
-                }
-            } else {
-                $saveLog = mysqli_query($conn, "INSERT INTO tb_msg_konten(id_contact,id_distributor,id_msg,nomorhp_msg_konten,message_msg_konten,img_msg_konten,is_sent) VALUES($id_contact,$id_distributor,'$id_msg','$nomorhp','$message','$imgNewName',1)");
-
-                if ($saveLog) {
-                    $response = ["response" => 200, "status" => "ok", "message" => "Pesan berhasil terkirim."];
-                    echo json_encode($response);
-                } else {
-                    $response = ["response" => 400, "status" => "failed", "message" => "Pesan gagal terkirim."];
-                    echo json_encode($response);
-                }
-            }
+            $response = ["response" => 200, "status" => "ok", "message" => "Pesan berhasil terkirim."];
+            echo json_encode($response);
         } else {
-            // Gagal
-            $saveLog = mysqli_query($conn, "INSERT INTO tb_msg_konten(id_contact,id_distributor,id_msg,nomorhp_msg_konten,message_msg_konten,img_msg_konten,is_sent) VALUES($id_contact,$id_distributor,'-','$nomorhp','$message','$imgNewName',0)");
-
-            if ($saveLog) {
-                $response = ["response" => 200, "status" => "ok", "message" => "Pesan telah disimpan", "qontak" => $res];
-                echo json_encode($response);
-            } else {
-                $response = ["response" => 400, "status" => "failed", "message" => "Pesan gagal tersimpan", "qontak" => $res];
-                echo json_encode($response);
-            }
+            $response = ["response" => 400, "status" => "failed", "message" => "Pesan gagal terkirim", "detail" => $res];
+            echo json_encode($response);
         }
     } else {
         $response = ["response" => 400, "status" => "failed", "message" => "Anda belum memilih foto"];
