@@ -168,6 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($rowVisit) {
             $response = ["response" => 200, "status" => "ok", "message" => "Visit sudah tersimpan! "];
             echo json_encode($response);
+            die;
         } else {
             if ($is_pay != "0") {
                 $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
