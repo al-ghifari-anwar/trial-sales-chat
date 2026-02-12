@@ -213,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         $wa_token = $rowHaloai['token_haloai'];
                         $business_id = $rowHaloai['business_id_haloai'];
                         $channel_id = $rowHaloai['channel_id_haloai'];
-                        $template = 'info_meeting_baru';
+                        $template = 'info_konfirm_meeting';
 
                         $haloaiPayload = [
                             'activate_ai_after_send' => false,
@@ -794,7 +794,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $wa_token = $rowHaloai['token_haloai'];
                     $business_id = $rowHaloai['business_id_haloai'];
                     $channel_id = $rowHaloai['channel_id_haloai'];
-                    $template = 'info_meeting_baru';
+                    $template = 'info_konfirm_meeting';
 
                     $haloaiPayload = [
                         'activate_ai_after_send' => false,
