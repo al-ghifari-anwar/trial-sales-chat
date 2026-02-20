@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // $rowSj = $getSj->fetch_array(MYSQLI_ASSOC);
 
             // $row['sj'] = $rowSj;
-            $row['payment_score'] = $resScore['payment'];
+            $row['payment_score'] = $resScore['payment'] != null ? $resScore['payment'] : 0;
 
             $storeArray[] = $row;
         }
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $resScore = json_decode($response, true);
 
-            $row['payment_score'] = $resScore['payment'];
+            $row['payment_score'] = $resScore['payment'] != null ? $resScore['payment'] : 0;
 
             $suratJalanArray[] = $row;
         }

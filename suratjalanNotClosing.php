@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $detailArray[] = $rowSj;
             }
 
-            $row['payment_score'] = $resScore['payment'];
+            $row['payment_score'] = $resScore['payment'] != null ? $resScore['payment'] : 0;
             $row['detail'] = $detailArray;
 
             $suratJalanArray[] = $row;
@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $detailArray[] = $rowSj;
             }
 
-            $row['payment_score'] = $resScore['payment'];
+            $row['payment_score'] = $resScore['payment'] != null ? $resScore['payment'] : 0;
             $row['detail'] = $detailArray;
 
             $suratJalanArray[] = $row;
@@ -161,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $detailArray[] = $rowSj;
             }
 
-            $row['payment_score'] = $resScore['payment'];
+            $row['payment_score'] = $resScore['payment'] != null ? $resScore['payment'] : 0;
             $row['detail'] = $detailArray;
 
             $suratJalanArray[] = $row;
