@@ -82,10 +82,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
 
             // Begin Cross Sell Potongan
-            $getNotDefaultPotongan = mysqli_query($conn, "SELECT SUM(qty_produk) AS jmlItem, SUM(potongan_cod) AS total_potongan FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk JOIN tb_master_produk ON tb_master_produk.id_master_produk = tb_produk.id_master_produk WHERE id_surat_jalan = '$id_surat_jalan' AND is_bonus = 0 AND tb_master_produk.is_default_potongan = 0 GROUP BY id_surat_jalan");
+            $getNotDefaultPotongan = mysqli_query($conn, "SELECT SUM(qty_produk) AS jmlItem, potongan_cod AS total_potongan FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk JOIN tb_master_produk ON tb_master_produk.id_master_produk = tb_produk.id_master_produk WHERE id_surat_jalan = '$id_surat_jalan' AND is_bonus = 0 AND tb_master_produk.is_default_potongan = 0 GROUP BY id_surat_jalan");
 
             $rowNotDefaultPotongan = $getNotDefaultPotongan->fetch_array(MYSQLI_ASSOC);
-            $potonganCrossSelling = $rowNotDefaultPotongan['total_potongan'];
+            $potonganCrossSelling = $rowNotDefaultPotongan['total_potongan'] * $rowNotDefaultPotongan['total_potongan'];
             // End Cross Sell Potongan
 
             $id_surat_jalan = $rowSuratJalan['id_surat_jalan'];
