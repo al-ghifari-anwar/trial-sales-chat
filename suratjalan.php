@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_SSL_VERIFYPEER => false,
                 CURLOPT_HTTPHEADER => array(
                     'Cookie: ci_session=lhkink762s3l30orkkjnpds9sd94eh1d'
                 ),
@@ -68,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_SSL_VERIFYPEER => false,
                 CURLOPT_HTTPHEADER => array(
                     'Cookie: ci_session=lhkink762s3l30orkkjnpds9sd94eh1d'
                 ),
