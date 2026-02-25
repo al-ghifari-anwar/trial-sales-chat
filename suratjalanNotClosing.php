@@ -134,28 +134,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_surat_jalan = $row['id_surat_jalan'];
             $id_contact = $row['id_contact'];
 
-            $curl = curl_init();
+            // $curl = curl_init();
 
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://order.topmortarindonesia.com/scoring/combine/' . $id_contact,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_HTTPHEADER => array(
-                    'Cookie: ci_session=lhkink762s3l30orkkjnpds9sd94eh1d'
-                ),
-            ));
+            // curl_setopt_array($curl, array(
+            //     CURLOPT_URL => 'https://order.topmortarindonesia.com/scoring/combine/' . $id_contact,
+            //     CURLOPT_RETURNTRANSFER => true,
+            //     CURLOPT_ENCODING => '',
+            //     CURLOPT_MAXREDIRS => 10,
+            //     CURLOPT_TIMEOUT => 0,
+            //     CURLOPT_FOLLOWLOCATION => true,
+            //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            //     CURLOPT_CUSTOMREQUEST => 'POST',
+            //     CURLOPT_SSL_VERIFYPEER => false,
+            //     CURLOPT_HTTPHEADER => array(
+            //         'Cookie: ci_session=lhkink762s3l30orkkjnpds9sd94eh1d'
+            //     ),
+            // ));
 
-            $response = curl_exec($curl);
+            // $response = curl_exec($curl);
 
-            curl_close($curl);
+            // curl_close($curl);
 
-            $resScore = json_decode($response, true);
+            // $resScore = json_decode($response, true);
 
             $detailArray = array();
 
@@ -164,7 +164,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $detailArray[] = $rowSj;
             }
 
-            $row['payment_score'] = $resScore['payment'] != null ? $resScore['payment'] : 0;
+            // $row['payment_score'] = $resScore['payment'] != null ? $resScore['payment'] : 0;
+            $row['payment_score'] = 92 . "";
             $row['detail'] = $detailArray;
 
             $suratJalanArray[] = $row;
