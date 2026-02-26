@@ -175,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if ($sisa_kredit_limit < 0) {
             $can_closing = "no";
-            $msg_can_closing = $msg_can_closing . " | Kredit limit habis";
+            $msg_can_closing = empty($msg_can_closing) ? "Kredit limit habis" : $msg_can_closing . " | Kredit limit habis";
         }
 
         // Endof Kredit Limit
