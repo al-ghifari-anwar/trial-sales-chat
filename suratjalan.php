@@ -102,10 +102,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $can_closing = 'yes';
         $msg_can_closing = '';
 
+        $suratjalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
+
         while ($row = $resultDetail->fetch_array(MYSQLI_ASSOC)) {
             $dateCutoff = "2025-07-20 00:00:00";
 
-            $suratjalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
 
             $id_city = $suratjalan['id_city'];
 
