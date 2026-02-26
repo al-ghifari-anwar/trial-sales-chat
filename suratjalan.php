@@ -95,11 +95,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if ($_GET['p'] == 3) {
         $id_surat_jalan = $_GET['sj'];
 
-        $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan WHERE id_surat_jalan = '$id_surat_jalan' ");
+        $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan, tb_surat_Jalan.id_contact FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan WHERE id_surat_jalan = '$id_surat_jalan' ");
 
         $resultDetail = mysqli_query($conn, "SELECT * FROM tb_detail_surat_jalan JOIN tb_produk ON tb_produk.id_produk = tb_detail_surat_jalan.id_produk WHERE id_surat_jalan = '$id_surat_jalan'");
 
         $can_closing = 'yes';
+        $msg_can_closing = '';
 
         while ($row = $resultDetail->fetch_array(MYSQLI_ASSOC)) {
             $dateCutoff = "2025-07-20 00:00:00";
@@ -132,10 +133,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             if ($currentStok <= 0) {
                 $can_closing = 'no';
+                $msg_can_closing = 'Stok tidak mencukupi';
             }
 
             if ($currentStok < $row['qty_produk']) {
                 $can_closing = 'no';
+                $msg_can_closing = 'Stok tidak mencukupi';
             }
 
             $row['stok_bebas'] = $currentStok . "";
@@ -143,9 +146,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $detailArray[] = $row;
         }
 
+        $id_contact = $suratjalan['id_contact'];
+
+        $contact = mysqli_query($conn, " SELECT * FROM tb_contact WHERE id_contact = '$id_contact' ")->fetch_array(MYSQLI_ASSOC);
+
+        // Get total waiting
+        $getInvoices = mysqli_query($conn, "SELECT * FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact' AND status_invoice = 'waiting' ORDER BY date_invoice DESC");
+
+        $sisa_invoice_waiting = 0;
+
+        while ($rowInvoice = $getInvoices->fetch_array(MYSQLI_ASSOC)) {
+
+            $id_invoice = $rowInvoice['id_invoice'];
+
+            $getPayment = mysqli_query($conn, "SELECT * FROM tb_payment WHERE id_invoice = '$id_invoice' ORDER BY date_payment DESC");
+
+            $total_payment = 0;
+            while ($rowPayment = $getPayment->fetch_array(MYSQLI_ASSOC)) {
+                $total_payment += $rowPayment['amount_payment'];
+            }
+
+            $sisa_invoice_waiting += $rowInvoice['total_invoice'] - $total_payment;
+        }
+
+        $sisa_kredit_limit = $contact['kredit_limit'] - $sisa_invoice_waiting;
+
+        if ($sisa_kredit_limit < 0) {
+            $can_closing = "no";
+            $msg_can_closing = "Kredit limit habis";
+        }
+
+        // Endof Kredit Limit
+
         while ($row = $resultSuratJalan->fetch_object()) {
             $row->details = $detailArray;
             $row->can_closing = $can_closing;
+            $row->msg_can_closing = $msg_can_closing;
             $suratJalanArray[] = $row;
         }
 
