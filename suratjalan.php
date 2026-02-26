@@ -107,7 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         while ($row = $resultDetail->fetch_array(MYSQLI_ASSOC)) {
             $dateCutoff = "2025-07-20 00:00:00";
 
-
             $id_city = $suratjalan['id_city'];
 
             $city = mysqli_query($conn, "SELECT * FROM tb_city WHERE id_city = '$id_city'")->fetch_array(MYSQLI_ASSOC);
