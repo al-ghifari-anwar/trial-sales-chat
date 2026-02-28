@@ -209,6 +209,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $msg_can_closing = empty($msg_can_closing) ? "Skor rendah, skor toko: " . $resScore['payment'] : $msg_can_closing . " | Skor rendah, skor toko: " . $resScore['payment'];
         }
 
+        if ($suratjalan['can_closing'] == 1) {
+            $can_closing = "yes";
+            $msg_can_closing = "";
+        }
+
         while ($row = $resultSuratJalan->fetch_object()) {
             $row->details = $detailArray;
             $row->can_closing = $can_closing;
