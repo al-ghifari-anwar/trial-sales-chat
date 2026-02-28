@@ -174,11 +174,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $sisa_kredit_limit = $contact['kredit_limit'] - $sisa_invoice_waiting;
 
         if ($sisa_kredit_limit < 0) {
-            // $can_closing = "no";
+            $can_closing = "no";
             $msg_can_closing = empty($msg_can_closing) ? "Kredit limit habis" : $msg_can_closing . " | Kredit limit habis";
         }
 
         // Endof Kredit Limit
+
+        // Get Score
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://order.topmortarindonesia.com/scoring/combine/' . $id_contact,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_HTTPHEADER => array(
+                'Cookie: ci_session=lhkink762s3l30orkkjnpds9sd94eh1d'
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        $resScore = json_decode($response, true);
+
+        if ($resScore['payment'] < 90) {
+            $can_closing = "no";
+            $msg_can_closing = empty($msg_can_closing) ? "Skor rendah, skor toko: " . $resScore['payment'] : $msg_can_closing . " | Skor rendah, skor toko: " . $resScore['payment'];
+        }
 
         while ($row = $resultSuratJalan->fetch_object()) {
             $row->details = $detailArray;
