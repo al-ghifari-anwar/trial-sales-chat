@@ -138,10 +138,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $status = $res['status'];
 
             if ($status == "success") {
-                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan tagihan!", "detail" => $msgStatus, "body" => $message];
+                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan tagihan!", "detail" => $msgStatus, "body" => $message, "res" => $response];
                 echo json_encode($response);
             } else {
-                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim laporan tagihan!", "target" => $salesArray['username'] . " - " . $nomor_hp];
+                $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim laporan tagihan!", "target" => $salesArray['username'] . " - " . $nomor_hp, "res" => $response];
                 echo json_encode($response);
             }
             // 
