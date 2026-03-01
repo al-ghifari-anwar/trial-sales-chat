@@ -144,6 +144,11 @@ foreach ($transArray as $arr) {
                         'activate_ai_after_send' => false,
                         'channel_id' => $channel_id,
                         'fallback_template_message' => $template,
+                        'fallback_template_header' => [
+                            "filename" => "video.mp4",
+                            'type' => 'video',
+                            'url' => 'https://saleswa.topmortarindonesia.com/vids/ultahnew.mp4',
+                        ],
                         'fallback_template_variables' => [
                             $nama,
                             trim(preg_replace('/\s+/', ' ', $jmlVoucher)),
