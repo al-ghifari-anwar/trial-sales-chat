@@ -148,7 +148,6 @@ foreach ($transArray as $arr) {
                             $nama,
                             trim(preg_replace('/\s+/', ' ', $jmlVoucher)),
                             $vouchers,
-                            $full_name,
                             date("d M, Y", strtotime("+30 days")),
                         ],
                         'media' => [
