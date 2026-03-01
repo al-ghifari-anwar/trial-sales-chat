@@ -1,6 +1,8 @@
 <?php
 
-// error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 
@@ -54,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 'channel_id' => $channel_id,
                 'fallback_template_message' => $template,
                 'fallback_template_variables' => [
-                    $nama['nama'],
+                    $nama,
                     trim(preg_replace('/\s+/', ' ', $message)),
                     "PT Top Mortar Indonesia",
                 ],
