@@ -138,7 +138,7 @@ foreach ($transArray as $arr) {
                     $wa_token = $rowHaloai['token_haloai'];
                     $business_id = $rowHaloai['business_id_haloai'];
                     $channel_id = $rowHaloai['channel_id_haloai'];
-                    $template = 'info_meeting_baru';
+                    $template = 'bdayvidbaru';
 
                     $haloaiPayload = [
                         'activate_ai_after_send' => false,
@@ -146,8 +146,10 @@ foreach ($transArray as $arr) {
                         'fallback_template_message' => $template,
                         'fallback_template_variables' => [
                             $nama,
-                            trim(preg_replace('/\s+/', ' ', $message)),
+                            trim(preg_replace('/\s+/', ' ', $jmlVoucher)),
+                            $vouchers,
                             $full_name,
+                            date("d M, Y", strtotime("+30 days")),
                         ],
                         'media' => [
                             "filename" => "video.mp4",
