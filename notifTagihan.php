@@ -144,6 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $response = ["response" => 200, "status" => "failed", "message" => "Gagal mengirim laporan tagihan!", "target" => $salesArray['username'] . " - " . $nomor_hp];
                 echo json_encode($response);
             }
+            // 
         }
     }
 }
