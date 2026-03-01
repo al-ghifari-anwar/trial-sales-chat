@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 'channel_id' => $channel_id,
                 'fallback_template_message' => $template,
                 'fallback_template_variables' => [
-                    $nama['nama'],
+                    $nama,
                     trim(preg_replace('/\s+/', ' ', $message)),
                     "PT Top Mortar Indonesia",
                 ],
