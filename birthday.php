@@ -116,8 +116,8 @@ foreach ($transArray as $arr) {
 
                 if ($status == 'ok') {
                     $voucherArr = array();
-                    $dateNow = date("m-d");
-                    $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id_contact' AND is_claimed = 0 AND date_voucher LIKE '%$dateNow%' ");
+                    $dateNow = date("Y-m-d");
+                    $getVoucher = mysqli_query($conn, "SELECT * FROM tb_voucher WHERE id_contact = '$id_contact' AND is_claimed = 0 AND DATE(date_voucher) LIKE '%$dateNow%' ");
                     while ($rowVoucher = $getVoucher->fetch_array(MYSQLI_ASSOC)) {
                         $voucherArr[] = $rowVoucher;
                     }
