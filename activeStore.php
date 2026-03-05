@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if (isset($_GET['city'])) {
         $id_city = $_GET['city'];
-
         $lastDay = date('Y-m-01');
 
         // $resultActive = mysqli_query($conn, "SELECT * FROM tb_active_store WHERE id_city = '$id_city'");
