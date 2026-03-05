@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $updated_at = date("Y-m-d H:i:s");
         $year = date('Y');
 
-        $getActive = mysqli_query($conn, "SELECT * FROM tb_active_store WHERE month_active = '$month' AND id_city = '$id_city' AND YEAR(craeted_at) = '$year' ")->fetch_array(MYSQLI_ASSOC);
+        $getActive = mysqli_query($conn, "SELECT * FROM tb_active_store WHERE month_active = '$month' AND id_city = '$id_city' AND YEAR(created_at) = '$year' ")->fetch_array(MYSQLI_ASSOC);
 
         if ($getActive) {
             $updateActive = mysqli_query($conn, " UPDATE tb_active_store SET jml_active = '$jml_active', updated_at = '$updated_at' WHERE month_active = '$month' AND id_city = '$id_city' AND YEAR(craeted_at) = '$year' ");
