@@ -101,183 +101,192 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $id_distributor = $rowContact['id_distributor'];
 
     if (isset($_POST['message_body'])) {
-
-        $integration_id = $rowQontak['integration_id'];
-        if ($rowUserData['id_distributor'] == 4) {
-            $nama = $rowContact['store_owner'] . ".";
-            $wa_token = 'lzKKjup6a2_fKtoDZ0KJO4pFURhKte5eVKzeD9Ect0A';
-            $integration_id = $rowUserData['integration_id'];
-            $template_id = '0f10d2b5-f143-4c76-b413-3a9a236677c4';
-            if ($rowUserData['level_user'] == 'admin' || $rowUserData['level_user'] == 'salesleader') {
-                $nama = $rowContact['store_owner'] . ".";
-                $wa_token = "lzKKjup6a2_fKtoDZ0KJO4pFURhKte5eVKzeD9Ect0A";
-                $integration_id = "e44eaa46-7a7c-45cb-9cea-1375c241fa66";
-                $template_id = '0f10d2b5-f143-4c76-b413-3a9a236677c4';
-                // $template_id = '85f17083-255d-4340-af32-5dd22f483960';
-            }
-        }
         $message = $_POST['message_body'];
-        if ($id_contact != null) {
-            ini_set('display_errors', 1);
-            error_reporting(E_ALL);
 
-            $resultMsg = mysqli_query($conn, "INSERT INTO tb_messages(id_contact, message_body) VALUES($id_contact, '$message')");
+        $getMessage = mysqli_query($conn, " SELECT * FROM tb_message WHERE id_contact = '$id_contact' AND message_body = '$message' ")->fetch_array(MYSQLI_ASSOC);
 
-
-            $status = "";
-
-            if ($rowUserData['id_distributor'] != 8) {
-                $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
-                $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
-                $wa_token = $rowHaloai['token_haloai'];
-                $business_id = $rowHaloai['business_id_haloai'];
-                $channel_id = $rowHaloai['channel_id_haloai'];
-                $template = 'info_meeting_baru';
-
-                $haloaiPayload = [
-                    'activate_ai_after_send' => false,
-                    'channel_id' => $channel_id,
-                    'fallback_template_message' => $template,
-                    'fallback_template_variables' => [
-                        $rowContact['nama'],
-                        trim(preg_replace('/\s+/', ' ', $message)),
-                        $full_name,
-                    ],
-                    'phone_number' => $nomor_hp,
-                    'text' => trim(preg_replace('/\s+/', ' ', $message)),
-                ];
-
-                $curl = curl_init();
-
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
-                    CURLOPT_HTTPHEADER => array(
-                        'Authorization: Bearer ' . $wa_token,
-                        'X-HaloAI-Business-Id: ' . $business_id,
-                        'Content-Type: application/json'
-                    ),
-                ));
-
-                $response = curl_exec($curl);
-
-                curl_close($curl);
-
-                $res = json_decode($response, true);
-
-                $status = isset($res['delivery_status']) ? $res['status'] : 'empty';
-            } else {
-                $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
-                $maxchat = $getMaxchat->fetch_array(MYSQLI_ASSOC);
-                $endpoint = "https://app.maxchat.id/api/messages/push";
-
-                $data = [
-                    'to' => $nomor_hp,
-                    'msgType' => 'text',
-                    'templateId' => 'b75d51f9-c925-4a62-8b93-dd072600b95b',
-                    'values' => [
-                        'body' => [
-                            [
-                                'index' => 1,
-                                'type' => 'text',
-                                'text' => $nama
-                            ],
-                            [
-                                'index' => 2,
-                                'type' => 'text',
-                                'text' => trim(preg_replace('/\s+/', ' ', $message))
-                            ]
-                        ],
-                    ]
-                ];
-
-                $headers = [
-                    'Authorization: Bearer ' . $maxchat['token_maxchat'],
-                    'Content-Type: application/json',
-                ];
-
-                $curl = curl_init();
-
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => $endpoint,
-                    CURLOPT_SSL_VERIFYHOST => false,
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => "",
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 30,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => "POST",
-                    CURLOPT_POSTFIELDS => json_encode($data),
-                    CURLOPT_HTTPHEADER => $headers,
-                ));
-
-                $response = curl_exec($curl);
-                $err = curl_error($curl);
-
-                $res = json_decode($response, true);
-
-                curl_close($curl);
-
-                $status = isset($res['content']) ? 'success' : 'empty';
+        if ($getMessage) {
+            $response = ["response" => 200, "status" => "failed", "message" => "Tidak dapat mengirim 2 pesan yg sama!"];
+            echo json_encode($response);
+            die;
+        } else {
+            $integration_id = $rowQontak['integration_id'];
+            if ($rowUserData['id_distributor'] == 4) {
+                $nama = $rowContact['store_owner'] . ".";
+                $wa_token = 'lzKKjup6a2_fKtoDZ0KJO4pFURhKte5eVKzeD9Ect0A';
+                $integration_id = $rowUserData['integration_id'];
+                $template_id = '0f10d2b5-f143-4c76-b413-3a9a236677c4';
+                if ($rowUserData['level_user'] == 'admin' || $rowUserData['level_user'] == 'salesleader') {
+                    $nama = $rowContact['store_owner'] . ".";
+                    $wa_token = "lzKKjup6a2_fKtoDZ0KJO4pFURhKte5eVKzeD9Ect0A";
+                    $integration_id = "e44eaa46-7a7c-45cb-9cea-1375c241fa66";
+                    $template_id = '0f10d2b5-f143-4c76-b413-3a9a236677c4';
+                    // $template_id = '85f17083-255d-4340-af32-5dd22f483960';
+                }
             }
 
-            if ($status == 'success') {
-                $checkBid = mysqli_query($conn, "SELECT * FROM tb_bid WHERE id_contact = '$id_contact' AND id_user = '$id_user' AND is_active = 1");
-                $rowBid = $checkBid->fetch_array(MYSQLI_ASSOC);
+            if ($id_contact != null) {
+                ini_set('display_errors', 1);
+                error_reporting(E_ALL);
 
-                if ($rowBid == null) {
-                    $insertBid = mysqli_query($conn, "INSERT INTO tb_bid(id_contact,id_user,is_active) VALUES($id_contact, $id_user, 1)");
-                    $id_bid = mysqli_insert_id($conn);
+                $resultMsg = mysqli_query($conn, "INSERT INTO tb_messages(id_contact, message_body) VALUES($id_contact, '$message')");
 
-                    if ($insertBid) {
-                        // $updateStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'bid' WHERE id_contact = '$id_contact'");
-                        $updateStoreStatus = true;
 
-                        if ($updateStoreStatus) {
-                            $insertAction = mysqli_query($conn, "INSERT INTO tb_action_bid(id_bid, field_action_bid) VALUES($id_bid, 'Send new message')");
+                $status = "";
 
-                            if ($insertAction) {
-                                $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim pesan, log terimpan!", "detail" => $res];
-                                echo json_encode($response);
+                if ($rowUserData['id_distributor'] != 8) {
+                    $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                    $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                    $wa_token = $rowHaloai['token_haloai'];
+                    $business_id = $rowHaloai['business_id_haloai'];
+                    $channel_id = $rowHaloai['channel_id_haloai'];
+                    $template = 'info_meeting_baru';
+
+                    $haloaiPayload = [
+                        'activate_ai_after_send' => false,
+                        'channel_id' => $channel_id,
+                        'fallback_template_message' => $template,
+                        'fallback_template_variables' => [
+                            $rowContact['nama'],
+                            trim(preg_replace('/\s+/', ' ', $message)),
+                            $full_name,
+                        ],
+                        'phone_number' => $nomor_hp,
+                        'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                    ];
+
+                    $curl = curl_init();
+
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: Bearer ' . $wa_token,
+                            'X-HaloAI-Business-Id: ' . $business_id,
+                            'Content-Type: application/json'
+                        ),
+                    ));
+
+                    $response = curl_exec($curl);
+
+                    curl_close($curl);
+
+                    $res = json_decode($response, true);
+
+                    $status = isset($res['delivery_status']) ? $res['status'] : 'empty';
+                } else {
+                    $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
+                    $maxchat = $getMaxchat->fetch_array(MYSQLI_ASSOC);
+                    $endpoint = "https://app.maxchat.id/api/messages/push";
+
+                    $data = [
+                        'to' => $nomor_hp,
+                        'msgType' => 'text',
+                        'templateId' => 'b75d51f9-c925-4a62-8b93-dd072600b95b',
+                        'values' => [
+                            'body' => [
+                                [
+                                    'index' => 1,
+                                    'type' => 'text',
+                                    'text' => $nama
+                                ],
+                                [
+                                    'index' => 2,
+                                    'type' => 'text',
+                                    'text' => trim(preg_replace('/\s+/', ' ', $message))
+                                ]
+                            ],
+                        ]
+                    ];
+
+                    $headers = [
+                        'Authorization: Bearer ' . $maxchat['token_maxchat'],
+                        'Content-Type: application/json',
+                    ];
+
+                    $curl = curl_init();
+
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => $endpoint,
+                        CURLOPT_SSL_VERIFYHOST => false,
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => "",
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 30,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => "POST",
+                        CURLOPT_POSTFIELDS => json_encode($data),
+                        CURLOPT_HTTPHEADER => $headers,
+                    ));
+
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+
+                    $res = json_decode($response, true);
+
+                    curl_close($curl);
+
+                    $status = isset($res['content']) ? 'success' : 'empty';
+                }
+
+                if ($status == 'success') {
+                    $checkBid = mysqli_query($conn, "SELECT * FROM tb_bid WHERE id_contact = '$id_contact' AND id_user = '$id_user' AND is_active = 1");
+                    $rowBid = $checkBid->fetch_array(MYSQLI_ASSOC);
+
+                    if ($rowBid == null) {
+                        $insertBid = mysqli_query($conn, "INSERT INTO tb_bid(id_contact,id_user,is_active) VALUES($id_contact, $id_user, 1)");
+                        $id_bid = mysqli_insert_id($conn);
+
+                        if ($insertBid) {
+                            // $updateStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'bid' WHERE id_contact = '$id_contact'");
+                            $updateStoreStatus = true;
+
+                            if ($updateStoreStatus) {
+                                $insertAction = mysqli_query($conn, "INSERT INTO tb_action_bid(id_bid, field_action_bid) VALUES($id_bid, 'Send new message')");
+
+                                if ($insertAction) {
+                                    $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim pesan, log terimpan!", "detail" => $res];
+                                    echo json_encode($response);
+                                } else {
+                                    $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan record bid!"];
+                                    echo json_encode($response);
+                                }
                             } else {
-                                $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan record bid!"];
+                                $response = ["response" => 200, "status" => "failed", "message" => "Gagal merubah status toko!"];
                                 echo json_encode($response);
                             }
                         } else {
-                            $response = ["response" => 200, "status" => "failed", "message" => "Gagal merubah status toko!"];
+                            $response = ["response" => 200, "status" => "failed", "message" => "Proses bid gagal, silahkan coba lagi!", "detail" => mysqli_error($conn)];
                             echo json_encode($response);
                         }
                     } else {
-                        $response = ["response" => 200, "status" => "failed", "message" => "Proses bid gagal, silahkan coba lagi!", "detail" => mysqli_error($conn)];
-                        echo json_encode($response);
+                        $id_bid = $rowBid['id_bid'];
+                        $insertAction = mysqli_query($conn, "INSERT INTO tb_action_bid(id_bid, field_action_bid) VALUES($id_bid, 'Send message')");
+
+                        if ($insertAction) {
+                            $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim pesan, bid sudah ada, log tersimpan!", "detail" => $res];
+                            echo json_encode($response);
+                        } else {
+                            $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan record bid!"];
+                            echo json_encode($response);
+                        }
                     }
                 } else {
-                    $id_bid = $rowBid['id_bid'];
-                    $insertAction = mysqli_query($conn, "INSERT INTO tb_action_bid(id_bid, field_action_bid) VALUES($id_bid, 'Send message')");
-
-                    if ($insertAction) {
-                        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim pesan, bid sudah ada, log tersimpan!", "detail" => $res];
-                        echo json_encode($response);
-                    } else {
-                        $response = ["response" => 200, "status" => "failed", "message" => "Gagal menyimpan record bid!"];
-                        echo json_encode($response);
-                    }
+                    $response = ["response" => 200, "status" => "ok", "message" => "Terjadi kesalahan", "detail" => $res];
+                    echo json_encode($response);
                 }
             } else {
-                $response = ["response" => 200, "status" => "ok", "message" => "Terjadi kesalahan", "detail" => $res];
+                $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data pesan!"];
                 echo json_encode($response);
             }
-        } else {
-            $response = ["response" => 200, "status" => "failed", "message" => "Gagal menambah data pesan!"];
-            echo json_encode($response);
         }
     } else {
         $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menambah data toko!"];
