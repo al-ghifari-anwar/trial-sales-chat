@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_POST['message_body'])) {
         $message = $_POST['message_body'];
 
-        $getMessage = mysqli_query($conn, " SELECT * FROM tb_message WHERE id_contact = '$id_contact' AND message_body = '$message' ")->fetch_array(MYSQLI_ASSOC);
+        $getMessage = mysqli_query($conn, " SELECT * FROM tb_messages WHERE id_contact = '$id_contact' AND message_body = '$message' ")->fetch_array(MYSQLI_ASSOC);
 
         if ($getMessage) {
             $response = ["response" => 200, "status" => "failed", "message" => "Tidak dapat mengirim 2 pesan yg sama!"];
