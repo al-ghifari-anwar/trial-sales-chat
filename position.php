@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $lat_position = $_POST['lat_position'];
     $long_position = $_POST['long_position'];
 
-    $save = mysqli_query($conn, " INSERT INTO tb_position(id_user,id_contact,type_position,lat_position,long_position) ");
+    $save = mysqli_query($conn, " INSERT INTO tb_position(id_user,id_contact,type_position,lat_position,long_position) VALUES($id_user,$id_contact,'$type_position','$lat_position','$long_position') ");
 
     if ($save) {
         $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan lokasi!"];
