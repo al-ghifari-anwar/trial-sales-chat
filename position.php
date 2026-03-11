@@ -18,9 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($save) {
         $response = ["response" => 200, "status" => "ok", "message" => "Berhasil menyimpan lokasi!"];
         echo json_encode($response);
+        die;
     } else {
         $response = ["response" => 400, "status" => "failed", "message" => "Gagal menyimpan lokasi!"];
-        return json_encode($response);
+        echo json_encode($response);
+        die;
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 }
