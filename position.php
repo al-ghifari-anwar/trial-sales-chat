@@ -45,9 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $id_contact = $rowPosition['id_contact'];
             $contact = mysqli_query($conn, " SELECT * FROM tb_contact WHERE id_contact = '$id_contact' ")->fetch_array(MYSQLI_ASSOC);
 
-            echo json_encode($rowPosition);
-            echo "<br>";
-
             $rowPosition['toko'] = $contact ? $contact['nama'] : '';
 
             $positions[] = $rowPosition;
