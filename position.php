@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo json_encode(["code" => 400, "status" => "failed", "msg" => "User not found"]);
             die;
         } else {
-            echo json_encode(["code" => 200, "status" => "ok", "msg" => "Success get data", "data" => $user]);
+            echo json_encode(["code" => 200, "status" => "ok", "msg" => "Success get data", "data" => json_encode($getPositions)]);
             die;
         }
     }
