@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $getPositions = mysqli_query($conn, " SELECT * FROM tb_position WHERE id_user = '$id_user' AND DATE(created_at) = '$date' ORDER BY created_at ASC ");
 
-        // $positions = array();
+        $positions = array();
 
         while ($rowPosition = $getPositions->fetch_array(MYSQLI_ASSOC)) {
             $id_contact = $rowPosition['id_contact'];
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $positions[] = $rowPosition;
         }
 
-        $user['positions'] = $positions;
+        $user['positions'] = $getPositions;
 
         // 
 
