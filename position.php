@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $date = date('Y-m-d', strtotime($lastPosition['created_at']));
         }
 
-        $getPositions = mysqli_query($conn, " SELECT * FROM tb_position WHERE id_user = '$id_user' AND DATE(created_at) = '$date' ORDER BY created_at ASC ")->fetch_array(MYSQLI_ASSOC);
+        $getPositions = mysqli_query($conn, " SELECT * FROM tb_position WHERE id_user = '$id_user' AND DATE(created_at) = '$date' ")->fetch_array(MYSQLI_ASSOC);
 
         $positions = array();
 
