@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $lastPosition = mysqli_query($conn, " SELECT * FROM tb_position WHERE id_user = '$id_user' ORDER BY created_at DESC ")->fetch_array(MYSQLI_ASSOC);
 
-        if ($date = null) {
+        if ($date == null) {
             $date = date('Y-m-d', strtotime($lastPosition['created_at']));
         }
 
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         //     $positions[] = $rowPosition;
         // }
 
-        $user['positions'] = $lastPosition;
+        $user['positions'] = $date;
 
         // 
 
