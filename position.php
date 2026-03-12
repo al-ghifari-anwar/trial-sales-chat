@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_GET['type'])) {
         if ($_GET['type'] == 'Global') {
             $id_distributor = $_GET['id_distributor'];
-            $getUsers = mysqli_query($conn, " SELECT * FROM tb_user WHERE id_distributor = '$id_distributor' AND nomorhp != 0 ");
+            $getUsers = mysqli_query($conn, " SELECT * FROM tb_user WHERE id_distributor = '$id_distributor' AND phone_user != 0 ");
 
             $users = array();
 
