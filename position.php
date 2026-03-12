@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         //     $positions[] = $rowPosition;
         // }
 
-        $user['positions'] = $date;
+        $user['positions'] = $date . " " . $id_user;
 
         // 
 
