@@ -37,25 +37,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $date = date('Y-m-d', strtotime($lastPosition['created_at']));
         }
 
-        $getPositions = mysqli_query($conn, " SELECT * FROM tb_position WHERE id_user = '$id_user' AND DATE(created_at) = '$date' ORDER BY created_at ASC ");
-
-        $cities = mysqli_query($conn, "SELECT * FROM tb_city")->fetch_array(MYSQLI_ASSOC);
+        $getPositions = mysqli_query($conn, " SELECT * FROM tb_position WHERE id_user = '$id_user' AND DATE(created_at) = '$date' ORDER BY created_at ASC ")->fetch_array(MYSQLI_ASSOC);
 
         $positions = array();
 
-        while ($rowPosition = $getPositions->fetch_array(MYSQLI_ASSOC)) {
-            $id_contact = $rowPosition['id_contact'];
-            $contact = mysqli_query($conn, " SELECT * FROM tb_contact WHERE id_contact = '$id_contact' ")->fetch_array(MYSQLI_ASSOC);
+        // while ($rowPosition = $getPositions->fetch_array(MYSQLI_ASSOC)) {
+        //     $id_contact = $rowPosition['id_contact'];
+        //     $contact = mysqli_query($conn, " SELECT * FROM tb_contact WHERE id_contact = '$id_contact' ")->fetch_array(MYSQLI_ASSOC);
 
-            echo json_encode($rowPosition);
-            echo "<br>";
+        //     echo json_encode($rowPosition);
+        //     echo "<br>";
 
-            $rowPosition['toko'] = $contact ? $contact['nama'] : '';
+        //     $rowPosition['toko'] = $contact ? $contact['nama'] : '';
 
-            $positions[] = $rowPosition;
-        }
+        //     $positions[] = $rowPosition;
+        // }
 
-        $user['positions'] = $cities;
+        $user['positions'] = $getPositions;
 
         // 
 
