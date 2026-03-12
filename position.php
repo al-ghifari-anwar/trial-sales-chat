@@ -26,7 +26,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['type'])) {
-        if ($_GET['type'] == 'Detail') {
+        if ($_GET['type'] == 'Global') {
+            $id_distributor = $_GET['id_distributor'];
+            $getUsers = mysqli_query($conn, " SELECT * FROM tb_user WHERE id_distributor = '$id_distributor' AND nomorhp != 0 ");
+
+            $users = array();
+
+            while ($rowUser = $getUsers->fetch_array(MYSQLI_ASSOC)) {
+                $id_user = $rowUser['id_user'];
+
+                $lastPosition = mysqli_query($conn, " SELECT * FROM tb_position WHERE id_user = '$id_user' ORDER BY created_at DESC ")->fetch_array(MYSQLI_ASSOC);
+
+                $id_contact = $lastPosition['id_contact'];
+
+                $contact = mysqli_query($conn, " SELECT * FROM tb_contact WHERE id_contact = '$id_contact' ")->fetch_array(MYSQLI_ASSOC);
+
+                $lastPosition['toko'] = $contact ? $contact['nama'] : '';
+
+                $users[] = $rowUser;
+            }
+
+            if ($users == null) {
+                echo json_encode(["code" => 400, "status" => "failed", "msg" => "User not found"]);
+                die;
+            } else {
+                echo json_encode(["code" => 200, "status" => "ok", "msg" => "Success get data", "datas" => $users]);
+                die;
+            }
+        } else if ($_GET['type'] == 'Detail') {
             $id_user = $_GET['id_user'];
             $date = isset($_GET['date']) ? $_GET['date'] : null;
 
