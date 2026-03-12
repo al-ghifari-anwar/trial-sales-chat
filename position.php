@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id_user'])) {
         $id_user = $_GET['id_user'];
-        $date = $_GET['date'];
+        $date = $_GET['dates'];
 
         $user = mysqli_query($conn, " SELECT * FROM tb_user WHERE id_user = '$id_user' ")->fetch_array(MYSQLI_ASSOC);
 
