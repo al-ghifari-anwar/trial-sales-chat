@@ -43,6 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 $lastPosition['toko'] = $contact ? $contact['nama'] : '';
 
+                $rowUser['lastPosition'] = $lastPosition;
+
                 $users[] = $rowUser;
             }
 
