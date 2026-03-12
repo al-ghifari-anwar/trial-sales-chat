@@ -25,4 +25,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die;
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (isset($_GET['id_user'])) {
+        $id_user = $_GET['id_user'];
+
+        $user = mysqli_query($conn, " SELECT * FROM tb_user WHERE id_user = '$id_user' ")->fetch_array(MYSQLI_ASSOC);
+
+        $getPositions = mysqli_query($conn, " SELECT * FROM tb_position WHERE id_user = '$id_user' ");
+
+        $positions = array();
+
+        while ($rowPosition = $getPositions->fetch_array(MYSQLI_ASSOC)) {
+            $id_contact = $rowPosition['id_contact'];
+            $contact = mysqli_query($conn, " SELECT * FROM tb_contact WHERE id_contact = '$id_contact' ")->fetch_array(MYSQLI_ASSOC);
+
+            $rowPosition['toko'] = $contact ? $contact['nama'] : '';
+
+            $positions[] = $rowPosition;
+        }
+
+        $user['positions'] = $positions;
+
+        if ($user == null) {
+            echo json_encode(["code" => 400, "status" => "failed", "msg" => "User not found"]);
+            die;
+        } else {
+            echo json_encode(["code" => 200, "status" => "ok", "msg" => "Success get data", "data" => $user]);
+            die;
+        }
+    }
 }
