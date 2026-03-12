@@ -27,10 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id_user'])) {
         $id_user = $_GET['id_user'];
+        $date = isset($_GET['date']) ? $_GET['date'] : null;
 
         $user = mysqli_query($conn, " SELECT * FROM tb_user WHERE id_user = '$id_user' ")->fetch_array(MYSQLI_ASSOC);
 
-        $getPositions = mysqli_query($conn, " SELECT * FROM tb_position WHERE id_user = '$id_user' ");
+        $lastPosition = mysqli_query($conn, " SELECT * FROM tb_position WHERE id_user = '$id_user' ORDER BY created_at DESC ")->fetch_array(MYSQLI_ASSOC);
+
+        if ($date = null) {
+            $date = date('Y-m-d', strtotime($lastPosition['created_at']));
+        }
+
+        $getPositions = mysqli_query($conn, " SELECT * FROM tb_position WHERE id_user = '$id_user' AND DATE(created_at) = '$date' ORDER BY created_at ASC ");
 
         $positions = array();
 
