@@ -55,6 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $user['positions'] = $positions;
 
+        // 
+
         if ($user == null) {
             echo json_encode(["code" => 400, "status" => "failed", "msg" => "User not found"]);
             die;
