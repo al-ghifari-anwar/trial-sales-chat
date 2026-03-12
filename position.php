@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die;
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if (isset($_GET['id_user'])) {
+    if (isset($_GET['id_user']) && isset($_GET['date'])) {
         $id_user = $_GET['id_user'];
         $date = isset($_GET['date']) ? $_GET['date'] : null;
 
