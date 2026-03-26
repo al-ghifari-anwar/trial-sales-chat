@@ -725,7 +725,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                     $message = "Terimakasih atas waktu kunjungannya ";
 
-                    $full_name = 'PT Top Mortar Indonesia';
+                    $full_name = $rowUser['full_name'];
 
                     $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
                     $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
@@ -787,7 +787,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                     $message = "Terimakasih atas waktu kunjungannya ";
 
-                    $full_name = 'PT Top Mortar Indonesia';
+                    $full_name = $rowUser['full_name'];
 
                     $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
                     $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
