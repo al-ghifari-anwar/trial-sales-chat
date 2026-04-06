@@ -12,18 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $date = date("Y-m-d H:i:s");
         $dateFile = date("Y-m-d-H-i-s");
         $distance = $_POST['distance'];
+
+        $suratjalan = mysqli_query($conn, " SELECT * FROM tb_surat_jalan WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
         // Delivery
         $endDateTime = $_POST['endDateTime'];
         $endLat = $_POST['endLat'];
         $endLng = $_POST['endLng'];
         $lat = $_POST['lat'];
         $lng = $_POST['lng'];
-        $id_courier = $_POST['id_courier'];
-        $id_contact = $_POST['id_contact'];
         $startDateTime = $_POST['startDateTime'];
         $startLat = $_POST['startLat'];
         $startLng = $_POST['startLng'];
-        $id_surat_jalan = isset($_POST['id_surat_jalan']) ? $_POST['id_surat_jalan'] : 0;
+        $id_courier = $suratjalan['id_courier'];
+        $id_contact = $suratjalan['id_contact'];
 
         if (move_uploaded_file($_FILES['pic']['tmp_name'], 'img/' . $dateFile . $_FILES['pic']['name'])) {
             $sourceImage = 'img/' . $dateFile . $_FILES['pic']['name'];
