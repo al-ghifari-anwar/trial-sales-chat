@@ -723,7 +723,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                     $id_distributor = $rowUser['id_distributor'];
 
-                    $message = "Terimakasih atas waktu kunjungannya ";
+                    $message = "Terimakasih atas waktu kunjungannya.. ";
 
                     $full_name = $rowUser['full_name'];
 
@@ -785,7 +785,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                     $id_distributor = $rowUser['id_distributor'];
 
-                    $message = "Terimakasih atas waktu kunjungannya ";
+                    $message = "Terimakasih atas waktu kunjungannya. ";
 
                     $full_name = $rowUser['full_name'];
 
