@@ -11,6 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $arrayCountActive[] = $rowCountActive;
     }
 
+    $deleteActiceStore = mysqli_query($conn, "SELECT * FROM tb_active_store WHERE month_active = '$month' AND YEAR(created_at) = '$year'");
+
     foreach ($arrayCountActive as $active) {
         // $month = date('m');
         // $month = 9;
@@ -24,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $getActive = mysqli_query($conn, "SELECT * FROM tb_active_store WHERE month_active = '$month' AND id_city = '$id_city' AND YEAR(created_at) = '$year' ")->fetch_array(MYSQLI_ASSOC);
 
         if ($getActive) {
-            $deleteActiceStore = mysqli_query($conn, "SELECT * FROM tb_active_store WHERE month_active = '$month' AND id_city = '$id_city' AND YEAR(created_at) = '$year'");
 
             $insertActive = mysqli_query($conn, "INSERT INTO tb_active_store(month_active,jml_active,id_city,id_distributor,updated_at) VALUES('$month',$jml_active,$id_city,$id_distributor,'$updated_at')");
 
