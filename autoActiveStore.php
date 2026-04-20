@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $arrayCountActive[] = $rowCountActive;
     }
 
-    $deleteActiceStore = mysqli_query($conn, "SELECT * FROM tb_active_store WHERE month_active = '$month' AND YEAR(created_at) = '$year'");
+    $deleteActiceStore = mysqli_query($conn, "DELETE FROM tb_active_store WHERE month_active = '$month' AND YEAR(created_at) = '$year'");
 
     foreach ($arrayCountActive as $active) {
         // $month = date('m');
