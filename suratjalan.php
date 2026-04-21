@@ -123,6 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             // $masterProduk = mysqli_query($conn, "SELECT * FROM tb_master_produk WHERE id_master_produk = '$id_master_produk'")->fetch_array(MYSQLI_ASSOC);
 
+            // $jumlahAwal = mysqli_query($conn, "SELECT SUM(jml_stok) AS jml_stokAwal FROM tb_stok WHERE id_master_produk = '$id_master_produk' AND ")
+
             $getStokIn = mysqli_query($conn, "SELECT SUM(jml_stok) AS jml_stokIn FROM tb_stok WHERE id_gudang_stok = '$id_gudang_stok' AND id_master_produk = '$id_master_produk' AND status_stok = 'in' AND tb_stok.created_at > '$dateCutoff' ")->fetch_array(MYSQLI_ASSOC);
 
             $stokIn = $getStokIn['jml_stokIn'];
@@ -145,6 +147,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $msg_can_closing = 'Stok tidak mencukupi';
             }
 
+            $row['stokin'] = $stokIn;
+            $row['stokout'] = $stokOut;
             $row['stok_bebas'] = $currentStok . "";
 
             $detailArray[] = $row;
