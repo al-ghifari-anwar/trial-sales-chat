@@ -583,6 +583,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             $res = json_decode($response, true);
 
                             if ($res['status'] == 'success') {
+                                // Get Score
+                                $curl = curl_init();
+
+                                curl_setopt_array($curl, array(
+                                    CURLOPT_URL => 'https://order.topmortarindonesia.com/scoring/combine/' . $id_contact,
+                                    CURLOPT_RETURNTRANSFER => true,
+                                    CURLOPT_ENCODING => '',
+                                    CURLOPT_MAXREDIRS => 10,
+                                    CURLOPT_TIMEOUT => 0,
+                                    CURLOPT_FOLLOWLOCATION => true,
+                                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                    CURLOPT_CUSTOMREQUEST => 'POST',
+                                    CURLOPT_HTTPHEADER => array(
+                                        'Cookie: ci_session=2scmao9aquusdrn7rm2i7vkrifkamkld'
+                                    ),
+                                ));
+
+                                $response = curl_exec($curl);
+
+                                curl_close($curl);
+
+                                $resultScore = json_decode($response, true);
+
+                                $score = isset($resultScore['payment']) ? $resultScore['payment'] : 0;
+
+                                if ($score <= 90) {
+                                    // Send to Tele
+                                    $curl = curl_init();
+
+                                    $telegramPayload = [
+                                        'chat_id' => "-5142817838",
+                                        'text' => "Toko tidak bayar\nToko: " . $nama . "\nSkor: " . $score,
+                                    ];
+
+                                    curl_setopt_array($curl, array(
+                                        CURLOPT_URL => 'https://api.telegram.org/bot8494834740:AAEZLYfkzUhrY6GroazEJOf876oToo2-qIw/sendMessage',
+                                        CURLOPT_RETURNTRANSFER => true,
+                                        CURLOPT_ENCODING => '',
+                                        CURLOPT_MAXREDIRS => 10,
+                                        CURLOPT_TIMEOUT => 0,
+                                        CURLOPT_FOLLOWLOCATION => true,
+                                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                        CURLOPT_CUSTOMREQUEST => 'POST',
+                                        CURLOPT_POSTFIELDS => json_encode($telegramPayload),
+                                        CURLOPT_HTTPHEADER => array(
+                                            'Content-Type: application/json'
+                                        ),
+                                    ));
+
+                                    $response = curl_exec($curl);
+
+                                    curl_close($curl);
+                                }
+
                                 $nomor_hp_admin = "6289636224827";
                                 $nama_admin = "April";
                                 if ($id_distributor == 6) {
