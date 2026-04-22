@@ -612,8 +612,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     // Send to Tele
                                     $curl = curl_init();
 
+                                    $chatId = "-5142817838";
+
+                                    if ($id_distributor == 6) {
+                                        $chatId = "-5002318714";
+                                    }
+
                                     $telegramPayload = [
-                                        'chat_id' => "-5142817838",
+                                        'chat_id' => $chatId,
                                         'text' => "Toko tidak bayar\nToko: " . $nama . "\nSkor: " . $score,
                                     ];
 
