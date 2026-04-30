@@ -225,11 +225,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $msg_can_closing = "";
         }
 
+        // Get Invoice
+        $invoice = [];
+        if ($suratjalan['is_closing'] == 1) {
+            if ($suratjalan['is_print_inv'] == 1) {
+                $getInvoice = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE id_surat_jalan = '$id_surat_jalan'")->fetch_array(MYSQLI_ASSOC);
+
+                $invoice = $getInvoice;
+            }
+        }
+
 
         while ($row = $resultSuratJalan->fetch_object()) {
             $row->details = $detailArray;
             $row->can_closing = $can_closing;
             $row->msg_can_closing = $msg_can_closing;
+            $row->invoice = $invoice;
             $suratJalanArray[] = $row;
         }
 
