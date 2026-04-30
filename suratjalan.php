@@ -226,7 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
 
         // Get Invoice
-        $invoice = [];
+        $invoice = null;
         if ($suratjalan['is_closing'] == 1) {
             if ($suratjalan['is_print_inv'] == 1) {
                 $getInvoice = mysqli_query($conn, "SELECT * FROM tb_invoice WHERE id_surat_jalan = '$id_surat_jalan'")->fetch_array(MYSQLI_ASSOC);
