@@ -136,11 +136,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                 if ($resultInvoice) {
                     $id_invoice = mysqli_insert_id($conn);
+
+                    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+                    $domainUrl = $protocol . "://" . $_SERVER['HTTP_HOST'];
                     // Send Notif
                     $curl = curl_init();
 
                     curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'https://order.topmortarindonesia.com/notif/invoice',
+                        CURLOPT_URL => $domainUrl . '/notif/invoice',
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
