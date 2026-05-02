@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_courier = $_GET['id_courier'];
         $dateNow = date("Y-m-d");
 
-        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE tb_delivery.id_courier = '$id_courier' AND DATE(endDatetime) = '$dateNow' GROUP BY tb_delivery.id_contact");
+        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE tb_delivery.id_courier = '$id_courier' AND DATE(endDatetime) = '$dateNow' GROUP BY tb_delivery.id_surat_jalan");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $id_surat_jalan = $row['id_surat_jalan'];
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_city = $_GET['c'];
         $dateNow = date("Y-m-d");
 
-        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE tb_user.id_city = '$id_city' AND DATE(endDatetime) = '$dateNow'  GROUP BY tb_delivery.id_contact");
+        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE tb_user.id_city = '$id_city' AND DATE(endDatetime) = '$dateNow'  GROUP BY tb_delivery.id_surat_jalan");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $id_surat_jalan = $row['id_surat_jalan'];
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_distributor = $_GET['dst'];
         $dateNow = date("Y-m-d");
 
-        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE tb_user.id_distributor = '$id_distributor' AND DATE(endDatetime) = '$dateNow'  GROUP BY tb_delivery.id_contact");
+        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE tb_user.id_distributor = '$id_distributor' AND DATE(endDatetime) = '$dateNow'  GROUP BY tb_delivery.id_surat_jalan");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $id_surat_jalan = $row['id_surat_jalan'];
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     } else {
         // echo "AWDA";
-        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact  GROUP BY tb_delivery.id_contact");
+        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact  GROUP BY tb_delivery.id_surat_jalan");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $id_surat_jalan = $row['id_surat_jalan'];
