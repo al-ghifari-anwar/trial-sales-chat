@@ -13,14 +13,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $dateNow = date('Y-m-d H:i:s');
 
-    $udpatePrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET is_printed_inv = '$dateNow'");
+    $udpatePrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET date_printed_inv = '$dateNow'");
 
     if ($udpatePrint) {
         $response = ["response" => 200, "status" => "failed", "message" => "Failed to print inv!"];
         echo json_encode($response);
         die;
     } else {
-        $response = ["response" => 200, "status" => "success", "message" => "Succes to print inv!"];
+        $response = ["response" => 200, "status" => "success", "message" => "Succes to print inv!", "data" => ['date_printed_inv' => $dateNow]];
         echo json_encode($response);
         die;
     }
