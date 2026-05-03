@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $dateNow = date('Y-m-d H:i:s');
 
-    $udpatePrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET date_printed_inv = '$dateNow'");
+    $udpatePrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET date_printed_inv = '$dateNow' WHERE id_surat_jalan = '$id_sj'");
 
     if ($udpatePrint) {
         $response = ["response" => 200, "status" => "failed", "message" => "Failed to print inv!"];
