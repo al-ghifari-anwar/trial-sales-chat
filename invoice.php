@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $curl = curl_init();
 
                     curl_setopt_array($curl, array(
-                        CURLOPT_URL => $domainUrl . '/notif/invoice',
+                        CURLOPT_URL => "https://order.topmortarindonesia.com/notif/invoice",
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_ENCODING => '',
                         CURLOPT_MAXREDIRS => 10,
