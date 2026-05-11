@@ -103,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $can_closing = 'yes';
         $msg_can_closing = '';
+        $out_of_stock = false;
 
         $suratjalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan JOIN tb_contact ON tb_contact.id_contact = tb_surat_jalan.id_contact WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
 
@@ -140,11 +141,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($currentStok <= 0) {
                 $can_closing = 'no';
                 $msg_can_closing = 'Stok tidak mencukupi';
+                $out_of_stock = true;
             }
 
             if ($currentStok < $row['qty_produk']) {
                 $can_closing = 'no';
                 $msg_can_closing = 'Stok tidak mencukupi';
+                $out_of_stock = true;
             }
 
             $row['stokin'] = $stokIn;
@@ -220,9 +223,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $msg_can_closing = "Alamat tidak ada";
         }
 
+
         if ($suratjalan['can_closing'] == 1) {
-            $can_closing = "yes";
-            $msg_can_closing = "";
+            if ($out_of_stock == false) {
+                $can_closing = "yes";
+                $msg_can_closing = "";
+            }
         }
 
         // Get Invoice
