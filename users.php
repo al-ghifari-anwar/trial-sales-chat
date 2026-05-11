@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (isset($_GET['c'])) {
             $id_city = $_GET['c'];
 
-            $result = mysqli_query($conn, "SELECT * FROM tb_user JOIN tb_city ON tb_user.id_city = tb_city.id_city WHERE tb_city.id_city = '$id_city'");
+            $result = mysqli_query($conn, "SELECT * FROM tb_user JOIN tb_city ON tb_user.id_city = tb_city.id_city WHERE tb_city.id_city = '$id_city' AND phone_user != '0' ");
 
             while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                 $transArray[] = $row;
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             $id_distributor = $_GET['dst'];
 
-            $result = mysqli_query($conn, "SELECT * FROM tb_user JOIN tb_city ON tb_user.id_city = tb_city.id_city WHERE tb_city.id_distributor = '$id_distributor'");
+            $result = mysqli_query($conn, "SELECT * FROM tb_user JOIN tb_city ON tb_user.id_city = tb_city.id_city WHERE tb_city.id_distributor = '$id_distributor' AND phone_user != '0' ");
 
             while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                 $transArray[] = $row;
