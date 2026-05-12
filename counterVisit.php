@@ -1,0 +1,51 @@
+<?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+include_once("config.php");
+date_default_timezone_set('Asia/Jakarta');
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $id_user = $_GET['id_user'];
+
+    $user = mysqli_query($conn, " SELECT * FROM tb_user WHERE id_user = $id_user ")->fetch_array(MYSQLI_ASSOC);
+
+    $id_city = $user['id_city'];
+
+    // Target Calculation
+    $date1 = new DateTime(date('Y-m-01'));
+    $date2 = new DateTime(date('Y-m-d'));
+    $days  = $date2->diff($date1)->format('%a');
+
+    $targetVisit = $days * 10;
+
+    // Visit Count
+    $dateFrom = date('Y-m-01');
+    $dateTo = date('Y-m-d');
+
+    $getDateGroupVisit = mysqli_query($conn, " SELECT * FROM tb_visit JOIN tb_contact ON tb_contact.id_contact = tb_visit.id_contact WHERE tb_visit.id_user = '$id_user' AND DATE(tb_visit.date_visit) >= '$dateFrom' AND DATE(tb_visit.date_visit) <= '$dateTo' GROUP BY DATE(tb_visit.date_visit) ");
+
+    $totalVisit = 0;
+
+    while ($rowDateGroupVisit = $getDateGroupVisit->fetch_array(MYSQLI_ASSOC)) {
+        $dateGroup = date('Y-m-d', strtotime($rowDateGroupVisit['date_visit']));
+
+        $getTotal = mysqli_query($conn, " SELECT COUNT(*) AS total_visit FROM tb_visit JOIN tb_contact ON tb_visit.id_contact = tb_contact.id_contact WHERE tb_visit.id_user = '$id_user' AND DATE(tb_visit.date_visit) = '$dateGroup' AND tb_visit.is_deleted = 0 AND is_approved = 1 GROUP BY id_contact ");
+        $rowTotal = $getTotal->fetch_array(MYSQLI_ASSOC);
+
+        $checkYes = mysqli_query($conn, " SELECT COUNT(*) AS total_confirmed FROM tb_jadwal_visit WHERE id_city = $id_city AND date_jadwal_visit = '$dateGroup' AND is_yes = 1 ")->fetch_array(MYSQLI_ASSOC);
+
+        $totalVisit += $rowTotal['total_visit'];
+    }
+
+    $resultArray = [
+        'user' => $user['full_name'],
+        'target_visit' => $targetVisit . "",
+        'total_visit' => $totalVisit . "",
+        'totla_confirmed' => $checkYes . "",
+    ];
+
+    $response = ["response" => 200, "status" => "ok", "message" => "Success!", "results" => $resultArray];
+    echo json_encode($response);
+}
