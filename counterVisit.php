@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         'user' => $user['full_name'],
         'target_visit' => $targetVisit . "",
         'total_visit' => $totalVisit . "",
-        'totla_confirmed' => $checkYes . "",
+        'totla_confirmed' => $checkYes['total_confirmed'] . "",
     ];
 
     $response = ["response" => 200, "status" => "ok", "message" => "Success!", "results" => $resultArray];
