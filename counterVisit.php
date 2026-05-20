@@ -29,6 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $totalVisit = 0;
     $totalConfirmed = 0;
 
+    $detailVisits = array();
+    $detailConfirmed = array();
     while ($rowDateGroupVisit = $getDateGroupVisit->fetch_array(MYSQLI_ASSOC)) {
         $dateGroup = date('Y-m-d', strtotime($rowDateGroupVisit['date_visit']));
 
@@ -40,6 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $checkYes = mysqli_query($conn, " SELECT COUNT(*) AS total_confirmed FROM tb_jadwal_visit WHERE id_city = $id_city AND date_jadwal_visit = '$dateGroup' AND is_yes = 1 ")->fetch_array(MYSQLI_ASSOC);
 
+        $detailVisits[] = ['tgl' => $dateGroup, 'total' => count($arrayTotal)];
+        $detailConfirmed[] = ['tgl' => $dateGroup, 'total' => $checkYes['total_confirmed']];
+
         $totalVisit += count($arrayTotal);
         $totalConfirmed += $checkYes['total_confirmed'];
     }
@@ -49,6 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         'target_visit' => $targetVisit . "",
         'total_visit' => $totalVisit . "",
         'total_confirmed' => $totalConfirmed . "",
+        'details' => [
+            'visits' => $detailVisits,
+            'confirmed' => $detailConfirmed,
+        ]
     ];
 
     $response = ["response" => 200, "status" => "ok", "message" => "Success!", "results" => $resultArray];
