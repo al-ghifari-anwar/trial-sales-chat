@@ -72,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id = $_POST['id'];
 
         $getContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id'");
+
         $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
         $nama = $_POST['nama'];
         $tgl_lahir = $_POST['tgl_lahir'];
@@ -262,6 +263,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $result = mysqli_query($conn, "UPDATE tb_contact SET nama = '$nama', tgl_lahir = '$tgl_lahir', store_owner = '$store_owner', id_city = '$id_city', maps_url = '$mapsUrl', address = '$address', nomorhp = '$nomor_hp', termin_payment = $termin_payment, ktp_owner = '$imgNewName', id_promo = '$id_promo', reputation = '$reputation', payment_method = '$payment_method', store_status = '$status', tagih_mingguan = $tagih_mingguan, nomorhp_2 = '$nomor_hp2', nomor_cat_1 = '$nomor_cat_1', nomor_cat_2 = '$nomor_cat_2', updated_at = '$updatedAt', hari_bayar = '$hari_bayar', cluster = '$cluster', kredit_limit = '$kredit_limit', hobi_contact = '$hobi_contact', is_send_content = $is_send_content, jam_bayar = '$jam_bayar', interval_visit = '$interval_visit' WHERE id_contact = '$id'");
 
         if ($result) {
+            if ($status != $rowContact['store_status']) {
+                $oldStatus = $rowContact['store_status'];
+                $result = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to,mode_status,created_at) VALUES ($id, '$oldStatus', '$status', 'manual') ");
+            }
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
             echo json_encode($response);
         } else {
