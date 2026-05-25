@@ -50,6 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $getBadScore = mysqli_query($conn, "SELECT * FROM tb_bad_score WHERE id_contact = '$id_contact'");
             $rowBadscore = $getBadScore->fetch_array(MYSQLI_ASSOC);
 
+            $row['validation_status'] = 'valid';
+            if ($row['cluster'] == 0 || $row['id_promo'] == 0 || $row['payment_method'] == 'not set') {
+                $row['validation_status'] = 'invalid';
+            }
+
             if ($rowBadscore) {
                 if ($rowBadscore['is_approved'] != 1) {
                     $transArray[] = $row;
