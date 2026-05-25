@@ -8,16 +8,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     while ($rowContact = $getContacts->fetch_array(MYSQLI_ASSOC)) {
         $id_contact = $rowContact['id_contact'];
+        $id_city = $rowContact['id_city'];
         $id_distributor = $rowContact['id_distributor'];
         $nama_city_buangan = trim(preg_replace("/\\d+/", "", $rowContact['nama_city'])) . " X";
-        $visit = mysqli_query($conn, " SELECT COUNT(*) AS jml_visit FROM tb_visit WHERE id_contact = $id_contact ")->fetch_array(MYSQLI_ASSOC);
+
+        $lastVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_contact' ORDER BY date_visit DESC")->fetch_array(MYSQLI_ASSOC);
+
+        $id_user = $lastVisit['id_user'];
+
+        $visit = mysqli_query($conn, " SELECT COUNT(*) AS jml_visit FROM tb_visit WHERE id_contact = $id_contact AND id_user = '$id_user' ")->fetch_array(MYSQLI_ASSOC);
 
         $cityBuangan = mysqli_query($conn, " SELECT * FROM tb_city WHERE nama_city = '$nama_city_buangan' AND id_distributor = '$id_distributor' ")->fetch_array(MYSQLI_ASSOC);
 
-        if ($visit['jml_visit'] >= 8) {
+        if ($visit['jml_visit'] >= 4) {
             if ($cityBuangan) {
                 $id_city_buangan = $cityBuangan['id_city'];
-                $updateContact = mysqli_query($conn, "UPDATE tb_contact SET id_city = '$id_city_buangan' WHERE id_contact = '$id_contact'");
+                $updateContact = mysqli_query($conn, "UPDATE tb_contact SET id_city = '$id_city_buangan', id_city_old = '$id_city' WHERE id_contact = '$id_contact'");
 
                 if (!$updateContact) {
                     $response = ["response" => 4200, "status" => "failed", "message" => "Gagal pindah toko!"];
