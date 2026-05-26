@@ -34,6 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     while ($rowDateGroupVisit = $getDateGroupVisit->fetch_array(MYSQLI_ASSOC)) {
         $dateGroup = date('Y-m-d', strtotime($rowDateGroupVisit['date_visit']));
 
+        $getDayoffGlobal = mysqli_query($conn, "SELECT SUM(jml_day_off) AS day_off_global FROM tb_day_off WHERE id_user = 0 AND date_day_off = '$dateGroup'")->fetch_array(MYSQLI_ASSOC);
+
+        $getDayoffUser = mysqli_query($conn, "SELECT SUM(jml_day_off) AS day_off_user FROM tb_day_off WHERE id_user = '$id_user' AND date_day_off = '$dateGroup'")->fetch_array(MYSQLI_ASSOC);
+
         $getTotal = mysqli_query($conn, " SELECT COUNT(*) AS total_visit FROM tb_visit JOIN tb_contact ON tb_visit.id_contact = tb_contact.id_contact WHERE tb_visit.id_user = '$id_user' AND DATE(tb_visit.date_visit) = '$dateGroup' AND tb_visit.is_deleted = 0 AND is_approved = 1 GROUP BY tb_visit.id_contact ");
         $arrayTotal = array();
         while ($rowTotal = $getTotal->fetch_array(MYSQLI_ASSOC)) {
@@ -45,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $detailVisits[] = ['tgl' => $dateGroup, 'total' => count($arrayTotal)];
         $detailConfirmed[] = ['tgl' => $dateGroup, 'total' => $checkYes['total_confirmed']];
 
-        $totalVisit += count($arrayTotal);
+        $totalVisit += count($arrayTotal) - ($getDayoffGlobal['day_off_global'] + $getDayoffUser['day_off_user']);
         $totalConfirmed += $checkYes['total_confirmed'];
     }
 
