@@ -16,9 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // Target Calculation
     $date1 = new DateTime(date('Y-m-01'));
     $date2 = new DateTime(date('Y-m-d'));
+    $date2->modify('+1 day');
     $days  = $date2->diff($date1)->format('%a');
 
-    $targetVisit = $days * 10 + 10;
+    $interval = new DateInterval('P1D');
+    $period = new DatePeriod($date1, $interval, $date2);
+
+    $dates = [];
+
+    $targetVisit = $days * 10;
 
     // Visit Count
     $dateFrom = date('Y-m-01');
@@ -32,8 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $detailVisits = array();
     $detailConfirmed = array();
-    while ($rowDateGroupVisit = $getDateGroupVisit->fetch_array(MYSQLI_ASSOC)) {
-        $dateGroup = date('Y-m-d', strtotime($rowDateGroupVisit['date_visit']));
+    // while ($rowDateGroupVisit = $getDateGroupVisit->fetch_array(MYSQLI_ASSOC)) {
+    foreach ($period as $date) {
+        // $dateGroup = date('Y-m-d', strtotime($rowDateGroupVisit['date_visit']));
+        $dateGroup = $date->format('Y-m-d');
 
         $getDayoffGlobal = mysqli_query($conn, "SELECT SUM(jml_day_off) AS day_off_global FROM tb_day_off WHERE id_user = 0 AND date_day_off = '$dateGroup'")->fetch_array(MYSQLI_ASSOC);
 
@@ -54,11 +62,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $totalConfirmed += $checkYes['total_confirmed'];
         $totalDayoff += $getDayoffGlobal['day_off_global'] + $getDayoffUser['day_off_user'];
     }
+    // }
 
     $resultArray = [
         'user' => $user['full_name'],
         'target_visit' => $targetVisit . "",
-        'total_dayoff' => $totalDayoff,
+        'total_dayoff' => $totalDayoff . "",
         'total_visit' => $totalVisit . "",
         'total_confirmed' => $totalConfirmed . "",
         'details' => [
