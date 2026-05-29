@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $totalVisit = 0;
     $totalConfirmed = 0;
+    $totalDayoff = 0;
 
     $detailVisits = array();
     $detailConfirmed = array();
@@ -51,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $totalVisit += count($arrayTotal) - ($getDayoffGlobal['day_off_global'] + $getDayoffUser['day_off_user']);
         $totalConfirmed += $checkYes['total_confirmed'];
+        $totalDayoff += $getDayoffGlobal['day_off_global'] + $getDayoffUser['day_off_user'];
     }
 
     $resultArray = [
