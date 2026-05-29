@@ -71,8 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $resultArray = [
         'user' => $user['full_name'],
         'target_visit' => $targetVisit - $totalDayoff . "",
-        'total_dayoff_global' => $totalDayoffGlobal . "",
-        'total_dayoff_user' => $totalDayoffUser . "",
         'total_dayoff' => $totalDayoff . "",
         'total_visit' => $totalVisit . "",
         'total_confirmed' => $totalConfirmed . "",
