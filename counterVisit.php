@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $totalVisit += count($arrayTotal);
         $totalConfirmed += $checkYes['total_confirmed'];
         $totalDayoffGlobal += $getDayoffGlobal['day_off_global'];
-        $totalDayoffUser += $getDayoffUser['day_off_user'];
+        $totalDayoffUser += 10 - $getDayoffUser['day_off_user'];
         $totalDayoff += $getDayoffGlobal['day_off_global'] + $getDayoffUser['day_off_user'];
     }
     // }
