@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $date2 = new DateTime(date('Y-m-d'));
     $days  = $date2->diff($date1)->format('%a');
 
-    $targetVisit = $days * 10;
+    $targetVisit = $days * 10 + 10;
 
     // Visit Count
     $dateFrom = date('Y-m-01');
@@ -58,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $resultArray = [
         'user' => $user['full_name'],
         'target_visit' => $targetVisit . "",
+        'total_dayoff' => $totalDayoff,
         'total_visit' => $totalVisit . "",
         'total_confirmed' => $totalConfirmed . "",
         'details' => [
