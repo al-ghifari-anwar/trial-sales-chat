@@ -34,6 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $totalVisit = 0;
     $totalConfirmed = 0;
+    $totalDayoffGlobal = 0;
+    $totalDayoffUser = 0;
     $totalDayoff = 0;
 
     $detailVisits = array();
@@ -58,17 +60,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $detailVisits[] = ['tgl' => $dateGroup, 'total' => count($arrayTotal)];
         $detailConfirmed[] = ['tgl' => $dateGroup, 'total' => $checkYes['total_confirmed']];
 
-        $dayOffUser = 10 - $getDayoffUser['day_off_user'];
-
         $totalVisit += count($arrayTotal);
         $totalConfirmed += $checkYes['total_confirmed'];
-        $totalDayoff += $getDayoffGlobal['day_off_global'] + $dayOffUser;
+        $totalDayoffGlobal += $getDayoffGlobal['day_off_global'];
+        $totalDayoffUser += $getDayoffUser['day_off_user'];
+        $totalDayoff += $getDayoffGlobal['day_off_global'] + $getDayoffUser['day_off_user'];
     }
     // }
 
     $resultArray = [
         'user' => $user['full_name'],
         'target_visit' => $targetVisit - $totalDayoff . "",
+        'total_dayoff_global' => $totalDayoffGlobal . "",
+        'total_dayoff_user' => $totalDayoffUser . "",
         'total_dayoff' => $totalDayoff . "",
         'total_visit' => $totalVisit . "",
         'total_confirmed' => $totalConfirmed . "",
