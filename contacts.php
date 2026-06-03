@@ -272,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($result) {
             if ($status != $rowContact['store_status']) {
                 $oldStatus = $rowContact['store_status'];
-                $result = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to,mode_status,created_at) VALUES ($id, '$oldStatus', '$status', 'manual') ");
+                $result = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to,mode_status) VALUES ($id, '$oldStatus', '$status', 'manual') ");
             }
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
             echo json_encode($response);
