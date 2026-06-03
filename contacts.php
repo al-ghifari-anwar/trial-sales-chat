@@ -1,5 +1,7 @@
 <?php
-// error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
 include_once("config.php");
 
 $wa_token = '_GEJodr1x8u7-nSn4tZK2hNq0M5CARkRp_plNdL2tFw';
