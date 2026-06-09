@@ -365,8 +365,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 } else if ($is_pay == "pay_later") {
                     $pay_date = $_POST['pay_date'];
 
-                    $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date,id_invoice) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date',$id_invoice)");
+                    $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date,id_invoice,is_approved) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date',$id_invoice,1)");
                     $id_visit = mysqli_insert_id($conn);
+
+                    $insertVisCon = mysqli_query($conn, "INSERT INTO tb_visit_control(id_contact,id_user,reason_visit_control) VALUES($id_contact,$id_user,'Janji bayar')");
 
                     if ($insertVisit) {
                         $message = "Hari ini kami belum menerima pembayaran dan janji bayar pada tanggal " . date('d M Y', strtotime($pay_date)) . ". Terimakasih";
@@ -529,8 +531,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 } else if ($is_pay == "not_pay") {
                     // $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date,id_invoice) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date',$id_invoice)");
 
-                    $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user, '$is_pay')");
+                    $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,is_approved) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user, '$is_pay',1)");
                     $id_visit = mysqli_insert_id($conn);
+
+                    $insertVisCon = mysqli_query($conn, "INSERT INTO tb_visit_control(id_contact,id_user,reason_visit_control) VALUES($id_contact,$id_user,'Tidak bayar')");
 
                     if ($insertVisit) {
                         $message = "Hari ini kami belum menerima pembayaran mohon dibantu pembayaran nya. Terimakasih";
@@ -752,8 +756,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     }
                 }
             } else {
-                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user)");
+                $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_approved) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user, 1)");
                 $id_visit = mysqli_insert_id($conn);
+
+                $insertVisCon = mysqli_query($conn, "INSERT INTO tb_visit_control(id_contact,id_user,reason_visit_control) VALUES($id_contact,$id_user,'Visit non tagihan, perlu balasan WA')");
             }
 
             // if ($insertVisit) {
