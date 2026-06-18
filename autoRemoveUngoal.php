@@ -16,17 +16,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $id_user = $lastVisit['id_user'];
 
-        $visit = mysqli_query($conn, " SELECT COUNT(*) AS jml_visit FROM tb_visit WHERE id_contact = $id_contact AND id_user = '$id_user' ")->fetch_array(MYSQLI_ASSOC);
+        $cutoffVisit = mysqli_query($conn, "SELECT * FROM tb_cutoff_visit WHERE id_contact = '$id_contact' ORDER BY created_at DESC")->fetch_array(MYSQLI_ASSOC);
+
+        $visit = array();
+        $dateCutoffVisit = null;
+
+        if ($cutoffVisit) {
+            $dateCutoffVisit = date('Y-m-d', strtotime($cutoffVisit['date_cutoff_visit']));
+
+            $visit = mysqli_query($conn, " SELECT COUNT(*) AS jml_visit FROM tb_visit WHERE id_contact = $id_contact AND id_user = '$id_user' AND DATE(date_visit) > $dateCutoffVisit ")->fetch_array(MYSQLI_ASSOC);
+        } else {
+            $visit = mysqli_query($conn, " SELECT COUNT(*) AS jml_visit FROM tb_visit WHERE id_contact = $id_contact AND id_user = '$id_user'")->fetch_array(MYSQLI_ASSOC);
+        }
 
         $cityBuangan = mysqli_query($conn, " SELECT * FROM tb_city WHERE nama_city = '$nama_city_buangan' AND id_distributor = '$id_distributor' ")->fetch_array(MYSQLI_ASSOC);
 
         if ($visit['jml_visit'] >= 4) {
             if ($cityBuangan) {
                 $id_city_buangan = $cityBuangan['id_city'];
-                $updateContact = mysqli_query($conn, "UPDATE tb_contact SET id_city = '$id_city_buangan', id_city_old = '$id_city' WHERE id_contact = '$id_contact'");
 
-                if (!$updateContact) {
-                    $response = ["response" => 4200, "status" => "failed", "message" => "Gagal pindah toko!"];
+                $insertTransit = mysqli_query($conn, "INSERT INTO tb_transit_toko(id_contact,id_city_from,id_city_to) VALUES($id_contact,$id_city,$id_city_buangan)");
+
+                if (!$insertTransit) {
+                    $response = ["response" => 400, "status" => "failed", "message" => "Gagal pindah toko!"];
                     echo json_encode($response);
                 } else {
                     $response = ["response" => 200, "status" => "ok", "message" => "Toko " . $rowContact['nama'] . " Berhasil dipindah! "];
