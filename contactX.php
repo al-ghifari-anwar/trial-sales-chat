@@ -10,9 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $city = mysqli_query($conn, " SELECT * FROM tb_city WHERE id_city = '$id_city' ")->fetch_array(MYSQLI_ASSOC);
 
-    $nama_city = $city['nama_city'][0] . " X";
+    // $nama_city = $city['nama_city'][0] . " X";
+    $nama_city_buangan = trim(preg_replace("/\\d+/", "", $city['nama_city'])) . " X";
 
-    $cityX = mysqli_query($conn, " SELECT * FROM tb_city WHERE nama_city = '$nama_city'")->fetch_array(MYSQLI_ASSOC);
+    $cityX = mysqli_query($conn, " SELECT * FROM tb_city WHERE nama_city = '$nama_city_buangan'")->fetch_array(MYSQLI_ASSOC);
 
     $id_city_x = $cityX['id_city'];
 
@@ -26,6 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     while ($rowContacts = $getContacts->fetch_array(MYSQLI_ASSOC)) {
+        $id_city_old = $rowContacts['id_city_old'];
+        $cityOld = mysqli_query($conn, "SELECT * FROM tb_city WHERE id_city = $id_city_old")->fetch_array(MYSQLI_ASSOC);
+
+        $rowContacts['old_city'] = $cityOld['nama_city'];
+
         $contacts[] = $rowContacts;
     }
 
