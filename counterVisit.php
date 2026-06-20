@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $detailConfirmed[] = ['tgl' => $dateGroup, 'total' => $checkYes['total_confirmed']];
 
         $totalVisit += count($arrayTotal);
-        $totalConfirmed += $checkYes['total_confirmed'];
+        $totalConfirmed += count($arrayTotal) < $checkYes['total_confirmed'] ? count($arrayTotal) : $checkYes['total_confirmed'];
         $totalDayoffGlobal += $getDayoffGlobal['day_off_global'];
         $totalDayoffUser += ($getDayoffUser > 0) ? 10 - $getDayoffUser['day_off_user'] : 0;
         $totalDayoff += $getDayoffGlobal['day_off_global'] + $getDayoffUser['day_off_user'];
