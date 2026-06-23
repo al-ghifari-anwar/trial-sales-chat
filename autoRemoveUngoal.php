@@ -35,14 +35,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             if ($cityBuangan) {
                 $id_city_buangan = $cityBuangan['id_city'];
 
-                $insertTransit = mysqli_query($conn, "INSERT INTO tb_transit_toko(id_contact,id_city_from,id_city_to) VALUES($id_contact,$id_city,$id_city_buangan)");
+                $checkBuangan = mysqli_query($conn, "SELECT * FROM tb_transit_toko WHERE id_contact = '$id_contact'")->fetch_array(MYSQLI_ASSOC);
 
-                if (!$insertTransit) {
-                    $response = ["response" => 400, "status" => "failed", "message" => "Gagal pindah toko!"];
-                    echo json_encode($response);
-                } else {
-                    $response = ["response" => 200, "status" => "ok", "message" => "Toko " . $rowContact['nama'] . " Berhasil dipindah! "];
-                    echo json_encode($response);
+                if (!$checkBuangan) {
+                    $insertTransit = mysqli_query($conn, "INSERT INTO tb_transit_toko(id_contact,id_city_from,id_city_to) VALUES($id_contact,$id_city,$id_city_buangan)");
+
+                    if (!$insertTransit) {
+                        $response = ["response" => 400, "status" => "failed", "message" => "Gagal pindah toko!"];
+                        echo json_encode($response);
+                    } else {
+                        $response = ["response" => 200, "status" => "ok", "message" => "Toko " . $rowContact['nama'] . " Berhasil dipindah! "];
+                        echo json_encode($response);
+                    }
                 }
             }
         }

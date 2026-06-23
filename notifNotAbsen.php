@@ -5,7 +5,7 @@ include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE phone_user != '0' AND password_user != '0' AND level_user IN ('sales','courier')");
+    $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE phone_user != '0' AND password != '0' AND level_user IN ('sales','courier') AND is_absen = 1 AND id_distributor = 1");
 
     while ($user = $getUser->fetch_array(MYSQLI_ASSOC)) {
         $id_user = $user['id_user'];
