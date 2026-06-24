@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $rowSubTotals = null;
             $rowNotFreeItem = null;
             $is_cod = $rowSuratJalan['is_cod'];
+            $is_tebus_murah = $rowSuratJalan['is_tebus_murah'];
 
             $no = $rowSuratJalan['id_surat_jalan'];
             $id_surat_jalan = $rowSuratJalan['id_surat_jalan'];
@@ -37,11 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             // echo "Nominal awal: " . $rowSubTotals['subtotal'];
 
-            if ($is_cod == 1) {
-                $jmlItemDiskon = $rowNotFreeItem['jmlItem'];
-                $potonganCod = 2000 * $jmlItemDiskon;
-            } else {
-                $potonganCod = 0;
+            $potonganCod = 0;
+            if ($is_tebus_murah == 0) {
+                if ($is_cod == 1) {
+                    $jmlItemDiskon = $rowNotFreeItem['jmlItem'];
+                    $potonganCod = 2000 * $jmlItemDiskon;
+                } else {
+                    $potonganCod = 0;
+                }
             }
 
             // echo "Potongan: " . $potonganCod;
