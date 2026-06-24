@@ -314,10 +314,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             // Save record change status
             $store_status = "";
+            $store_to_status = "active";
             $getContact = mysqli_query($conn, "SELECT * FROM tb_contact WHERE id_contact = '$id_contact'");
             $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
             $store_status = $rowContact['store_status'];
-            $statusChange = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to) VALUES($id_contact,'$store_status','active')");
+
+            if ($rowSuratJalan['is_tebus_murah'] == 1) {
+                $store_to_status = "data";
+            }
+
+            $statusChange = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to) VALUES($id_contact,'$store_status','$store_to_status')");
+
 
             // Transfer Test
             $id_city = $rowContact['id_city'];
@@ -329,7 +336,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $qty = $rowTotalQty['qty_produk'];
 
             if ($statusChange) {
-                $changeStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = 'active' WHERE id_contact = '$id_contact'");
+                $changeStoreStatus = mysqli_query($conn, "UPDATE tb_contact SET store_status = '$store_to_status' WHERE id_contact = '$id_contact'");
                 $date = date("Y-m-d H:i:s");
 
                 if ($changeStoreStatus) {
