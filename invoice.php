@@ -62,6 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             //     $no = 1;
             // }
             $is_cod = $rowSuratJalan['is_cod'];
+            $is_tebus_murah = $rowSuratJalan['is_tebus_murah'];
 
             // if ($is_cod != 1) {
             $no = $rowSuratJalan['id_surat_jalan'];
@@ -74,11 +75,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $rowNotFreeItem = $getNotFreeItem->fetch_array(MYSQLI_ASSOC);
 
-            if ($is_cod == 1) {
-                $jmlItemDiskon = $rowNotFreeItem['jmlItem'];
-                $potonganCod = 2000 * $jmlItemDiskon;
-            } else {
-                $potonganCod = 0;
+            if ($is_tebus_murah == 0) {
+                if ($is_cod == 1) {
+                    $jmlItemDiskon = $rowNotFreeItem['jmlItem'];
+                    $potonganCod = 2000 * $jmlItemDiskon;
+                } else {
+                    $potonganCod = 0;
+                }
             }
 
             // Begin Cross Sell Potongan
