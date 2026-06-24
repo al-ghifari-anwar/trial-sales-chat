@@ -75,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $rowNotFreeItem = $getNotFreeItem->fetch_array(MYSQLI_ASSOC);
 
+            $potonganCod = 0;
             if ($is_tebus_murah == 0) {
                 if ($is_cod == 1) {
                     $jmlItemDiskon = $rowNotFreeItem['jmlItem'];
