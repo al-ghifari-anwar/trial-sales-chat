@@ -16,6 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     while ($rowHobi = $getHobis->fetch_array(MYSQLI_ASSOC)) {
         $ids = explode('/', trim($rowHobi['path_hobi'], '/'));
 
+        $breadcrumb = array();
+
         foreach ($ids as $id) {
 
             $q = mysqli_query($conn, "SELECT name_hobi FROM tb_hobi WHERE id_hobi = '" . intval($id) . "'");
