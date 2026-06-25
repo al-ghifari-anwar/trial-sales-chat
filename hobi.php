@@ -15,20 +15,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $hobis = array();
     while ($rowHobi = $getHobis->fetch_array(MYSQLI_ASSOC)) {
         $ids = explode('/', trim($rowHobi['path_hobi'], '/'));
-        $idList = implode(',', array_map('intval', $ids));
-
-        $getParentHobi = mysqli_query($conn, "SELECT id_hobi, name_hobi FROM tb_hobi WHERE id_hobi IN ($idList)");
-
-        $namaHobi = [];
-
-        while ($r = mysqli_fetch_assoc($getParentHobi)) {
-            $namaHobi[$r['id_hobi']] = $r['name_hobi'];
-        }
-
-        $breadcrumb = [];
 
         foreach ($ids as $id) {
-            $breadcrumb[] = $namaHobi[$id];
+            foreach ($ids as $id) {
+
+                $q = mysqli_query($conn, "SELECT name_hobi FROM tb_hobi WHERE id_hobi = '" . intval($id) . "'");
+
+                $d = mysqli_fetch_assoc($q);
+
+                if ($d) {
+                    $breadcrumb[] = $d['name_hobi'];
+                }
+            }
         }
 
         $label = implode(' → ', $breadcrumb);
