@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $checkHobi = mysqli_query($conn, "SELECT * FROM tb_hobi_toko WHERE id_contact = '$id_contact' AND id_hobi IN ($id_hobis_search)")->fetch_array(MYSQLI_ASSOC);
 
-    $deletekHobi = mysqli_query($conn, "DELETE FROM tb_hobi_toko WHERE id_contact = '$id_contact' AND id_hobi IN ($id_hobis_search)")->fetch_array(MYSQLI_ASSOC);
+    $deletekHobi = mysqli_query($conn, "DELETE FROM tb_hobi_toko WHERE id_contact = '$id_contact' AND id_hobi IN ($id_hobis_search)");
 
     if ($deletekHobi) {
         foreach ($id_hobis as $id_hobi) {
