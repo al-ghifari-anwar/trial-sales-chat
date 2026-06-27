@@ -48,8 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $id_hobis_search = $_POST['id_hobis'];
     $id_user = $_POST['id_user'];
 
-    $checkHobi = mysqli_query($conn, "SELECT * FROM tb_hobi_toko WHERE id_contact = '$id_contact' AND id_hobi IN ($id_hobis_search)")->fetch_array(MYSQLI_ASSOC);
-
     $deletekHobi = mysqli_query($conn, "DELETE FROM tb_hobi_toko WHERE id_contact = '$id_contact' ");
 
     if ($deletekHobi) {
