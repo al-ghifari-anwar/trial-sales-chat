@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // echo json_encode($response);
             continue;
         } else {
-            $save = mysqli_query($conn, "SELECT * FROM tb_hobi_toko(id_contact,id_hobi,id_user) VALUES($id_contact,$id_hobi,$id_user)");
+            $save = mysqli_query($conn, "INSERT INTO tb_hobi_toko(id_contact,id_hobi,id_user) VALUES($id_contact,$id_hobi,$id_user)");
 
             if (!$save) {
                 $response = ["response" => 200, "status" => "failed", "message" => "Gagal harap coba lagi"];
