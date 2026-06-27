@@ -44,26 +44,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_contact = $_POST['id_contact'];
-    $id_hobi = $_POST['id_hobi'];
+    $id_hobis = explode(',', $_POST['id_hobis']);
     $id_user = $_POST['id_user'];
 
-    $checkHobi = mysqli_query($conn, "SELECT * FROM tb_hobi_toko WHERE id_contact = '$id_contact' AND id_hobi = '$id_hobi'")->fetch_array(MYSQLI_ASSOC);
+    $checkHobi = mysqli_query($conn, "SELECT * FROM tb_hobi_toko WHERE id_contact = '$id_contact' AND id_hobi IN ($id_hobis)")->fetch_array(MYSQLI_ASSOC);
 
-    if ($checkHobi) {
-        $response = ["response" => 200, "status" => "failed", "message" => "Hobi sudah ada"];
-        echo json_encode($response);
-        die;
-    } else {
-        $save = mysqli_query($conn, "SELECT * FROM tb_hobi_toko(id_contact,id_hobi,id_user) VALUES($id_contact,$id_hobi,$id_user)");
-
-        if (!$save) {
-            $response = ["response" => 200, "status" => "failed", "message" => "Gagal harap coba lagi"];
-            echo json_encode($response);
-            die;
+    foreach ($id_hobis as $id_hobi) {
+        if ($checkHobi) {
+            // $response = ["response" => 200, "status" => "failed", "message" => "Hobi sudah ada"];
+            // echo json_encode($response);
+            continue;
         } else {
-            $response = ["response" => 200, "status" => "success", "message" => "Berhasil menambahkan hobi toko"];
-            echo json_encode($response);
-            die;
+            $save = mysqli_query($conn, "SELECT * FROM tb_hobi_toko(id_contact,id_hobi,id_user) VALUES($id_contact,$id_hobi,$id_user)");
+
+            if (!$save) {
+                $response = ["response" => 200, "status" => "failed", "message" => "Gagal harap coba lagi"];
+                echo json_encode($response);
+            } else {
+                $response = ["response" => 200, "status" => "success", "message" => "Berhasil menambahkan dat hobi toko"];
+                echo json_encode($response);
+            }
         }
     }
+
+    $response = ["response" => 200, "status" => "success", "message" => "Berhasil menambahkan hobi toko"];
+    echo json_encode($response);
 }
