@@ -16,6 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $id_contact = $row['id_contact'];
+
+            $hobis = mysqli_query($conn, "SELECT * FROM tb_hobi_toko JOIN tb_hobi ON tb_hobi.id_hobi = tb_hobi_toko.id_hobi WHERE id_contact = '$id_contact' ");
+
+            $row['hobi_toko'] = mysqli_fetch_all($hobis, MYSQLI_ASSOC);
+
             $transArray[] = $row;
         }
 

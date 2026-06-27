@@ -50,12 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $checkHobi = mysqli_query($conn, "SELECT * FROM tb_hobi_toko WHERE id_contact = '$id_contact' AND id_hobi IN ($id_hobis_search)")->fetch_array(MYSQLI_ASSOC);
 
-    foreach ($id_hobis as $id_hobi) {
-        if ($checkHobi) {
-            // $response = ["response" => 200, "status" => "failed", "message" => "Hobi sudah ada"];
-            // echo json_encode($response);
-            continue;
-        } else {
+    $deletekHobi = mysqli_query($conn, "DELETE FROM tb_hobi_toko WHERE id_contact = '$id_contact' AND id_hobi IN ($id_hobis_search)")->fetch_array(MYSQLI_ASSOC);
+
+    if ($deletekHobi) {
+        foreach ($id_hobis as $id_hobi) {
             $save = mysqli_query($conn, "INSERT INTO tb_hobi_toko(id_contact,id_hobi,id_user) VALUES($id_contact,$id_hobi,$id_user)");
 
             if (!$save) {
