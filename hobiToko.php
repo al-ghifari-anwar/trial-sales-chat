@@ -45,9 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_contact = $_POST['id_contact'];
     $id_hobis = explode(',', $_POST['id_hobis']);
+    $id_hobis_search = $_POST['id_hobis'];
     $id_user = $_POST['id_user'];
 
-    $checkHobi = mysqli_query($conn, "SELECT * FROM tb_hobi_toko WHERE id_contact = '$id_contact' AND id_hobi IN ($id_hobis)")->fetch_array(MYSQLI_ASSOC);
+    $checkHobi = mysqli_query($conn, "SELECT * FROM tb_hobi_toko WHERE id_contact = '$id_contact' AND id_hobi IN ($id_hobis_search)")->fetch_array(MYSQLI_ASSOC);
 
     foreach ($id_hobis as $id_hobi) {
         if ($checkHobi) {
