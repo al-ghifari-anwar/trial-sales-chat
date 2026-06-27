@@ -51,17 +51,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $deletekHobi = mysqli_query($conn, "DELETE FROM tb_hobi_toko WHERE id_contact = '$id_contact' ");
 
     if ($deletekHobi) {
-        foreach ($id_hobis as $id_hobi) {
-            $save = mysqli_query($conn, "INSERT INTO tb_hobi_toko(id_contact,id_hobi,id_user) VALUES($id_contact,$id_hobi,$id_user)");
+        if (!empty($id_hobis)) {
+            foreach ($id_hobis as $id_hobi) {
+                $save = mysqli_query($conn, "INSERT INTO tb_hobi_toko(id_contact,id_hobi,id_user) VALUES($id_contact,$id_hobi,$id_user)");
 
-            if (!$save) {
-                // $response = ["response" => 200, "status" => "failed", "message" => "Gagal harap coba lagi"];
-                // echo json_encode($response);
-                continue;
-            } else {
-                // $response = ["response" => 200, "status" => "success", "message" => "Berhasil menambahkan dat hobi toko"];
-                // echo json_encode($response);
-                continue;
+                if (!$save) {
+                    // $response = ["response" => 200, "status" => "failed", "message" => "Gagal harap coba lagi"];
+                    // echo json_encode($response);
+                    continue;
+                } else {
+                    // $response = ["response" => 200, "status" => "success", "message" => "Berhasil menambahkan dat hobi toko"];
+                    // echo json_encode($response);
+                    continue;
+                }
             }
         }
     }
