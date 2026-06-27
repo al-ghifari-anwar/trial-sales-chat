@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $deletekHobi = mysqli_query($conn, "DELETE FROM tb_hobi_toko WHERE id_contact = '$id_contact' ");
 
     if ($deletekHobi) {
-        if (!empty($id_hobis)) {
+        if (!empty($id_hobis_search)) {
             foreach ($id_hobis as $id_hobi) {
                 $save = mysqli_query($conn, "INSERT INTO tb_hobi_toko(id_contact,id_hobi,id_user) VALUES($id_contact,$id_hobi,$id_user)");
 
