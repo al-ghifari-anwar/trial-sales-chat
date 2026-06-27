@@ -59,11 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $save = mysqli_query($conn, "INSERT INTO tb_hobi_toko(id_contact,id_hobi,id_user) VALUES($id_contact,$id_hobi,$id_user)");
 
             if (!$save) {
-                $response = ["response" => 200, "status" => "failed", "message" => "Gagal harap coba lagi"];
-                echo json_encode($response);
+                // $response = ["response" => 200, "status" => "failed", "message" => "Gagal harap coba lagi"];
+                // echo json_encode($response);
+                continue;
             } else {
-                $response = ["response" => 200, "status" => "success", "message" => "Berhasil menambahkan dat hobi toko"];
-                echo json_encode($response);
+                // $response = ["response" => 200, "status" => "success", "message" => "Berhasil menambahkan dat hobi toko"];
+                // echo json_encode($response);
+                continue;
             }
         }
     }
