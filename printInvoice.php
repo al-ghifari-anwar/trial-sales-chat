@@ -11,9 +11,13 @@ date_default_timezone_set('Asia/Jakarta');
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_sj = $_POST['id_sj'];
 
+    $suratjalan = mysqli_query($conn, "SELECT * FROM tb_surat_jalan WHERE id_surat_jalan = '$id_sj'")->fetch_array(MYSQLI_ASSOC);
+
+    $is_print_inv = $suratjalan['is_print_inv'] - 1;
+
     $dateNow = date('Y-m-d H:i:s');
 
-    $udpatePrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET date_printed_inv = '$dateNow' WHERE id_surat_jalan = '$id_sj'");
+    $udpatePrint = mysqli_query($conn, "UPDATE tb_surat_jalan SET date_printed_inv = '$dateNow', is_print_inv = $is_print_inv WHERE id_surat_jalan = '$id_sj'");
 
     if (!$udpatePrint) {
         $response = ["response" => 200, "status" => "failed", "message" => "Failed to print inv!"];
