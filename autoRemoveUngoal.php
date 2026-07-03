@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         $response = ["response" => 400, "status" => "failed", "message" => "Gagal pindah toko!"];
                         echo json_encode($response);
                     } else {
-                        $response = ["response" => 200, "status" => "ok", "message" => "Toko " . $rowContact['nama'] . " Berhasil dipindah! Cutoff Visit: " . $isCutoff];
+                        $response = ["response" => 200, "status" => "ok", "message" => "Toko " . $rowContact['nama'] . " Berhasil dipindah! Cutoff Visit: " . json_encode($visit)];
                         echo json_encode($response);
                     }
                 }
