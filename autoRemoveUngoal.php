@@ -20,8 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $visit = array();
         $dateCutoffVisit = null;
+        $isCutoff = 0;
 
         if ($cutoffVisit) {
+            $isCutoff = 1;
             $dateCutoffVisit = date('Y-m-d', strtotime($cutoffVisit['date_cutoff_visit']));
 
             $visit = mysqli_query($conn, " SELECT COUNT(*) AS jml_visit FROM tb_visit WHERE id_contact = $id_contact AND id_user = '$id_user' AND DATE(date_visit) > $dateCutoffVisit ")->fetch_array(MYSQLI_ASSOC);
@@ -44,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         $response = ["response" => 400, "status" => "failed", "message" => "Gagal pindah toko!"];
                         echo json_encode($response);
                     } else {
-                        $response = ["response" => 200, "status" => "ok", "message" => "Toko " . $rowContact['nama'] . " Berhasil dipindah! Cutoff Visit: " . json_encode($dateCutoffVisit)];
+                        $response = ["response" => 200, "status" => "ok", "message" => "Toko " . $rowContact['nama'] . " Berhasil dipindah! Cutoff Visit: " . $isCutoff];
                         echo json_encode($response);
                     }
                 }
