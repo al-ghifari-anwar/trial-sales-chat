@@ -4,7 +4,7 @@ include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $getContacts = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE store_status IN ('data') ");
+    $getContacts = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tb_contact.id_city = 2 AND store_status IN ('data') ");
 
     while ($rowContact = $getContacts->fetch_array(MYSQLI_ASSOC)) {
         $id_contact = $rowContact['id_contact'];
@@ -31,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $cityBuangan = mysqli_query($conn, " SELECT * FROM tb_city WHERE nama_city = '$nama_city_buangan' AND id_distributor = '$id_distributor' ")->fetch_array(MYSQLI_ASSOC);
 
-        if ($visit['jml_visit'] >= 4) {
-            if ($cityBuangan) {
+        if ($cityBuangan) {
+            if ($visit['jml_visit'] >= 4) {
                 $id_city_buangan = $cityBuangan['id_city'];
 
                 $checkBuangan = mysqli_query($conn, "SELECT * FROM tb_transit_toko WHERE id_contact = '$id_contact'")->fetch_array(MYSQLI_ASSOC);
