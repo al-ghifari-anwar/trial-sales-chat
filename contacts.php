@@ -54,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $id_contact = $row['id_contact'];
+            $id_city = $row['id_city'];
             $getBadScore = mysqli_query($conn, "SELECT * FROM tb_bad_score WHERE id_contact = '$id_contact'");
             $rowBadscore = $getBadScore->fetch_array(MYSQLI_ASSOC);
 
@@ -62,12 +63,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $row['validation_status'] = 'invalid';
             }
 
-            if ($rowBadscore) {
-                if ($rowBadscore['is_approved'] != 1) {
+            $city = mysqli_query($conn, "SELECT * FROM tb_city WHERE id_city = '$id_city'")->fetch_array(MYSQLI_ASSOC);
+
+            if (!str_contains($city['nama_city'], 'X')) {
+                if ($rowBadscore) {
+                    if ($rowBadscore['is_approved'] != 1) {
+                        $transArray[] = $row;
+                    }
+                } else {
                     $transArray[] = $row;
                 }
-            } else {
-                $transArray[] = $row;
             }
         }
 
