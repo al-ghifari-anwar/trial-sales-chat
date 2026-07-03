@@ -65,7 +65,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $city = mysqli_query($conn, "SELECT * FROM tb_city WHERE id_city = '$id_city'")->fetch_array(MYSQLI_ASSOC);
 
-            if (!str_contains($city['nama_city'], 'X')) {
+            if (str_contains($city['nama_city'], 'X')) {
+                $transArray[] = $row;
+            } else {
                 if ($rowBadscore) {
                     if ($rowBadscore['is_approved'] != 1) {
                         $transArray[] = $row;
