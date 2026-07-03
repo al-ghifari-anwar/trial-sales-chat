@@ -49,6 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     }
                 }
             }
+        } else {
+            $response = ["response" => 200, "status" => "ok", "message" => "Toko " . $rowContact['nama'] . " Belum waktunya pindah! "];
+            echo json_encode($response);
         }
     }
 }
