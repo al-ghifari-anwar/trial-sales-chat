@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $isCutoff = 1;
             $dateCutoffVisit = date('Y-m-d', strtotime($cutoffVisit['date_cutoff_visit']));
 
-            $visitQuery = " SELECT COUNT(*) AS jml_visit FROM tb_visit WHERE id_contact = $id_contact AND id_user = '$id_user' AND DATE(date_visit) > $dateCutoffVisit ";
+            $visitQuery = " SELECT COUNT(*) AS jml_visit FROM tb_visit WHERE id_contact = $id_contact AND id_user = '$id_user' AND DATE(date_visit) > '$dateCutoffVisit' ";
 
             $visit = mysqli_query($conn, $visitQuery)->fetch_array(MYSQLI_ASSOC);
         } else {
