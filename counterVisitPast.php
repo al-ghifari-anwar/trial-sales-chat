@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $getDayoffUser = mysqli_query($conn, "SELECT COALESCE(SUM(jml_day_off), 0) AS day_off_user FROM tb_day_off WHERE id_user = '$id_user' AND date_day_off = '$dateGroup'")->fetch_array(MYSQLI_ASSOC);
 
-        $getTotal = mysqli_query($conn, " SELECT COUNT(*) AS total_visit FROM tb_visit JOIN tb_contact ON tb_visit.id_contact = tb_contact.id_contact WHERE tb_visit.id_user = '$id_user' AND DATE(tb_visit.date_visit) = '$dateGroup' AND tb_visit.is_deleted = 0 AND is_approved = 1 GROUP BY tb_visit.id_contact ");
+        $getTotal = mysqli_query($conn, " SELECT COUNT(*) AS total_visit FROM tb_visit JOIN tb_contact ON tb_visit.id_contact = tb_contact.id_contact WHERE tb_visit.id_user = '$id_user' AND DATE(tb_visit.date_visit) = '$dateGroup' AND tb_visit.is_deleted = 0 AND is_approved = 1 AND source_visit NOT LIKE '%absen_in%' GROUP BY tb_visit.id_contact ");
         $arrayTotal = array();
         while ($rowTotal = $getTotal->fetch_array(MYSQLI_ASSOC)) {
             $arrayTotal[] = $rowTotal;
