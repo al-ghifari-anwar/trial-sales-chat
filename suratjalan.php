@@ -184,6 +184,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $sisa_kredit_limit = $contact['kredit_limit'] - $sisa_invoice_waiting;
 
+        if ($suratjalan['payment_scoring'] > 90) {
+            $sisa_kredit_limit += 1000000;
+        }
+
         if ($sisa_kredit_limit < 0) {
             $can_closing = "no";
             $msg_can_closing = empty($msg_can_closing) ? "Kredit limit habis" : $msg_can_closing . " | Kredit limit habis";
