@@ -49,63 +49,66 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // $wa_token = $rowQontak['token'];
             // echo json_encode($sisaHutang);
             if ($sisaHutang > 0) {
-                $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
-                $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
-                $wa_token = $rowHaloai['token_haloai'];
-                $business_id = $rowHaloai['business_id_haloai'];
-                $channel_id = $rowHaloai['channel_id_haloai'];
-                $template = 'tagihan_min_3';
-                $messageText = "Ini adalah pesan otomatis dari system*. Dengan ini kami memberitahukan bahwa tagihan Bapak/Ibu dengan nomor invoice *$no_invoice* Sebesar *$sisaHutang* akan jatuh pada *$jatuhTempo* (3 hari sebelum jatuh tempo) Mohon kerjasamanya untuk melakukan pembayaran tepat waktu. (_*Jika Bapak/Ibu sudah melakukan pembayaran maka bisa abaikan pesan ini*_) Kami tunggu orderan anda selanjutnya, Terima Kasih. Salam Hangat, PT Top Mortar Indonesia";
+                if ($invArray['is_notif_tagihan'] == 1) {
 
-                $haloaiPayload = [
-                    'activate_ai_after_send' => false,
-                    'channel_id' => $channel_id,
-                    'fallback_template_message' => $template,
-                    'fallback_template_variables' => [
-                        $nama . ", *Ini adalah pesan otomatis dari system*. ",
-                        $no_invoice,
-                        $sisaHutang,
-                        $jatuhTempo,
-                    ],
-                    'phone_number' => $nomor_hp,
-                    'text' => trim(preg_replace('/\s+/', ' ', $messageText)),
-                ];
+                    $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                    $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                    $wa_token = $rowHaloai['token_haloai'];
+                    $business_id = $rowHaloai['business_id_haloai'];
+                    $channel_id = $rowHaloai['channel_id_haloai'];
+                    $template = 'tagihan_min_3';
+                    $messageText = "Ini adalah pesan otomatis dari system*. Dengan ini kami memberitahukan bahwa tagihan Bapak/Ibu dengan nomor invoice *$no_invoice* Sebesar *$sisaHutang* akan jatuh pada *$jatuhTempo* (3 hari sebelum jatuh tempo) Mohon kerjasamanya untuk melakukan pembayaran tepat waktu. (_*Jika Bapak/Ibu sudah melakukan pembayaran maka bisa abaikan pesan ini*_) Kami tunggu orderan anda selanjutnya, Terima Kasih. Salam Hangat, PT Top Mortar Indonesia";
 
-                $curl = curl_init();
+                    $haloaiPayload = [
+                        'activate_ai_after_send' => false,
+                        'channel_id' => $channel_id,
+                        'fallback_template_message' => $template,
+                        'fallback_template_variables' => [
+                            $nama . ", *Ini adalah pesan otomatis dari system*. ",
+                            $no_invoice,
+                            $sisaHutang,
+                            $jatuhTempo,
+                        ],
+                        'phone_number' => $nomor_hp,
+                        'text' => trim(preg_replace('/\s+/', ' ', $messageText)),
+                    ];
 
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
-                    CURLOPT_HTTPHEADER => array(
-                        'Authorization: Bearer ' . $wa_token,
-                        'X-HaloAI-Business-Id: ' . $business_id,
-                        'Content-Type: application/json'
-                    ),
-                ));
+                    $curl = curl_init();
 
-                $response = curl_exec($curl);
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: Bearer ' . $wa_token,
+                            'X-HaloAI-Business-Id: ' . $business_id,
+                            'Content-Type: application/json'
+                        ),
+                    ));
 
-                curl_close($curl);
+                    $response = curl_exec($curl);
 
-                $res = json_decode($response, true);
+                    curl_close($curl);
 
-                $status = $res['status'];
+                    $res = json_decode($response, true);
 
-                if ($status == "success") {
-                    $response = ["response" => 200, "status" => "ok", "message" => "Success notify customer"];
-                    echo json_encode($response);
-                } else {
-                    $response = ["response" => 200, "status" => "failed", "message" => "Failed notify customer. " . mysqli_error($conn), "detail" => mysqli_error($conn), "qontak" => $res];
-                    echo json_encode($response);
+                    $status = $res['status'];
+
+                    if ($status == "success") {
+                        $response = ["response" => 200, "status" => "ok", "message" => "Success notify customer"];
+                        echo json_encode($response);
+                    } else {
+                        $response = ["response" => 200, "status" => "failed", "message" => "Failed notify customer. " . mysqli_error($conn), "detail" => mysqli_error($conn), "qontak" => $res];
+                        echo json_encode($response);
+                    }
+                    // }
                 }
-                // }
             }
             // }
         } else {
