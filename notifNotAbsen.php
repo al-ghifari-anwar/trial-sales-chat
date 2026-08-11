@@ -7,19 +7,21 @@ date_default_timezone_set('Asia/Jakarta');
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if (date('D') != 'Sun') {
-        $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE phone_user != '0' AND password != '0' AND level_user IN ('sales','courier') AND is_absen = 1 AND id_distributor = 1");
+        $getUser = mysqli_query($conn, "SELECT * FROM tb_user JOIN tb_city ON tb_city.id_city = tb_user.id_city WHERE password != '0' AND level_user IN ('sales','courier') AND tb_user.id_distributor = 1");
 
         while ($user = $getUser->fetch_array(MYSQLI_ASSOC)) {
             $id_user = $user['id_user'];
             $date = date('Y-m-d');
             $full_name = $user['full_name'];
+            $level_user = $user['level_user'];
+            $nama_city = $user['nama_city'];
 
             $absenMasuk = mysqli_query($conn, " SELECT * FROM tb_visit WHERE id_user = $id_user AND DATE(date_visit) = '$date' AND source_visit LIKE '%absen_in%' ")->fetch_array(MYSQLI_ASSOC);
 
             if (!$absenMasuk) {
                 $curl = curl_init();
 
-                $message = "Pengguna Belum Absen\n\nNama: " . $full_name . "";
+                $message = "Pengguna Belum Absen\n\nNama: " . $full_name . "\nRole: " . $level_user . "\nKota: " . $nama_city;
 
                 $telegramPayload = [
                     'chat_id' => -5138489487,
