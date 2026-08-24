@@ -765,20 +765,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // if ($insertVisit) {
             $visitDate = date("Y-m-d H:i:s");
             if ($type_renvi == 'jatem3') {
-                $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'jatem'");
+                $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'jatem' AND is_visited = 0");
 
-                $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_renvis = 'jatem3'");
+                $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_renvis = 'jatem3' AND is_visited = 0");
             } else if ($type_renvi == 'mg') {
-                $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'mg'");
+                $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'mg' AND is_visited = 0");
             } else {
                 if ($type_renvi == 'jatem2') {
-                    $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_renvis = 'jatem2'");
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_renvis = 'jatem2' AND is_visited = 0");
                 } else if ($type_renvi == 'jatem1') {
-                    $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_renvis = 'jatem1'");
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_renvis = 'jatem1' AND is_visited = 0");
                 } else if ($type_renvi == 'voucher') {
-                    $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi'");
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi' AND is_visited = 0");
                     // Update pasif also
-                    $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'passive'");
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'passive' AND is_visited = 0");
                 } else if ($type_renvi == 'passive') {
                     // Send notif passive ke toko
                     $resultContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
@@ -839,9 +839,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     // echo json_encode($rowHaloai);
                     // echo $response;
 
-                    $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi'");
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi' AND is_visited = 0");
                 } else if ($type_renvi == 'tagih_mingguan' || $type_renvi == 'weekly') {
-                    $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'tagih_mingguan'");
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = 'tagih_mingguan' AND is_visited = 0");
                 } else if ($type_renvi == 'normal') {
                     $resultContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
                     $rowContact = $resultContact->fetch_array(MYSQLI_ASSOC);
