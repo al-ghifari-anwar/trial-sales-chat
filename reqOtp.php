@@ -213,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     $res = json_decode($response, true);
 
-                    $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!" . $id_distributor];
+                    $response = ["response" => 200, "status" => "ok", "message" => "Success creating new OTP code!" . $id_distributor, "res" => $response];
                     echo json_encode($response);
                 } else {
                     $getMaxchat = mysqli_query($conn, "SELECT * FROM tb_maxchat WHERE id_distributor = 1");
