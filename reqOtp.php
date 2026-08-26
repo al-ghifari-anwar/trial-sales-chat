@@ -180,9 +180,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         'channel_id' => $channel_id,
                         'fallback_template_message' => $template,
                         'fallback_template_variables' => [
-                            $username . "",
+                            $username . "A",
                             trim(preg_replace('/\s+/', ' ', $message)),
-                            'Automated Message'
+                            'Top Mortar',
                         ],
                         'phone_number' => $nomor_hp,
                         'text' => trim(preg_replace('/\s+/', ' ', $message)),
