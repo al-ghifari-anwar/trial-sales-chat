@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 trim(preg_replace('/\s+/', ' ', $message)),
                                 'Automated Message'
                             ],
-                            'phone_number' => $nomor_hp,
+                            'phone_number' => $phone_user,
                             'text' => trim(preg_replace('/\s+/', ' ', $message)),
                         ];
 
@@ -184,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             trim(preg_replace('/\s+/', ' ', $message)),
                             'Top Mortar',
                         ],
-                        'phone_number' => $nomor_hp,
+                        'phone_number' => $phone_user,
                         'text' => trim(preg_replace('/\s+/', ' ', $message)),
                     ];
 
