@@ -4,7 +4,7 @@ include_once("config.php");
 date_default_timezone_set('Asia/Jakarta');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if ($_POST['level_user'] == 'sales') {
+    if ($_POST['level_user'] == 'sales' || $_POST['level_user'] == 'penagihan') {
         if (isset($_POST['id_gudang'])) {
             $id_gudang = $_POST['id_gudang'] ? $_POST['id_gudang'] : 0;
             $distance_visit = $_POST['distance_visit'] ? str_replace(',', '.', $_POST['distance_visit']) : 0;
