@@ -85,6 +85,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $response = curl_exec($curl);
 
+            $info = curl_getinfo($curl);
+            $errorNo = curl_errno($curl);
+            $error = curl_error($curl);
+
             if ($response === false) {
                 // curl_close($curl);
 
@@ -96,12 +100,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 // exit;
                 echo '<pre>';
                 var_dump([
-                    'url' => $url,
                     'response' => $response,
-                    'curl_errno' => $curlErrorNo,
-                    'curl_error' => $curlError,
-                    'http_code' => $httpCode,
-                    'content_type' => $contentType,
+                    'curl_errno' => $errorNo,
+                    'curl_error' => $error,
+                    'http_code' => $info['http_code'] ?? null,
+                    'content_type' => $info['content_type'] ?? null,
+                    'total_time' => $info['total_time'] ?? null,
                 ]);
                 echo '</pre>';
 
@@ -114,11 +118,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             if (!isset($osrm['code']) || $osrm['code'] !== 'Ok') {
 
-                echo json_encode([
-                    "status" => "error",
-                    "message" => "OSRM error",
-                    "osrm" => $osrm
+                // echo json_encode([
+                //     "status" => "error",
+                //     "message" => "OSRM error",
+                //     "osrm" => $osrm
+                // ]);
+
+                // exit;
+                echo '<pre>';
+                var_dump([
+                    'response' => $response,
+                    'curl_errno' => $errorNo,
+                    'curl_error' => $error,
+                    'http_code' => $info['http_code'] ?? null,
+                    'content_type' => $info['content_type'] ?? null,
+                    'total_time' => $info['total_time'] ?? null,
                 ]);
+                echo '</pre>';
 
                 exit;
             }
