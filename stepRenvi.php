@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // Hit OSRM untuk jarak
             $coordinateString = implode(';', $coordinates);
 
-            $url = 'https://router.project-osrm.org/table/v1/driving/' . $coordinateString . '?sources=0&destinations=' . implode(';', range(1, count($renvis))) . '&annotations=duration,distance';
+            $url = 'http://router.project-osrm.org/table/v1/driving/' . $coordinateString . '?sources=0&destinations=' . urlencode(implode(';', range(1, count($renvis)))) . '&annotations=duration,distance';
 
             $curl = curl_init();
 
