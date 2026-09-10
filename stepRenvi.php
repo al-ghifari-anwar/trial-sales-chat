@@ -85,26 +85,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $response = curl_exec($curl);
 
-            echo '<pre>';
-            var_dump([
-                'url' => $url,
-                'response' => $response,
-                'curl_errno' => $curlErrorNo,
-                'curl_error' => $curlError,
-                'http_code' => $httpCode,
-                'content_type' => $contentType,
-            ]);
-            echo '</pre>';
-
-            exit;
-
             if ($response === false) {
-                curl_close($curl);
+                // curl_close($curl);
 
-                echo json_encode([
-                    "status" => "error",
-                    "message" => "Failed to connect OSRM"
+                // echo json_encode([
+                //     "status" => "error",
+                //     "message" => "Failed to connect OSRM"
+                // ]);
+
+                // exit;
+                echo '<pre>';
+                var_dump([
+                    'url' => $url,
+                    'response' => $response,
+                    'curl_errno' => $curlErrorNo,
+                    'curl_error' => $curlError,
+                    'http_code' => $httpCode,
+                    'content_type' => $contentType,
                 ]);
+                echo '</pre>';
 
                 exit;
             }
