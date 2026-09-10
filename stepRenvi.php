@@ -100,6 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 // exit;
                 echo '<pre>';
                 var_dump([
+                    'url' => $url,
                     'response' => $response,
                     'curl_errno' => $errorNo,
                     'curl_error' => $error,
@@ -127,6 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 // exit;
                 echo '<pre>';
                 var_dump([
+                    'url' => $url,
                     'response' => $response,
                     'curl_errno' => $errorNo,
                     'curl_error' => $error,
