@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_distributor = $_GET['dst'];
         $dateNow = date("Y-m-d");
 
-        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact WHERE tb_user.id_distributor = '$id_distributor' AND DATE(endDatetime) = '$dateNow'  GROUP BY tb_delivery.id_surat_jalan");
+        $result = mysqli_query($conn, "SELECT * FROM tb_delivery JOIN tb_user ON tb_user.id_user = tb_delivery.id_courier JOIN tb_contact ON tb_contact.id_contact = tb_delivery.id_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE tb_city.id_distributor = '$id_distributor' AND DATE(endDatetime) = '$dateNow'  GROUP BY tb_delivery.id_surat_jalan");
 
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $id_surat_jalan = $row['id_surat_jalan'];
