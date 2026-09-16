@@ -19,7 +19,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $hobis = mysqli_query($conn, "SELECT * FROM tb_hobi_toko JOIN tb_hobi ON tb_hobi.id_hobi = tb_hobi_toko.id_hobi WHERE id_contact = '$id_contact' ");
 
+            $renvitagihans = mysqli_query($conn, " SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND is_visited = 0 LIMIT 1 ")->fetch_array(MYSQLI_ASSOC);
+
+            $invoiceWaiting = mysqli_query($conn, " SELECT * FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact' AND tb_invoice.status_invoice = 'waiting' AND total_invoice > 500 ")->fetch_array(MYSQLI_ASSOC);
+
+            $can_visit_normal = "0";
+
+            if ($row['store_status'] == 'active' || $row['store_status'] == 'passive') {
+                if ($invoiceWaiting != null) {
+                    $can_visit_normal = "1";
+                } else {
+                    $can_visit_normal = "2";
+                }
+            }
+
             $row['hobi_toko'] = mysqli_fetch_all($hobis, MYSQLI_ASSOC);
+            $row['can_visit_normal'] = $can_visit_normal;
 
             $transArray[] = $row;
         }
