@@ -11,12 +11,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_city = $_GET['id_city'];
         $dateNow = date('Y-m-d');
 
-        $getStepRenvis = mysqli_query($conn, " SELECT * FROM tb_step_renvi WHERE date_step_renvi = '$dateNow' AND number_step_renvi IN(1,2,3) AND id_city = '$id_city' ORDER BY number_step_renvi ASC ");
+        $getStepRenvis = mysqli_query($conn, " SELECT * FROM tb_step_renvi JOIN tb_contact ON tb_contact.id_contact = tb_step_renvi.id_contact WHERE date_step_renvi = '$dateNow' AND number_step_renvi IN(1,2,3) AND tb_step_renvi.id_city = '$id_city' ORDER BY number_step_renvi ASC ");
 
         $renvis = array();
 
         while ($rowStepRenvi = $getStepRenvis->fetch_array(MYSQLI_ASSOC)) {
             $id_contact = $rowStepRenvi['id_contact'];
+            $id_renvi = $rowStepRenvi['id_renvi'];
+
+            $getRenviTagihan = mysqli_query($conn, " SELECT * FROM tb_renvis_jatem WHERE id_renvis_jatem = '$id_renvi' ")->fetch_array();
+
+            $rowStepRenvi['renvi'] = $getRenviTagihan;
 
             $renvis[] = $rowStepRenvi;
         }
@@ -30,7 +35,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_city = $_GET['id_city'];
         $dateNow = date('Y-m-d');
 
-        $renvi = mysqli_query($conn, " SELECT * FROM tb_step_renvi WHERE date_step_renvi = '$dateNow' AND number_step_renvi NOT IN(1,2,3) AND is_active = 1 AND is_visited = 1 AND id_city = '$id_city' ")->fetch_array(MYSQLI_ASSOC);
+        $renvi = mysqli_query($conn, " SELECT * FROM tb_step_renvi JOIN tb_contact ON tb_contact.id_contact = tb_step_renvi.id_contact WHERE date_step_renvi = '$dateNow' AND number_step_renvi NOT IN(1,2,3) AND is_active = 1 AND is_visited = 0 AND tb_step_renvi.id_city = '$id_city' ")->fetch_array(MYSQLI_ASSOC);
+
+        $getRenviTagihan = mysqli_query($conn, " SELECT * FROM tb_renvis_jatem WHERE id_renvis_jatem = '$id_renvi' ")->fetch_array();
+
+        $getRenviNonTagihan = mysqli_query($conn, " SELECT * FROM tb_rencana_visit WHERE id_rencana_visit = '$id_renvi' ")->fetch_array();
+
+        $rowStepRenvi['renvi'] = $getRenviTagihan ?? $getRenviNonTagihan;
 
         if ($renvi == null) {
             echo json_encode(array("status" => "empty", "results" => []));
@@ -170,5 +181,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             echo json_encode(array("status" => "ok", "results" => $renvis));
         }
+    }
+} else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $id_step_renvi = $_POST['id_step_renvi'];
+
+    $save = mysqli_query($conn, " UPDATE tb_step_renvi SET is_active = 1 WHERE id_step_renvi = $id_step_renvi ");
+
+    if ($save) {
+        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil pilih renvi!"];
+        echo json_encode($response);
+    } else {
+        $response = ["response" => 200, "status" => "failed", "message" => "Gagal pilih renvi! " . mysqli_error($conn), "detail" => mysqli_error($conn)];
+        echo json_encode($response);
     }
 }
