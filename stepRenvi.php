@@ -171,4 +171,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array("status" => "ok", "results" => $renvis));
         }
     }
+} else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $id_step_renvi = $_POST['id_step_renvi'];
+
+    $save = mysqli_query($conn, " UPDATE tb_step_renvi SET is_active = 1 WHERE id_step_renvi = $id_step_renvi ");
+
+    if ($save) {
+        $response = ["response" => 200, "status" => "ok", "message" => "Berhasil pilih renvi!"];
+        echo json_encode($response);
+    } else {
+        $response = ["response" => 200, "status" => "failed", "message" => "Gagal pilih renvi! " . mysqli_error($conn), "detail" => mysqli_error($conn)];
+        echo json_encode($response);
+    }
 }
