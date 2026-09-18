@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_contact = $rowStepRenvi['id_contact'];
             $id_renvi = $rowStepRenvi['id_renvi'];
 
-            $getRenviTagihan = mysqli_query($conn, " SELECT * FROM tb_renvis_jatem WHERE id_renvi = '$id_renvi' ")->fetch_array();
+            $getRenviTagihan = mysqli_query($conn, " SELECT * FROM tb_renvis_jatem WHERE id_renvis_jatem = '$id_renvi' ")->fetch_array();
 
             $rowStepRenvi['renvi'] = $getRenviTagihan;
 
