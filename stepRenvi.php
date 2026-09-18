@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_contact = $rowStepRenvi['id_contact'];
             $id_renvi = $rowStepRenvi['id_renvi'];
 
-            $getRenviTagihan = mysqli_query($conn, " SELECT * FROM tb_renvis_jatem WHERE id_renvis_jatem = '$id_renvi' ")->fetch_array();
+            $getRenviTagihan = mysqli_query($conn, " SELECT * FROM tb_renvis_jatem WHERE id_renvis_jatem = '$id_renvi' ")->fetch_array(MYSQLI_ASSOC);
 
             $rowStepRenvi['renvi'] = $getRenviTagihan;
 
@@ -37,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $renvi = mysqli_query($conn, " SELECT * FROM tb_step_renvi JOIN tb_contact ON tb_contact.id_contact = tb_step_renvi.id_contact WHERE date_step_renvi = '$dateNow' AND number_step_renvi NOT IN(1,2,3) AND is_active = 1 AND is_visited = 0 AND tb_step_renvi.id_city = '$id_city' ")->fetch_array(MYSQLI_ASSOC);
 
-        $getRenviTagihan = mysqli_query($conn, " SELECT * FROM tb_renvis_jatem WHERE id_renvis_jatem = '$id_renvi' ")->fetch_array();
+        $getRenviTagihan = mysqli_query($conn, " SELECT * FROM tb_renvis_jatem WHERE id_renvis_jatem = '$id_renvi' ")->fetch_array(MYSQLI_ASSOC);
 
-        $getRenviNonTagihan = mysqli_query($conn, " SELECT * FROM tb_rencana_visit WHERE id_rencana_visit = '$id_renvi' ")->fetch_array();
+        $getRenviNonTagihan = mysqli_query($conn, " SELECT * FROM tb_rencana_visit WHERE id_rencana_visit = '$id_renvi' ")->fetch_array(MYSQLI_ASSOC);
 
         $rowStepRenvi['renvi'] = $getRenviTagihan ?? $getRenviNonTagihan;
 
