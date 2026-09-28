@@ -319,6 +319,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $insertCityLog = mysqli_query($conn, " INSERT INTO tb_log_update_contact(id_contact,column_updated,data_from,data_to,updated_by) VALUES($id, 'id_city', '$oldCity', '$id_city', $id_user) ");
             }
 
+            if ($cluster != $rowContact['cluster']) {
+                $oldCluster = $rowContact['cluster'];
+
+                $insertClusterLog = mysqli_query($conn, " INSERT INTO tb_log_update_contact(id_contact,column_updated,data_from,data_to,updated_by) VALUES($id, 'cluster', '$oldCluster', '$cluster', $id_user) ");
+            }
+
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
             echo json_encode($response);
         } else {
