@@ -105,6 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_POST['id'])) {
         $id = $_POST['id'];
 
+        $id_user = isset($_POST['id_user']) ? $_POST['id_user'] : 0;
+
         $getContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id'");
 
         $rowContact = $getContact->fetch_array(MYSQLI_ASSOC);
@@ -299,8 +301,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($result) {
             if ($status != $rowContact['store_status']) {
                 $oldStatus = $rowContact['store_status'];
+
                 $result = mysqli_query($conn, "INSERT INTO tb_status_change(id_contact,status_from,status_to,mode_status) VALUES ($id, '$oldStatus', '$status', 'manual') ");
+
+                $insertStatusLog = mysqli_query($conn, " INSERT INTO tb_log_update_contact(id_contact,column_updated,data_from,data_to,updated_by) VALUES($id, 'store_status', '$oldStatus', '$status', $id_user) ");
             }
+
+            if ($id_promo != $rowContact['id_promo']) {
+                $oldPromo = $rowContact['id_promo'];
+
+                $insertPromoLog = mysqli_query($conn, " INSERT INTO tb_log_update_contact(id_contact,column_updated,data_from,data_to,updated_by) VALUES($id, 'id_promo', '$oldPromo', '$id_promo', $id_user) ");
+            }
+
+            if ($id_city != $rowContact['id_city']) {
+                $oldCity = $rowContact['id_city'];
+
+                $insertCityLog = mysqli_query($conn, " INSERT INTO tb_log_update_contact(id_contact,column_updated,data_from,data_to,updated_by) VALUES($id, 'id_city', '$oldCity', '$id_city', $id_user) ");
+            }
+
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
             echo json_encode($response);
         } else {
