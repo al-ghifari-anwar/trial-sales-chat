@@ -13,7 +13,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     foreach ($invArray as $invArray) {
         $id_invoice = $invArray['id_invoice'];
         // Calculate sisa hari jatuh tempo
-        $jatuhTempo = date('d M Y', strtotime("+" . $invArray['termin_payment'] . " days", strtotime($invArray['date_invoice'])));
+        if ($invArray['is_cod'] == 0) {
+            // 
+            if ($invArray['termin_payment'] > 30) {
+                $jatuhTempo = date('Y-m-d', strtotime("+" . $invArray['termin_payment'] . " days", strtotime($invArray['date_invoice'])));
+            } else {
+                $jatuhTempo = date('Y-m-d', strtotime("+30 days", strtotime($invArray['date_invoice'])));
+            }
+        } else {
+            $jatuhTempo = date('Y-m-d', strtotime("+3 days", strtotime($invArray['date_invoice'])));
+        }
         $date1 = new DateTime(date("Y-m-d"));
         $date2 = new DateTime($jatuhTempo);
         $days  = $date2->diff($date1)->format('%a');

@@ -346,7 +346,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 if ($changeStoreStatus) {
                     $removeRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$date' WHERE id_contact = '$id_contact' AND type_rencana = 'passive'");
 
-                    $response = ["response" => 200, "status" => "success", "message" => "Succes to closing!"];
+                    $response = ["response" => 200, "status" => "success", "message" => "Succes to closing!", "sj" => $rowSuratJalan, "store_to_status" => $store_to_status];
                     echo json_encode($response);
                 } else {
                     $response = ["response" => 200, "status" => "failed", "message" => "Failed to change store status!"];
