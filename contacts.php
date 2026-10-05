@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $can_visit_normal = "0";
 
-            if ($row['store_status'] == 'active' || $row['store_status'] == 'passive' || $row['store_status' == 'data']) {
+            if ($row['store_status'] == 'active' || $row['store_status'] == 'passive' || $row['store_status'] == 'data') {
                 if ($invoiceWaiting != null) {
                     $can_visit_normal = "1";
                 } else {
