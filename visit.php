@@ -254,38 +254,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         $res = json_decode($response, true);
 
                         if ($res['status'] == 'success') {
-                            $nomor_hp_admin = "6289636224827";
-                            $nama_admin = "April";
-                            if ($id_distributor == 6) {
-                                $nomor_hp_admin = "6285646844240";
-                                $nama_admin = "Aris";
-                            }
                             $message = "Toko " . $nama . "telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
 
-                            $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
-                            $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
-                            $wa_token = $rowHaloai['token_haloai'];
-                            $business_id = $rowHaloai['business_id_haloai'];
-                            $channel_id = $rowHaloai['channel_id_haloai'];
-                            $template = 'info_meeting_baru';
+                            $telegram = mysqli_query($conn, "SELECT * FROM tb_telegram LIMIT 1")->fetch_array(MYSQLI_ASSOC);
 
-                            $haloaiPayload = [
-                                'activate_ai_after_send' => false,
-                                'channel_id' => $channel_id,
-                                'fallback_template_message' => $template,
-                                'fallback_template_variables' => [
-                                    $nama_admin,
-                                    trim(preg_replace('/\s+/', ' ', $message)),
-                                    $full_name,
-                                ],
-                                'phone_number' => $nomor_hp_admin,
-                                'text' => trim(preg_replace('/\s+/', ' ', $message)),
-                            ];
+                            $apikey = $telegram['api_key_telegram'];
+                            $chatId = "-5563739964";
 
                             $curl = curl_init();
 
+                            $telegramPayload = [
+                                'chat_id' => $chatId,
+                                'text' => $message,
+                            ];
+
                             curl_setopt_array($curl, array(
-                                CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                                CURLOPT_URL => "https://api.telegram.org/bot$apikey/sendMessage",
                                 CURLOPT_RETURNTRANSFER => true,
                                 CURLOPT_ENCODING => '',
                                 CURLOPT_MAXREDIRS => 10,
@@ -293,10 +277,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                 CURLOPT_FOLLOWLOCATION => true,
                                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                                 CURLOPT_CUSTOMREQUEST => 'POST',
-                                CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                                CURLOPT_POSTFIELDS => json_encode($telegramPayload),
                                 CURLOPT_HTTPHEADER => array(
-                                    'Authorization: Bearer ' . $wa_token,
-                                    'X-HaloAI-Business-Id: ' . $business_id,
                                     'Content-Type: application/json'
                                 ),
                             ));
@@ -421,38 +403,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             $res = json_decode($response, true);
 
                             if ($res['status'] == 'success') {
-                                $nomor_hp_admin = "6289636224827";
-                                $nama_admin = "April";
-                                if ($id_distributor == 6) {
-                                    $nomor_hp_admin = "6285646844240";
-                                    $nama_admin = "Aris";
-                                }
                                 $message = "Toko " . $nama . " menjanjikan pembayaran pada tanggal " . date("Y-m-d", strtotime($pay_date));
 
-                                $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
-                                $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
-                                $wa_token = $rowHaloai['token_haloai'];
-                                $business_id = $rowHaloai['business_id_haloai'];
-                                $channel_id = $rowHaloai['channel_id_haloai'];
-                                $template = 'info_meeting_baru';
+                                $telegram = mysqli_query($conn, "SELECT * FROM tb_telegram LIMIT 1")->fetch_array(MYSQLI_ASSOC);
 
-                                $haloaiPayload = [
-                                    'activate_ai_after_send' => false,
-                                    'channel_id' => $channel_id,
-                                    'fallback_template_message' => $template,
-                                    'fallback_template_variables' => [
-                                        $nama_admin,
-                                        trim(preg_replace('/\s+/', ' ', $message)),
-                                        $full_name,
-                                    ],
-                                    'phone_number' => $nomor_hp_admin,
-                                    'text' => trim(preg_replace('/\s+/', ' ', $message)),
-                                ];
+                                $apikey = $telegram['api_key_telegram'];
+                                $chatId = "-5563739964";
 
                                 $curl = curl_init();
 
+                                $telegramPayload = [
+                                    'chat_id' => $chatId,
+                                    'text' => $message,
+                                ];
+
                                 curl_setopt_array($curl, array(
-                                    CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                                    CURLOPT_URL => "https://api.telegram.org/bot$apikey/sendMessage",
                                     CURLOPT_RETURNTRANSFER => true,
                                     CURLOPT_ENCODING => '',
                                     CURLOPT_MAXREDIRS => 10,
@@ -460,10 +426,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     CURLOPT_FOLLOWLOCATION => true,
                                     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                                     CURLOPT_CUSTOMREQUEST => 'POST',
-                                    CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                                    CURLOPT_POSTFIELDS => json_encode($telegramPayload),
                                     CURLOPT_HTTPHEADER => array(
-                                        'Authorization: Bearer ' . $wa_token,
-                                        'X-HaloAI-Business-Id: ' . $business_id,
                                         'Content-Type: application/json'
                                     ),
                                 ));
@@ -587,6 +551,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             $res = json_decode($response, true);
 
                             if ($res['status'] == 'success') {
+                                $telegram = mysqli_query($conn, "SELECT * FROM tb_telegram LIMIT 1")->fetch_array(MYSQLI_ASSOC);
+
+                                $apikey = $telegram['api_key_telegram'];
+
                                 // Get Score
                                 $curl = curl_init();
 
@@ -628,7 +596,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     ];
 
                                     curl_setopt_array($curl, array(
-                                        CURLOPT_URL => 'https://api.telegram.org/bot8494834740:AAEZLYfkzUhrY6GroazEJOf876oToo2-qIw/sendMessage',
+                                        CURLOPT_URL => "https://api.telegram.org/bot$apikey/sendMessage",
                                         CURLOPT_RETURNTRANSFER => true,
                                         CURLOPT_ENCODING => '',
                                         CURLOPT_MAXREDIRS => 10,
@@ -647,38 +615,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     curl_close($curl);
                                 }
 
-                                $nomor_hp_admin = "6289636224827";
-                                $nama_admin = "April";
-                                if ($id_distributor == 6) {
-                                    $nomor_hp_admin = "6285646844240";
-                                    $nama_admin = "Aris";
-                                }
                                 $message = "Toko " . $nama . " hari ini belum melakukan pembayaran ";
 
-                                $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
-                                $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
-                                $wa_token = $rowHaloai['token_haloai'];
-                                $business_id = $rowHaloai['business_id_haloai'];
-                                $channel_id = $rowHaloai['channel_id_haloai'];
-                                $template = 'info_meeting_baru';
 
-                                $haloaiPayload = [
-                                    'activate_ai_after_send' => false,
-                                    'channel_id' => $channel_id,
-                                    'fallback_template_message' => $template,
-                                    'fallback_template_variables' => [
-                                        $nama_admin,
-                                        trim(preg_replace('/\s+/', ' ', $message)),
-                                        $full_name,
-                                    ],
-                                    'phone_number' => $nomor_hp_admin,
-                                    'text' => trim(preg_replace('/\s+/', ' ', $message)),
-                                ];
+                                $chatId = "-5563739964";
 
                                 $curl = curl_init();
 
+                                $telegramPayload = [
+                                    'chat_id' => $chatId,
+                                    'text' => $message,
+                                ];
+
                                 curl_setopt_array($curl, array(
-                                    CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                                    CURLOPT_URL => "https://api.telegram.org/bot$apikey/sendMessage",
                                     CURLOPT_RETURNTRANSFER => true,
                                     CURLOPT_ENCODING => '',
                                     CURLOPT_MAXREDIRS => 10,
@@ -686,10 +636,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     CURLOPT_FOLLOWLOCATION => true,
                                     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                                     CURLOPT_CUSTOMREQUEST => 'POST',
-                                    CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                                    CURLOPT_POSTFIELDS => json_encode($telegramPayload),
                                     CURLOPT_HTTPHEADER => array(
-                                        'Authorization: Bearer ' . $wa_token,
-                                        'X-HaloAI-Business-Id: ' . $business_id,
                                         'Content-Type: application/json'
                                     ),
                                 ));
