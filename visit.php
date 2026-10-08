@@ -497,6 +497,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     // $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date,id_invoice) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date',$id_invoice)");
                     $response = ["response" => 200, "status" => "ok", "message" => "Tidak dapat membuat laporan!", "id_visit" => (string)$id_visit];
                     echo json_encode($response);
+                    die;
                 }
             } else {
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_approved) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user, 1)");
