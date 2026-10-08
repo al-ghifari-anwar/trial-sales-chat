@@ -188,6 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $nama = $rowContact['nama'];
                 $nomor_hp = $rowContact['nomorhp'];
                 $id_distributor = $rowContact['id_distributor'];
+                $city = $rowContact['nama_city'];
 
                 // $getQontak = mysqli_query($conn, "SELECT * FROM tb_qontak WHERE id_distributor = '$id_distributor'");
                 // $rowQontak = $getQontak->fetch_array(MYSQLI_ASSOC);
@@ -254,7 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         $res = json_decode($response, true);
 
                         if ($res['status'] == 'success') {
-                            $message = "Toko " . $nama . "telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
+                            $message = "Toko " . $nama . " telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". \n Kota: " . $city;
 
                             $telegram = mysqli_query($conn, "SELECT * FROM tb_telegram LIMIT 1")->fetch_array(MYSQLI_ASSOC);
 
@@ -403,7 +404,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                             $res = json_decode($response, true);
 
                             if ($res['status'] == 'success') {
-                                $message = "Toko " . $nama . " menjanjikan pembayaran pada tanggal " . date("Y-m-d", strtotime($pay_date));
+                                $message = "Toko " . $nama . " menjanjikan pembayaran pada tanggal " . date("Y-m-d", strtotime($pay_date)) . " \n Kota: " . $city;
 
                                 $telegram = mysqli_query($conn, "SELECT * FROM tb_telegram LIMIT 1")->fetch_array(MYSQLI_ASSOC);
 
@@ -615,7 +616,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                                     curl_close($curl);
                                 }
 
-                                $message = "Toko " . $nama . " hari ini belum melakukan pembayaran ";
+                                $message = "Toko " . $nama . " hari ini belum melakukan pembayaran \n Kota: " . $city;
 
 
                                 $chatId = "-5563739964";
