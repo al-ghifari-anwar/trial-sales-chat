@@ -27,7 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             if ($row['store_status'] == 'active' || $row['store_status'] == 'passive' || $row['store_status'] == 'data') {
                 if ($invoiceWaiting != null) {
-                    $can_visit_normal = "1";
+                    if ($renvitagihans) {
+                        $can_visit_normal = "0";
+                    } else {
+                        $can_visit_normal = "2";
+                    }
                 } else {
                     $can_visit_normal = "2";
                 }
