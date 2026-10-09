@@ -155,6 +155,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $is_pay = isset($_POST['is_pay']) ? $_POST['is_pay'] : '0';
         $dateNow = date('Y-m-d');
 
+        $renvitagihans = mysqli_query($conn, " SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND is_visited = 0 ORDER BY created_at DESC LIMIT 1 ")->fetch_array(MYSQLI_ASSOC);
+
+        if ($source == 'normal' && $is_pay != '0') {
+            $type_renvi = $renvitagihans['type_renvis'];
+            $laporan_visit = "[" . $type_renvi . "] " .  $_POST['laporan_visit'];
+        }
 
         $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
         $rowUser = $getUser->fetch_array(MYSQLI_ASSOC);
