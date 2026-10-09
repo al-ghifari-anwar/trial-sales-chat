@@ -159,6 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         if ($source == 'normal' && $is_pay != '0') {
             $type_renvi = $renvitagihans['type_renvis'];
+            $laporan_visit = "[" . $type_renvi . "] " .  $_POST['laporan_visit'];
         }
 
         $getUser = mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user = '$id_user'");
