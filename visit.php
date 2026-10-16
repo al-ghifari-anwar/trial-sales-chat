@@ -263,7 +263,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                         $res = json_decode($response, true);
 
                         if ($res['status'] == 'success') {
+
+                            $messageDate = "";
                             $message = "Toko " . $nama . " telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". \n Kota: " . $city;
+
+                            if ($rowInv['status_invoice'] == 'paid') {
+                                $checkPayment = mysqli_query($conn, "SELECT * FROM tb_payment WHERE id_invoice = '$id_invoice' ORDER BY date_payment DESC LIMIT 1")->fetch_array(MYSQLI_ASSOC);
+
+                                $messageDate = "\n\n Pembayarab dilakukan pada tanggal: " . date("d F Y", strtotime($checkPayment['date_payment']));
+                            }
 
                             $telegram = mysqli_query($conn, "SELECT * FROM tb_telegram LIMIT 1")->fetch_array(MYSQLI_ASSOC);
 
@@ -274,7 +282,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
                             $telegramPayload = [
                                 'chat_id' => $chatId,
-                                'text' => $message,
+                                'text' => $message . $messageDate,
                             ];
 
                             curl_setopt_array($curl, array(
