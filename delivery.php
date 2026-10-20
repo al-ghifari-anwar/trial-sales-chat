@@ -13,6 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_surat_jalan = $row['id_surat_jalan'];
             $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
 
+            // Calculate day
+            $date1 = new DateTime(date("Y-m-d", strtotime($resultSuratJalan['dalivery_date'])));
+            $date2 = new DateTime(date("Y-m-d", strtotime($row['endDatetime'])));
+            $days  = $date2->diff($date1)->format('%a');
+
+            $row['total_day'] = $days;
             $row['sj'] = $resultSuratJalan;
             $transArray[] = $row;
         }
@@ -34,6 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_surat_jalan = $row['id_surat_jalan'];
             $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
 
+            // Calculate day
+            $date1 = new DateTime(date("Y-m-d", strtotime($resultSuratJalan['dalivery_date'])));
+            $date2 = new DateTime(date("Y-m-d", strtotime($row['endDatetime'])));
+            $days  = $date2->diff($date1)->format('%a');
+
+            $row['total_day'] = $days;
             $row['sj'] = $resultSuratJalan;
             $transArray[] = $row;
         }
@@ -55,6 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_surat_jalan = $row['id_surat_jalan'];
             $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
 
+            // Calculate day
+            $date1 = new DateTime(date("Y-m-d", strtotime($resultSuratJalan['dalivery_date'])));
+            $date2 = new DateTime(date("Y-m-d", strtotime($row['endDatetime'])));
+            $days  = $date2->diff($date1)->format('%a');
+
+            $row['total_day'] = $days;
             $row['sj'] = $resultSuratJalan;
             $transArray[] = $row;
         }
@@ -75,7 +93,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $id_surat_jalan = $row['id_surat_jalan'];
             $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
+            // Calculate day
+            $date1 = new DateTime(date("Y-m-d", strtotime($resultSuratJalan['dalivery_date'])));
+            $date2 = new DateTime(date("Y-m-d", strtotime($row['endDatetime'])));
+            $days  = $date2->diff($date1)->format('%a');
 
+            $row['total_day'] = $days;
             $row['sj'] = $resultSuratJalan;
             $transArray[] = $row;
         }
@@ -95,6 +118,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $id_surat_jalan = $row['id_surat_jalan'];
             $resultSuratJalan = mysqli_query($conn, "SELECT tb_surat_jalan.*, tb_user.full_name AS courier_name, tb_kendaraan.nama_kendaraan, tb_kendaraan.nopol_kendaraan FROM tb_surat_jalan JOIN tb_user ON tb_user.id_user = tb_surat_jalan.id_courier JOIN tb_kendaraan ON tb_kendaraan.id_kendaraan = tb_surat_jalan.id_kendaraan WHERE id_surat_jalan = '$id_surat_jalan' ")->fetch_array(MYSQLI_ASSOC);
 
+            // Calculate day
+            $date1 = new DateTime(date("Y-m-d", strtotime($resultSuratJalan['dalivery_date'])));
+            $date2 = new DateTime(date("Y-m-d", strtotime($row['endDatetime'])));
+            $days  = $date2->diff($date1)->format('%a');
+
+            $row['total_day'] = $days;
             $row['sj'] = $resultSuratJalan;
             $transArray[] = $row;
         }
