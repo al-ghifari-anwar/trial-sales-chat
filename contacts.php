@@ -329,6 +329,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $insertClusterLog = mysqli_query($conn, " INSERT INTO tb_log_update_contact(id_contact,column_updated,data_from,data_to,updated_by) VALUES($id, 'cluster', '$oldCluster', '$cluster', $id_user) ");
             }
 
+            if ($termin_payment != $rowContact['termin_payment']) {
+                $oldTerminPayment = $rowContact['termin_payment'];
+
+                $insertTerminLog = mysqli_query($conn, " INSERT INTO tb_log_update_contact(id_contact,column_updated,data_from,data_to,updated_by) VALUES($id, 'termin', '$oldTerminPayment', '$termin_payment', $id_user) ");
+            }
+
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengubah data kontak!"];
             echo json_encode($response);
         } else {
