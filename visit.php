@@ -666,6 +666,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 }
             }
 
+            $dateNow = date('Y-m-d');
+            mysqli_query($conn, "UPDATE tb_step_renvi SET is_visited = 1 WHERE id_contact = '$id_contact' AND date_step_renvi = '$dateNow' AND is_visited = 0");
+
             $id_bid = $rowBid['id_bid'];
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan!", "id_visit" => (string)$id_visit];
             echo json_encode($response);
