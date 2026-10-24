@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $id_city = $_GET['id_city'];
         $dateNow = date('Y-m-d');
 
-        $getStepRenvis = mysqli_query($conn, " SELECT * FROM tb_step_renvi JOIN tb_contact ON tb_contact.id_contact = tb_step_renvi.id_contact WHERE date_step_renvi = '$dateNow' AND number_step_renvi IN(1,2,3) AND tb_step_renvi.id_city = '$id_city' ORDER BY number_step_renvi ASC ");
+        $getStepRenvis = mysqli_query($conn, " SELECT * FROM tb_step_renvi JOIN tb_contact ON tb_contact.id_contact = tb_step_renvi.id_contact WHERE date_step_renvi = '$dateNow' AND number_step_renvi IN(1,2,3) AND tb_step_renvi.id_city = '$id_city' AND is_visited = 0 ORDER BY number_step_renvi ASC ");
 
         $renvis = array();
 
