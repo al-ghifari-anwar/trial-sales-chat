@@ -34,6 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $resLastVisit = $lastVisit->fetch_array(MYSQLI_ASSOC);
                 $created_at = $rowRenvis['created_at'];
                 $rowRenvis['created_at'] = $resLastVisit == null ? $created_at : $resLastVisit['date_visit'];
+
+                // Last Payment
+                $lastPayment = mysqli_query($conn, "SELECT * FROM tb_payment WHERE id_invoice = '$id_inv' ORDER BY date_payment DESC LIMIT 1")->fetch_array(MYSQLI_ASSOC);
+                $rowRenvis['last_date_payment'] = $lastPayment['date_payment'];
+                $rowRenvis['is_lunas'] = $rowRenvis['status_invoice'] == 'waiting' ? "0" : "1";
+
                 if (date('Y-m-d', strtotime("+" . $rowRenvis['termin_payment'] . " days", strtotime($rowRenvis['date_invoice']))) <= $date_now) {
                     $renvisArray[] = $rowRenvis;
                 }
