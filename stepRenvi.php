@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
             $daysAllVisit = $operan . $daysAllVisit;
 
-            if ($daysAllVisit > 7) {
+            if ($rowStepRenvi['days_step_renvi'] > 7) {
                 $renvis[] = $rowStepRenvi;
             }
         }
