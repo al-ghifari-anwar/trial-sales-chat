@@ -70,7 +70,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $coordinates[] = $store_coordinate[1] . ',' . $store_coordinate[0];
 
-            $renvis[] = $rowStepRenvi;
+            // Last of All Type Visit
+            // $allTypLastVisit = $this->db->order_by('date_visit', 'DESC')->get_where('tb_visit', ['id_contact' => $id_contact])->row_array();
+            $date1allVisit = new DateTime(date("Y-m-d"));
+            $date2allVisit = new DateTime($rowStepRenvi['last_visit_step_renvi']);
+            $daysAllVisit  = $date2allVisit->diff($date1allVisit)->format('%a');
+            $operan = "";
+            if ($date1allVisit < $date2allVisit) {
+                $operan = "-";
+            }
+            $daysAllVisit = $operan . $daysAllVisit;
+
+            if ($daysAllVisit > 7) {
+                $renvis[] = $rowStepRenvi;
+            }
         }
 
         if ($renvis == null) {
