@@ -606,6 +606,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $resultContact = mysqli_query($conn, "SELECT * FROM tb_contact JOIN tb_city ON tb_city.id_city = tb_contact.id_city WHERE id_contact = '$id_contact'");
                     $rowContact = $resultContact->fetch_array(MYSQLI_ASSOC);
 
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_renvis_jatem SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact'");
+
+                    $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi'");
+
                     $nama = $rowContact['nama'];
                     $nomor_hp = $rowContact['nomorhp'];
 

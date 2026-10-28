@@ -37,11 +37,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $renvi = mysqli_query($conn, " SELECT * FROM tb_step_renvi JOIN tb_contact ON tb_contact.id_contact = tb_step_renvi.id_contact WHERE date_step_renvi = '$dateNow' AND number_step_renvi NOT IN(1,2,3) AND is_active = 1 AND is_visited = 0 AND tb_step_renvi.id_city = '$id_city' ")->fetch_array(MYSQLI_ASSOC);
 
+        $id_renvi = $renvi['id_renvi'];
+        $id_contact = $renvi['id_contact'];
+
         $getRenviTagihan = mysqli_query($conn, " SELECT * FROM tb_renvis_jatem WHERE id_renvis_jatem = '$id_renvi' ")->fetch_array(MYSQLI_ASSOC);
 
         $getRenviNonTagihan = mysqli_query($conn, " SELECT * FROM tb_rencana_visit WHERE id_rencana_visit = '$id_renvi' ")->fetch_array(MYSQLI_ASSOC);
 
-        $rowStepRenvi['renvi'] = $getRenviTagihan ?? $getRenviNonTagihan;
+        $renvi['renvi'] = $getRenviTagihan ?? $getRenviNonTagihan;
+
+        $renvitagihans = mysqli_query($conn, " SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND is_visited = 0 LIMIT 1 ")->fetch_array(MYSQLI_ASSOC);
+
+        $invoiceWaiting = mysqli_query($conn, " SELECT * FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact' AND tb_invoice.status_invoice = 'waiting' AND total_invoice > 500 ")->fetch_array(MYSQLI_ASSOC);
+
+        $can_visit_tagihan = "0";
+
+        if ($renvi['store_status'] == 'active' || $renvi['store_status'] == 'data') {
+            if ($invoiceWaiting != null) {
+                if ($renvitagihans) {
+                    $can_visit_tagihan = "1";
+                } else {
+                    $can_visit_tagihan = "1";
+                }
+            } else {
+                $can_visit_tagihan = "0";
+            }
+        }
+
+        // 
+        $renvi['can_visit_tagihan'] = $can_visit_tagihan;
 
         if ($renvi == null) {
             echo json_encode(array("status" => "empty", "results" => []));
