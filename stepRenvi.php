@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
         }
 
+        // 
         $renvi['can_visit_tagihan'] = $can_visit_tagihan;
 
         if ($renvi == null) {
