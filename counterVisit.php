@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     $detailVisits = array();
     $detailConfirmed = array();
+    $detailConfirmedNew = array();
     // while ($rowDateGroupVisit = $getDateGroupVisit->fetch_array(MYSQLI_ASSOC)) {
     foreach ($period as $date) {
         // $dateGroup = date('Y-m-d', strtotime($rowDateGroupVisit['date_visit']));
@@ -57,11 +58,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $checkYes = mysqli_query($conn, " SELECT COUNT(*) AS total_confirmed FROM tb_jadwal_visit WHERE id_city = $id_city AND date_jadwal_visit = '$dateGroup' AND is_yes = 1 ")->fetch_array(MYSQLI_ASSOC);
 
+        $checkYesNew = mysqli_query($conn, " SELECT COUNT(*) AS total_confirmed FROM tb_step_renvi WHERE id_city = $id_city AND date_step_renvi = '$dateGroup' AND is_yes = 1 AND id_contact NOT IN (SELECT id_contact FROM tb_jadwal_visit WHERE id_city = $id_city AND date_jadwal_visit = '$dateGroup')")->fetch_array(MYSQLI_ASSOC);
+
         $detailVisits[] = ['tgl' => $dateGroup, 'total' => count($arrayTotal)];
         $detailConfirmed[] = ['tgl' => $dateGroup, 'total' => $checkYes['total_confirmed']];
+        $detailConfirmedNew[] = ['tgl' => $dateGroup, 'total' => $checkYesNew['total_confirmed']];
+
+        $totalCheckYes = $checkYes['total_confirmed'] + $checkYesNew['total_confirmed'];
 
         $totalVisit += count($arrayTotal);
-        $totalConfirmed += count($arrayTotal) < $checkYes['total_confirmed'] ? count($arrayTotal) : $checkYes['total_confirmed'];
+        $totalConfirmed += count($arrayTotal) < $totalCheckYes ? count($arrayTotal) : $totalCheckYes;
         $totalDayoffGlobal += $getDayoffGlobal['day_off_global'];
         $totalDayoffUser += ($getDayoffUser > 0) ? 10 - $getDayoffUser['day_off_user'] : 0;
         $totalDayoff += $getDayoffGlobal['day_off_global'] + $getDayoffUser['day_off_user'];
@@ -77,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         'details' => [
             'visits' => $detailVisits,
             'confirmed' => $detailConfirmed,
+            'confirmedNew' => $detailConfirmedNew,
         ]
     ];
 
