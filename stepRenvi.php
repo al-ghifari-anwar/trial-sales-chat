@@ -23,6 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $rowStepRenvi['renvi'] = $getRenviTagihan;
 
+            $rowStepRenvi['id_invoice'] = $getRenviTagihan ? $getRenviTagihan['id_invoice'] : 0;
+
             $renvis[] = $rowStepRenvi;
         }
 
