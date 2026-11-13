@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $rowStepRenvi['renvi'] = $getRenviTagihan;
 
-            $rowStepRenvi['id_invoice'] = $getRenviTagihan ? $getRenviTagihan['id_invoice'] : 0;
+            $rowStepRenvi['id_invoice'] = $getRenviTagihan ? $getRenviTagihan['id_invoice'] : "0";
 
             $renvis[] = $rowStepRenvi;
         }
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $invoiceWaiting = mysqli_query($conn, " SELECT * FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact' AND tb_invoice.status_invoice = 'waiting' AND total_invoice > 500 ")->fetch_array(MYSQLI_ASSOC);
 
-            $id_invoice = 0;
+            $id_invoice = "0";
 
             if ($getRenviTagihan) {
                 $id_invoice = $getRenviTagihan['id_invoice'];
