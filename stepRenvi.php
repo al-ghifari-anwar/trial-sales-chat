@@ -23,6 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             $rowStepRenvi['renvi'] = $getRenviTagihan;
 
+            $rowStepRenvi['id_invoice'] = $getRenviTagihan ? $getRenviTagihan['id_invoice'] : 0;
+
             $renvis[] = $rowStepRenvi;
         }
 
@@ -50,6 +52,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $renvitagihans = mysqli_query($conn, " SELECT * FROM tb_renvis_jatem WHERE id_contact = '$id_contact' AND is_visited = 0 LIMIT 1 ")->fetch_array(MYSQLI_ASSOC);
 
             $invoiceWaiting = mysqli_query($conn, " SELECT * FROM tb_invoice JOIN tb_surat_jalan ON tb_surat_jalan.id_surat_jalan = tb_invoice.id_surat_jalan WHERE tb_surat_jalan.id_contact = '$id_contact' AND tb_invoice.status_invoice = 'waiting' AND total_invoice > 500 ")->fetch_array(MYSQLI_ASSOC);
+
+            $id_invoice = 0;
+
+            if ($getRenviTagihan) {
+                $id_invoice = $getRenviTagihan['id_invoice'];
+            } else {
+                if ($invoiceWaiting) {
+                    $id_invoice = $invoiceWaiting['id_invoice'];
+                }
+            }
+
+            $renvi['id_invoice'] = $id_invoice;
 
             $can_visit_tagihan = "0";
 
@@ -93,11 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         while ($rowStepRenvi = $getStepRenvis->fetch_array(MYSQLI_ASSOC)) {
             $id_contact = $rowStepRenvi['id_contact'];
 
-            // koordinat toko
-            $store_coordinate = explode(",", $rowStepRenvi['maps_url']);
-
-            $coordinates[] = $store_coordinate[1] . ',' . $store_coordinate[0];
-
             // Last of All Type Visit
             // $allTypLastVisit = $this->db->order_by('date_visit', 'DESC')->get_where('tb_visit', ['id_contact' => $id_contact])->row_array();
             $date1allVisit = new DateTime(date("Y-m-d"));
@@ -110,7 +119,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $daysAllVisit = $operan . $daysAllVisit;
 
             if ($rowStepRenvi['days_step_renvi'] > 7) {
+                // koordinat toko
+                // $store_coordinate = explode(",", $rowStepRenvi['maps_url']);
+
+                // $coordinates[] = $store_coordinate[1] . ',' . $store_coordinate[0];
+
+                // $renvis[] = $rowStepRenvi;
+                $store_coordinate = explode(",", $rowStepRenvi['maps_url']);
+
+                // Validasi koordinat
+                if (count($store_coordinate) !== 2) {
+                    continue;
+                }
+
+                $storeLat = trim($store_coordinate[0]);
+                $storeLong = trim($store_coordinate[1]);
+
+                if (!is_numeric($storeLat) || !is_numeric($storeLong)) {
+                    continue;
+                }
+
+                // Kedua array harus selalu sinkron
                 $renvis[] = $rowStepRenvi;
+                $coordinates[] = $storeLong . ',' . $storeLat;
             }
         }
 
@@ -202,14 +233,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             // Assign koordinat dan durasi
             foreach ($renvis as $index => &$renvi) {
                 // Hitung estimasi durasi
-                $rawDuration = $osrm['distances'][0][$index] / 35000;
-                $duration = $rawDuration * 60;
+                // $rawDuration = $osrm['distances'][0][$index] / 35000;
+                // $duration = $rawDuration * 60;
 
                 // Karena index 0 adalah source
-                $osrmIndex = $index + 1;
+                // $osrmIndex = $index + 1;
 
-                $renvi['distance'] = $osrm['distances'][0][$index];
-                $renvi['duration'] = $duration;
+                // $renvi['distance'] = $osrm['distances'][0][$index];
+                // $renvi['duration'] = $duration;
+                // OSRM distance dalam meter
+                $distance = $osrm['distances'][0][$index] ?? null;
+
+                // OSRM duration dalam detik
+                $duration = $osrm['durations'][0][$index] ?? null;
+
+                $renvi['distance'] = $distance !== null
+                    ? (float) $distance
+                    : null;
+
+                // Konversi detik ke menit
+                $renvi['duration'] = $duration !== null
+                    ? round($duration / 60, 2)
+                    : null;
             }
 
             unset($renvi);
