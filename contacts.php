@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $payment_method = $_POST['payment_method'];
         $tagih_mingguan = $_POST['tagih_mingguan'];
         $hari_bayar = "-";
-        $cluster = isset($_POST['cluster']) ? $_POST['cluster'] : $rowContact['cluster'];
+        $cluster = isset($_POST['cluster']) || !empty($_POST['cluster']) ? $_POST['cluster'] : $rowContact['cluster'];
         $kredit_limit = isset($_POST['kredit_limit']) ? $_POST['kredit_limit'] : $rowContact['kredit_limit'];
         if (isset($_POST['hari_bayar'])) {
             $hari_bayar = $_POST['hari_bayar'];
