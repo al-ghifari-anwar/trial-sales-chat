@@ -296,10 +296,7 @@ foreach ($transArray as $arr) {
                         'url' => 'https://saleswa.topmortarindonesia.com/img/bday_' . $nomor_hp . 'jpg',
                     ],
                     'fallback_template_variables' => [
-                        $nama,
-                        trim(preg_replace('/\s+/', ' ', $jmlVoucher)),
-                        $vouchers,
-                        date("d M, Y", strtotime("+30 days")),
+                        trim(preg_replace('/\s+/', ' ', $message)),
                     ],
                     'media' => [
                         "filename" => "image.jpg",
