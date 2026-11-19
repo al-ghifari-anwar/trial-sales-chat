@@ -194,75 +194,76 @@ foreach ($transArray as $arr) {
 
                     if ($status == "success") {
                         // Send forward message
-                        curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => '',
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => '{
-                                "to_number": "' . $nomor_forward . '",
-                                "to_name": "' . $nama . '",
-                                "message_template_id": "' . $template_vc . '",
-                                "channel_integration_id": "' . $integration_id . '",
-                                "language": {
-                                    "code": "id"
-                                },
-                                "parameters": {
-                                    "header":{
-                                        "format":"VIDEO",
-                                        "params": [
-                                            {
-                                                "key":"url",
-                                                "value":"https://saleswa.topmortarindonesia.com/vid/ultahnew.mp4"
-                                            },
-                                            {
-                                                "key":"filename",
-                                                "value":"bday.jpg"
-                                            }
-                                        ]
-                                    },
-                                    "body": [
-                                        {
-                                            "key": "1",
-                                            "value": "nama",
-                                            "value_text": "' . $nama . '"
-                                        },
-                                        {
-                                            "key": "2",
-                                            "value": "jml_voucher",
-                                            "value_text": "' . $jmlVoucher . '"
-                                        },
-                                        {
-                                            "key": "3",
-                                            "value": "no_voucher",
-                                            "value_text": "' . $vouchers . '"
-                                        },
-                                        {
-                                            "key": "4",
-                                            "value": "date_voucher",
-                                            "value_text": "' . date("d M, Y", strtotime("+30 days")) . '"
-                                        }
-                                    ]
-                                }
-                                }',
-                            CURLOPT_HTTPHEADER => array(
-                                'Authorization: Bearer ' . $wa_token,
-                                'Content-Type: application/json'
-                            ),
-                        ));
+                        // curl_setopt_array($curl, array(
+                        //     CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                        //     CURLOPT_RETURNTRANSFER => true,
+                        //     CURLOPT_ENCODING => '',
+                        //     CURLOPT_MAXREDIRS => 10,
+                        //     CURLOPT_TIMEOUT => 0,
+                        //     CURLOPT_FOLLOWLOCATION => true,
+                        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        //     CURLOPT_CUSTOMREQUEST => 'POST',
+                        //     CURLOPT_POSTFIELDS => '{
+                        //         "to_number": "' . $nomor_forward . '",
+                        //         "to_name": "' . $nama . '",
+                        //         "message_template_id": "' . $template_vc . '",
+                        //         "channel_integration_id": "' . $integration_id . '",
+                        //         "language": {
+                        //             "code": "id"
+                        //         },
+                        //         "parameters": {
+                        //             "header":{
+                        //                 "format":"VIDEO",
+                        //                 "params": [
+                        //                     {
+                        //                         "key":"url",
+                        //                         "value":"https://saleswa.topmortarindonesia.com/vid/ultahnew.mp4"
+                        //                     },
+                        //                     {
+                        //                         "key":"filename",
+                        //                         "value":"bday.jpg"
+                        //                     }
+                        //                 ]
+                        //             },
+                        //             "body": [
+                        //                 {
+                        //                     "key": "1",
+                        //                     "value": "nama",
+                        //                     "value_text": "' . $nama . '"
+                        //                 },
+                        //                 {
+                        //                     "key": "2",
+                        //                     "value": "jml_voucher",
+                        //                     "value_text": "' . $jmlVoucher . '"
+                        //                 },
+                        //                 {
+                        //                     "key": "3",
+                        //                     "value": "no_voucher",
+                        //                     "value_text": "' . $vouchers . '"
+                        //                 },
+                        //                 {
+                        //                     "key": "4",
+                        //                     "value": "date_voucher",
+                        //                     "value_text": "' . date("d M, Y", strtotime("+30 days")) . '"
+                        //                 }
+                        //             ]
+                        //         }
+                        //         }',
+                        //     CURLOPT_HTTPHEADER => array(
+                        //         'Authorization: Bearer ' . $wa_token,
+                        //         'Content-Type: application/json'
+                        //     ),
+                        // ));
 
-                        $response = curl_exec($curl);
+                        // $response = curl_exec($curl);
 
-                        curl_close($curl);
+                        // curl_close($curl);
 
-                        $res = json_decode($response, true);
-                        echo $response;
+                        // $res = json_decode($response, true);
+                        // echo $response;
 
-                        $status = $res['status'];
+                        // $status = $res['status'];
+                        $status = 'success';
 
                         if ($status == 'success') {
                             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim forward ucapan ultah!"];
@@ -277,11 +278,42 @@ foreach ($transArray as $arr) {
                     }
                 }
             } else {
-                $template_id = '9e5f403d-a064-475e-b172-74ce62a56ede';
+                $message = "Selamat ulang tahun! ";
+                $getHaloai = mysqli_query($conn, "SELECT * FROM tb_haloai WHERE id_distributor = '$id_distributor'");
+                $rowHaloai = $getHaloai->fetch_array(MYSQLI_ASSOC);
+                $wa_token = $rowHaloai['token_haloai'];
+                $business_id = $rowHaloai['business_id_haloai'];
+                $channel_id = $rowHaloai['channel_id_haloai'];
+                $template = 'notif_materi_img';
+
+                $haloaiPayload = [
+                    'activate_ai_after_send' => false,
+                    'channel_id' => $channel_id,
+                    'fallback_template_message' => $template,
+                    'fallback_template_header' => [
+                        "filename" => "image.jpg",
+                        'type' => 'image',
+                        'url' => 'https://saleswa.topmortarindonesia.com/img/bday_' . $nomor_hp . 'jpg',
+                    ],
+                    'fallback_template_variables' => [
+                        $nama,
+                        trim(preg_replace('/\s+/', ' ', $jmlVoucher)),
+                        $vouchers,
+                        date("d M, Y", strtotime("+30 days")),
+                    ],
+                    'media' => [
+                        "filename" => "image.jpg",
+                        'type' => 'image',
+                        'url' => 'https://saleswa.topmortarindonesia.com/img/bday_' . $nomor_hp . 'jpg',
+                    ],
+                    'phone_number' => $nomor_hp,
+                    'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                ];
+
                 $curl = curl_init();
 
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                    CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -289,39 +321,10 @@ foreach ($transArray as $arr) {
                     CURLOPT_FOLLOWLOCATION => true,
                     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                     CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => '{
-                    "to_number": "' . $nomor_hp . '",
-                    "to_name": "' . $nama . '",
-                    "message_template_id": "' . $template_id . '",
-                    "channel_integration_id": "' . $integration_id . '",
-                    "language": {
-                        "code": "id"
-                    },
-                    "parameters": {
-                        "header":{
-                            "format":"IMAGE",
-                            "params": [
-                                {
-                                    "key":"url",
-                                    "value":"https://saleswa.topmortarindonesia.com/img/bday_' . $nomor_hp . '.jpg"
-                                },
-                                {
-                                    "key":"filename",
-                                    "value":"bday.jpg"
-                                }
-                            ]
-                        },
-                        "body": [
-                        {
-                            "key": "1",
-                            "value": "nama",
-                            "value_text": "' . $nama . '"
-                        }
-                        ]
-                    }
-                    }',
+                    CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
                     CURLOPT_HTTPHEADER => array(
                         'Authorization: Bearer ' . $wa_token,
+                        'X-HaloAI-Business-Id: ' . $business_id,
                         'Content-Type: application/json'
                     ),
                 ));
@@ -331,6 +334,7 @@ foreach ($transArray as $arr) {
                 curl_close($curl);
 
                 $res = json_decode($response, true);
+                echo $response;
 
                 $status = $res['status'];
 
@@ -339,62 +343,62 @@ foreach ($transArray as $arr) {
                 // $status = "success";
 
                 if ($status == 'success') {
-                    $curl = curl_init();
+                    // $curl = curl_init();
 
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => '{
-                        "to_number": "' . $nomor_forward . '",
-                        "to_name": "' . $nama . '",
-                        "message_template_id": "' . $template_id . '",
-                        "channel_integration_id": "' . $integration_id . '",
-                        "language": {
-                            "code": "id"
-                        },
-                        "parameters": {
-                            "header":{
-                                "format":"IMAGE",
-                                "params": [
-                                    {
-                                        "key":"url",
-                                        "value":"https://saleswa.topmortarindonesia.com/img/bday_' . $nomor_hp . '.jpg"
-                                    },
-                                    {
-                                        "key":"filename",
-                                        "value":"bday.jpg"
-                                    }
-                                ]
-                            },
-                            "body": [
-                            {
-                                "key": "1",
-                                "value": "nama",
-                                "value_text": "Forwarding from - ' . $nama . '"
-                            }
-                            ]
-                        }
-                        }',
-                        CURLOPT_HTTPHEADER => array(
-                            'Authorization: Bearer ' . $wa_token,
-                            'Content-Type: application/json'
-                        ),
-                    ));
+                    // curl_setopt_array($curl, array(
+                    //     CURLOPT_URL => 'https://service-chat.qontak.com/api/open/v1/broadcasts/whatsapp/direct',
+                    //     CURLOPT_RETURNTRANSFER => true,
+                    //     CURLOPT_ENCODING => '',
+                    //     CURLOPT_MAXREDIRS => 10,
+                    //     CURLOPT_TIMEOUT => 0,
+                    //     CURLOPT_FOLLOWLOCATION => true,
+                    //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    //     CURLOPT_CUSTOMREQUEST => 'POST',
+                    //     CURLOPT_POSTFIELDS => '{
+                    //     "to_number": "' . $nomor_forward . '",
+                    //     "to_name": "' . $nama . '",
+                    //     "message_template_id": "' . $template_id . '",
+                    //     "channel_integration_id": "' . $integration_id . '",
+                    //     "language": {
+                    //         "code": "id"
+                    //     },
+                    //     "parameters": {
+                    //         "header":{
+                    //             "format":"IMAGE",
+                    //             "params": [
+                    //                 {
+                    //                     "key":"url",
+                    //                     "value":"https://saleswa.topmortarindonesia.com/img/bday_' . $nomor_hp . '.jpg"
+                    //                 },
+                    //                 {
+                    //                     "key":"filename",
+                    //                     "value":"bday.jpg"
+                    //                 }
+                    //             ]
+                    //         },
+                    //         "body": [
+                    //         {
+                    //             "key": "1",
+                    //             "value": "nama",
+                    //             "value_text": "Forwarding from - ' . $nama . '"
+                    //         }
+                    //         ]
+                    //     }
+                    //     }',
+                    //     CURLOPT_HTTPHEADER => array(
+                    //         'Authorization: Bearer ' . $wa_token,
+                    //         'Content-Type: application/json'
+                    //     ),
+                    // ));
 
-                    $response = curl_exec($curl);
+                    // $response = curl_exec($curl);
 
-                    curl_close($curl);
+                    // curl_close($curl);
 
-                    $res = json_decode($response, true);
+                    // $res = json_decode($response, true);
 
-                    $status = $res['status'];
-                    // $status = "success";
+                    // $status = $res['status'];
+                    $status = "success";
 
                     if ($status == "success") {
                         $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim ucapan ultah!"];
