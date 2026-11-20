@@ -213,6 +213,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_value,is_approved) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay',$pay_value,1)");
                     $id_visit = mysqli_insert_id($conn);
 
+                    // $dateNow = date('Y-m-d');
+                    mysqli_query($conn, "UPDATE tb_step_renvi SET is_visited = 1 WHERE id_contact = '$id_contact' AND date_step_renvi = '$dateNow' AND is_visited = 0");
+
                     $message = "Terimakasih telah melakukan pembayaran sebesar Rp. " . number_format($pay_value, 0, ',', '.') . ". ";
 
                     if ($id_distributor != 8) {
@@ -367,6 +370,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_pay,pay_date,id_invoice,is_approved) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user,'$is_pay','$pay_date',$id_invoice,1)");
                     $id_visit = mysqli_insert_id($conn);
 
+                    mysqli_query($conn, "UPDATE tb_step_renvi SET is_visited = 1 WHERE id_contact = '$id_contact' AND date_step_renvi = '$dateNow' AND is_visited = 0");
+
                     $insertVisCon = mysqli_query($conn, "INSERT INTO tb_visit_control(id_contact,id_user,reason_visit_control) VALUES($id_contact,$id_user,'Janji bayar')");
 
                     if ($insertVisit) {
@@ -519,6 +524,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $insertVisit = mysqli_query($conn, "INSERT INTO tb_visit(id_contact,distance_visit,laporan_visit,source_visit,id_user,is_approved) VALUES($id_contact, $distance_visit, '$laporan_visit','$type_renvi', $id_user, 1)");
                 $id_visit = mysqli_insert_id($conn);
 
+                mysqli_query($conn, "UPDATE tb_step_renvi SET is_visited = 1 WHERE id_contact = '$id_contact' AND date_step_renvi = '$dateNow' AND is_visited = 0");
+
                 $insertVisCon = mysqli_query($conn, "INSERT INTO tb_visit_control(id_contact,id_user,reason_visit_control) VALUES($id_contact,$id_user,'Visit non tagihan, perlu balasan WA')");
             }
 
@@ -560,41 +567,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $channel_id = $rowHaloai['channel_id_haloai'];
                     $template = 'info_konfirm_meeting';
 
-                    $haloaiPayload = [
-                        'activate_ai_after_send' => false,
-                        'channel_id' => $channel_id,
-                        'fallback_template_message' => $template,
-                        'fallback_template_variables' => [
-                            $nama,
-                            trim(preg_replace('/\s+/', ' ', $message)),
-                            $full_name,
-                        ],
-                        'phone_number' => $nomor_hp,
-                        'text' => trim(preg_replace('/\s+/', ' ', $message)),
-                    ];
+                    if ($is_pay == 0) {
+                        $haloaiPayload = [
+                            'activate_ai_after_send' => false,
+                            'channel_id' => $channel_id,
+                            'fallback_template_message' => $template,
+                            'fallback_template_variables' => [
+                                $nama,
+                                trim(preg_replace('/\s+/', ' ', $message)),
+                                $full_name,
+                            ],
+                            'phone_number' => $nomor_hp,
+                            'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                        ];
 
-                    $curl = curl_init();
+                        $curl = curl_init();
 
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
-                        CURLOPT_HTTPHEADER => array(
-                            'Authorization: Bearer ' . $wa_token,
-                            'X-HaloAI-Business-Id: ' . $business_id,
-                            'Content-Type: application/json'
-                        ),
-                    ));
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                            CURLOPT_HTTPHEADER => array(
+                                'Authorization: Bearer ' . $wa_token,
+                                'X-HaloAI-Business-Id: ' . $business_id,
+                                'Content-Type: application/json'
+                            ),
+                        ));
 
-                    $response = curl_exec($curl);
+                        $response = curl_exec($curl);
 
-                    curl_close($curl);
+                        curl_close($curl);
+                    }
 
                     // echo json_encode($rowHaloai);
                     // echo $response;
@@ -626,41 +635,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $channel_id = $rowHaloai['channel_id_haloai'];
                     $template = 'info_konfirm_meeting';
 
-                    $haloaiPayload = [
-                        'activate_ai_after_send' => false,
-                        'channel_id' => $channel_id,
-                        'fallback_template_message' => $template,
-                        'fallback_template_variables' => [
-                            $nama,
-                            trim(preg_replace('/\s+/', ' ', $message)),
-                            $full_name,
-                        ],
-                        'phone_number' => $nomor_hp,
-                        'text' => trim(preg_replace('/\s+/', ' ', $message)),
-                    ];
+                    if ($is_pay == 0) {
+                        $haloaiPayload = [
+                            'activate_ai_after_send' => false,
+                            'channel_id' => $channel_id,
+                            'fallback_template_message' => $template,
+                            'fallback_template_variables' => [
+                                $nama,
+                                trim(preg_replace('/\s+/', ' ', $message)),
+                                $full_name,
+                            ],
+                            'phone_number' => $nomor_hp,
+                            'text' => trim(preg_replace('/\s+/', ' ', $message)),
+                        ];
 
-                    $curl = curl_init();
+                        $curl = curl_init();
 
-                    curl_setopt_array($curl, array(
-                        CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING => '',
-                        CURLOPT_MAXREDIRS => 10,
-                        CURLOPT_TIMEOUT => 0,
-                        CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST => 'POST',
-                        CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
-                        CURLOPT_HTTPHEADER => array(
-                            'Authorization: Bearer ' . $wa_token,
-                            'X-HaloAI-Business-Id: ' . $business_id,
-                            'Content-Type: application/json'
-                        ),
-                    ));
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://www.haloai.co.id/api/open/channel/whatsapp/v1/sendMessageByPhoneSync',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => json_encode($haloaiPayload),
+                            CURLOPT_HTTPHEADER => array(
+                                'Authorization: Bearer ' . $wa_token,
+                                'X-HaloAI-Business-Id: ' . $business_id,
+                                'Content-Type: application/json'
+                            ),
+                        ));
 
-                    $response = curl_exec($curl);
+                        $response = curl_exec($curl);
 
-                    curl_close($curl);
+                        curl_close($curl);
+                    }
                 } else {
                     if ($source == 'renvisales') {
                         $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi'");
@@ -673,9 +684,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     $getRenvis = mysqli_query($conn, "UPDATE tb_rencana_visit SET is_visited = 1, visit_date = '$visitDate' WHERE id_contact = '$id_contact' AND type_rencana = '$type_renvi'");
                 }
             }
-
-            $dateNow = date('Y-m-d');
-            mysqli_query($conn, "UPDATE tb_step_renvi SET is_visited = 1 WHERE id_contact = '$id_contact' AND date_step_renvi = '$dateNow' AND is_visited = 0");
 
             $id_bid = $rowBid['id_bid'];
             $response = ["response" => 200, "status" => "ok", "message" => "Berhasil mengirim laporan!", "id_visit" => (string)$id_visit];
