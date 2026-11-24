@@ -170,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $insertVisit = false;
         $id_visit = 0;
 
-        $checkVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_contact' AND source_visit = '$source' AND id_user = '$id_user' AND DATE(date_visit) = '$dateNow'");
+        $checkVisit = mysqli_query($conn, "SELECT * FROM tb_visit WHERE id_contact = '$id_contact' AND id_user = '$id_user' AND DATE(date_visit) = '$dateNow'");
         $rowVisit = $checkVisit->fetch_array(MYSQLI_ASSOC);
 
         if ($rowVisit) {
