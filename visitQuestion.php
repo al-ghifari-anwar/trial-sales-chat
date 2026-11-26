@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['dst'])) {
         $id_distributor = $_GET['dst'];
 
-        if ($id_distributor == 13) {
+        if (in_array($id_distributor, [13, 14, 15, 16, 17, 18, 19])) {
             $id_distributor = 1;
         }
 
